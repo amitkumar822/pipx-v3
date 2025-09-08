@@ -50,7 +50,7 @@ const SubCommentCard = ({
           }}
         />
         <View className="flex-1">
-          <Pressable onLongPress={() => handleLongPress(reply.id)} delayLongPress={500}>
+          <Pressable onLongPress={() => handleLongPress(reply)} delayLongPress={500}>
             <View className="flex-row justify-between">
               <Text className="font-semibold" style={{ fontSize: RFValue(13) }}>
                 {reply.user.first_name} {reply.user.last_name}
@@ -171,7 +171,7 @@ const SubCommentCard = ({
           {/* Replies inside reply */}
           {reply.replies?.length > 0 &&
             reply.replies.map((subReply) => (
-              <Pressable onLongPress={() => handleLongPress(subReply.id)} delayLongPress={500}>
+              <Pressable onLongPress={() => handleLongPress(subReply)} delayLongPress={500}>
                 <View key={subReply.id} className="mt-3 ml-2">
                   <View className="flex-row gap-2.5 bg-[#F9F9F9] rounded-xl p-3 shadow-sm border border-gray-100">
                     {/* Avatar */}

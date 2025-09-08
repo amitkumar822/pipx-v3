@@ -7,9 +7,11 @@ import {
   Dimensions,
   ActivityIndicator,
   FlatList,
+  Alert,
 } from "react-native";
 import CommentCard from "./CommentCard";
 import {
+  useDeleteComment,
   useGetReplyCommentMessage,
   useGetSignalPostComments,
 } from "@/src/hooks/useApi";
@@ -18,6 +20,7 @@ const { height } = Dimensions.get("window");
 const heightPercent = (percent) => (height * percent) / 100;
 
 const CommentSheet = ({ signalPostId }) => {
+
   // Fetch all comments when signalPostId changes
   const {
     data: allComments,
@@ -36,6 +39,51 @@ const CommentSheet = ({ signalPostId }) => {
       enabled: !!activeReplyTarget?.id,
     });
 
+
+  // Handle delete comment mutation hook
+  const { mutate: deleteComment, isLoading: isDeleting } = useDeleteComment();
+
+  // Handle long press to show delete alert
+  const handleLongPress = (comment) => {
+    Alert.alert(
+      "Delete Comment",
+      "Are you sure you want to delete this comment?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          style: "destructive",
+          onPress: () => handleDeleteComment(comment?.id),
+        },
+      ]
+    );
+  };
+
+  // Handle delete comment
+  const handleDeleteComment = (commentId) => {
+    deleteComment(
+      { commentId },
+      {
+        onSuccess: () => {
+          Toast.show({
+            type: "success",
+            text1: "Comment deleted successfully",
+          });
+        },
+        onError: (error) => {
+          Toast.show({
+            type: "error",
+            text1: "Failed to delete comment",
+            text2: error?.message || "Please try again later",
+          });
+        },
+      }
+    );
+  };
+
   const renderComment = ({ item }) => (
     <CommentCard
       item={item}
@@ -45,6 +93,7 @@ const CommentSheet = ({ signalPostId }) => {
       isLoading={isReplyLoading}
       replyText={replyText}
       setReplyText={setReplyText}
+      handleLongPress={handleLongPress}
     />
   );
 

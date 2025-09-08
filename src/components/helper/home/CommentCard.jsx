@@ -28,6 +28,7 @@ const CommentCard = ({
   isLoading = false,
   replyText,
   setReplyText,
+  handleLongPress,
 }) => {
   // State to manage sub-reply target
   const [activeSubReplyTarget, setActiveSubReplyTarget] = useState("");
@@ -87,9 +88,6 @@ const CommentCard = ({
   const { mutate: likeComment } = useLikeComment();
   const [likeTargetId, setLikeTargetId] = useState("");
 
-  // Handle delete comment mutation hook
-  const { mutate: deleteComment, isLoading: isDeleting } = useDeleteComment();
-
   // Track local like count for the main comment
   const [localLikeCount, setLocalLikeCount] = useState(item?.like_count || 0);
 
@@ -142,48 +140,6 @@ const CommentCard = ({
     );
   };
 
-  const handlePress = (id) => {
-    console.log("id", id);
-  };
-
-  // Handle long press to show delete alert
-  const handleLongPress = (commentId) => {
-    Alert.alert(
-      "Delete Comment",
-      "Are you sure you want to delete this comment?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "OK",
-          style: "destructive",
-          onPress: () => handleDeleteComment(commentId),
-        },
-      ]
-    );
-  };
-
-  // Handle delete comment
-  const handleDeleteComment = (commentId) => {
-    deleteComment(
-      { commentId },
-      {
-        onSuccess: () => {
-         
-        },
-        onError: (error) => {
-          Toast.show({
-            type: "error",
-            text1: "Failed to delete comment",
-            text2: error?.message || "Please try again later",
-          });
-        },
-      }
-    );
-  };
-
   return (
     <View className="mt-4">
       {/* Main Comment */}
@@ -195,7 +151,7 @@ const CommentCard = ({
         />
         <View className="flex-1">
           <Pressable
-            onLongPress={() => handleLongPress(item?.id)}
+            onLongPress={() => handleLongPress(item)}
             delayLongPress={500}
           >
             <View className="flex-row justify-between items-start">
