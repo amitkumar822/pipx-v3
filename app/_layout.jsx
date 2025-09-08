@@ -12,6 +12,7 @@ import { UserContextProvider } from "@/src/context/user/userContext";
 import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { AuthContextProvider } from "@/src/store/AuthContext";
 import ENV from "@/src/config/env";
+import { NoInternetWrapper } from "@/src/utils/NoInternetScreen";
 
 // Apply patches to fix third-party library issues
 try {
@@ -38,7 +39,7 @@ LogBox.ignoreLogs([
 ]);
 
 // Keep the splash screen visible until we're ready to render
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => { });
 
 export default function RootLayout() {
   // Use state to track initialization status
@@ -73,53 +74,55 @@ export default function RootLayout() {
 
   // Wrap everything in our custom error handler
   return (
-    <AuthContextProvider>
-      <AppErrorHandler>
-        <View style={{ flex: 1 }}>
-          <ErrorBoundary
-            fallback={({ error }) => (
-              <View style={{ flex: 1, padding: 20 }}>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: "bold",
-                    marginBottom: 10,
-                  }}
-                >
-                  Something went wrong
-                </Text>
-                <Text style={{ marginBottom: 20 }}>
-                  The app encountered an error but you can still use it.
-                </Text>
-                <Text style={{ fontSize: 12, color: "gray" }}>
-                  Error details: {error?.message || "Unknown error"}
-                </Text>
-              </View>
-            )}
-            onError={(error, errorInfo) => {
-              console.error("Root error boundary caught:", error, errorInfo);
-            }}
-          >
-            <SafeAreaProviderFix>
-              <ErrorBoundary>
-                <StripeProviderSafe>
-                  <ErrorBoundary>
+    <NoInternetWrapper>
+      <AuthContextProvider>
+        <AppErrorHandler>
+          <View style={{ flex: 1 }}>
+            <ErrorBoundary
+              fallback={({ error }) => (
+                <View style={{ flex: 1, padding: 20 }}>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      marginBottom: 10,
+                    }}
+                  >
+                    Something went wrong
+                  </Text>
+                  <Text style={{ marginBottom: 20 }}>
+                    The app encountered an error but you can still use it.
+                  </Text>
+                  <Text style={{ fontSize: 12, color: "gray" }}>
+                    Error details: {error?.message || "Unknown error"}
+                  </Text>
+                </View>
+              )}
+              onError={(error, errorInfo) => {
+                console.error("Root error boundary caught:", error, errorInfo);
+              }}
+            >
+              <SafeAreaProviderFix>
+                <ErrorBoundary>
+                  <StripeProviderSafe>
                     <ErrorBoundary>
-                      <UserContextProvider>
-                        <Slot />
-                        <Toast
-                          visibilityTime={3000} // 3 seconds
-                        />
-                      </UserContextProvider>
+                      <ErrorBoundary>
+                        <UserContextProvider>
+                          <Slot />
+                          <Toast
+                            visibilityTime={3000} // 3 seconds
+                          />
+                        </UserContextProvider>
+                      </ErrorBoundary>
                     </ErrorBoundary>
-                  </ErrorBoundary>
-                </StripeProviderSafe>
-              </ErrorBoundary>
-            </SafeAreaProviderFix>
-          </ErrorBoundary>
-        </View>
-      </AppErrorHandler>
-    </AuthContextProvider>
+                  </StripeProviderSafe>
+                </ErrorBoundary>
+              </SafeAreaProviderFix>
+            </ErrorBoundary>
+          </View>
+        </AppErrorHandler>
+      </AuthContextProvider>
+    </NoInternetWrapper>
   );
 }
 
