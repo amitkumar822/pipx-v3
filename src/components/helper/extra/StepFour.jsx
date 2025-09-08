@@ -156,11 +156,11 @@ export const StepFour = ({ type, step, setStep, loginType }) => {
             <View style={{ position: "absolute", right: 35, top: "45%" }}>
               {showPassword ? (
                 <Pressable onPress={() => setShowPassword(!showPassword)}>
-                  <Ionicons name="eye-off-outline" size={26} color="#007aff" />
+                  <Ionicons name="eye-outline" size={26} color="#007aff" />
                 </Pressable>
               ) : (
                 <Pressable onPress={() => setShowPassword(!showPassword)}>
-                  <Ionicons name="eye-outline" size={26} color="#007aff" />
+                  <Ionicons name="eye-off-outline" size={26} color="#007aff" />
                 </Pressable>
               )}
             </View>

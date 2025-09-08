@@ -19,6 +19,7 @@ export default function Home() {
       }, [profile]);
     }
   }
+
   if (userType === "SIGNAL_PROVIDER") {
     const { data: agentProfile } = useSignalProviderProfile();
     if (agentProfile) {
@@ -27,9 +28,6 @@ export default function Home() {
       }, [agentProfile]);
     }
   }
-
-
-
 
   if (userType === "USER") {
     return (

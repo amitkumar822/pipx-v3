@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { BottomSheetWrapper } from "../helper/shared/BottomSheetWrapper";
+import { Pressable, StyleSheet, Text, View, Modal } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LoginComponent } from "../helper/auth/LoginComponent";
 import { SignUpComponent } from "../helper/auth/SignUpComponent";
 
 export const LoginScreen = () => {
-  const [bottomSheetModalRef, setBottomSheetModalRef] = useState(null);
-  const [activateSheet, setActivateSheet] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [isSignUp, setIsSignUp] = useState(true);
 
   const handlePresentModalPress = useCallback((from) => {
@@ -16,18 +14,12 @@ export const LoginScreen = () => {
     } else {
       setIsSignUp(true);
     }
-    setActivateSheet(true);
+    setModalVisible(true);
   }, []);
 
-  useEffect(() => {
-    if (
-      activateSheet &&
-      Boolean(bottomSheetModalRef) &&
-      Boolean(bottomSheetModalRef.current)
-    ) {
-      bottomSheetModalRef?.current?.expand();
-    }
-  }, [activateSheet, bottomSheetModalRef]);
+  const closeModal = useCallback(() => {
+    setModalVisible(false);
+  }, []);
 
   return (
     <>
@@ -38,7 +30,7 @@ export const LoginScreen = () => {
           </View>
           <View style={styles.bottomsection}>
             <View style={styles.titletxt}>
-              <Text style={styles.headtxt} >Welcome to Pip</Text>
+              <Text style={styles.headtxt} >Welcome to Pipx</Text>
               <Text style={styles.bodytxt}>
                 To sign up, you need to be at least 18. Your birthday won’t be
                 shared with other users.
@@ -60,14 +52,31 @@ export const LoginScreen = () => {
             </View>
           </View>
         </View>
-        <BottomSheetWrapper
-          setBottomSheetModalRef={setBottomSheetModalRef}
-          activateSheet={activateSheet}
-          setActivateSheet={setActivateSheet}
-        >
-          {isSignUp ? <SignUpComponent /> : <LoginComponent />}
-        </BottomSheetWrapper>
       </GestureHandlerRootView>
+
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={closeModal}
+      >
+        <GestureHandlerRootView style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <View style={styles.dragIndicator} />
+              <View style={styles.headerContent}>
+                <Text style={styles.modalTitle}>
+                  {isSignUp ? "Sign Up" : "Login"}
+                </Text>
+                <Pressable style={styles.closeButton} onPress={closeModal}>
+                  <Text style={styles.closeButtonText}>✕</Text>
+                </Pressable>
+              </View>
+            </View>
+            {isSignUp ? <SignUpComponent /> : <LoginComponent />}
+          </View>
+        </GestureHandlerRootView>
+      </Modal>
     </>
   );
 };
@@ -160,5 +169,66 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    flex: 1,
+    maxHeight: "70%",
+    paddingHorizontal: 10,
+  },
+  modalHeader: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginBottom: 5,
+  },
+  headerContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+  },
+  dragIndicator: {
+    width: 40,
+    height: 4,
+    backgroundColor: "#ccc",
+    borderRadius: 2,
+    marginBottom: 8,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000",
+    textAlign: "center",
+    width: "80%",
+    paddingLeft: "21%",
+  },
+  closeButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "#f0f0f0",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  closeButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#666",
   },
 });
