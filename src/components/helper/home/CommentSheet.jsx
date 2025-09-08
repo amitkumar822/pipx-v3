@@ -23,10 +23,6 @@ const heightPercent = (percent) => (height * percent) / 100;
 const CommentSheet = ({ signalPostId }) => {
   const { profile } = useUserProvider();
 
-  console.log('====================================');
-  console.log("Profile: ", JSON.stringify(profile, null, 2));
-  console.log('====================================');
-
   // Fetch all comments when signalPostId changes
   const {
     data: allComments,

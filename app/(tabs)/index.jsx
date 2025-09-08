@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AuthContext } from "../../src/store/AuthContext";
@@ -10,35 +10,22 @@ import { useUserProvider } from "@/src/context/user/userContext";
 export default function Home() {
   const { userType } = useContext(AuthContext);
   const { setProfile } = useUserProvider();
+  
+  // Always call hooks at the top level, regardless of conditions
+  const { data: userProfile } = useUserProfile();
+  const { data: agentProfile } = useSignalProviderProfile();
 
-  if (userType === "USER") {
-    const { data: profile } = useUserProfile();
-    if (profile) {
-      useEffect(() => {
-        setProfile(profile?.data);
-      }, [profile]);
+  // Handle profile updates based on user type
+  useEffect(() => {
+    if (userType === "USER" && userProfile?.data) {
+      setProfile(userProfile.data);
+    } else if (userType === "SIGNAL_PROVIDER" && agentProfile?.data) {
+      setProfile(agentProfile.data);
     }
-  }
+  }, [userType, userProfile, agentProfile, setProfile]);
 
-  if (userType === "SIGNAL_PROVIDER") {
-    const { data: agentProfile } = useSignalProviderProfile();
-    if (agentProfile) {
-      useEffect(() => {
-        setProfile(agentProfile?.data);
-      }, [agentProfile]);
-    }
-  }
-
-  if (userType === "USER") {
-    return (
-      <View style={{ flex: 1, paddingHorizontal: 10, backgroundColor: "#FFF" }}>
-        <AppStatusBar backgroundColor="#FFF" barStyle="dark-content" />
-        <HomeScreen />
-      </View>
-    );
-  }
-
-  if (userType === "SIGNAL_PROVIDER") {
+  // Render based on user type
+  if (userType === "USER" || userType === "SIGNAL_PROVIDER") {
     return (
       <View style={{ flex: 1, paddingHorizontal: 10, backgroundColor: "#FFF" }}>
         <AppStatusBar backgroundColor="#FFF" barStyle="dark-content" />
