@@ -102,10 +102,11 @@ export const useLogout = () => {
 };
 
 // User Profile Hooks
-export const useUserProfile = () => {
+export const useUserProfile = (options: { enabled?: boolean } = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.USER_PROFILE],
     queryFn: () => apiService.getUserProfile(),
+    enabled: options.enabled !== false, // Default to true if not specified
   });
 };
 
@@ -120,10 +121,11 @@ export const useUpdateUserProfile = () => {
   });
 };
 
-export const useSignalProviderProfile = () => {
+export const useSignalProviderProfile = (options: { enabled?: boolean } = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SIGNAL_PROVIDER_PROFILE],
     queryFn: () => apiService.getSignalProviderProfile(),
+    enabled: options.enabled !== false, // Default to true if not specified
   });
 };
 

@@ -15,11 +15,17 @@ import {
   useGetReplyCommentMessage,
   useGetSignalPostComments,
 } from "@/src/hooks/useApi";
+import { useUserProvider } from "@/src/context/user/userContext";
 
 const { height } = Dimensions.get("window");
 const heightPercent = (percent) => (height * percent) / 100;
 
 const CommentSheet = ({ signalPostId }) => {
+  const { profile } = useUserProvider();
+
+  console.log('====================================');
+  console.log("Profile: ", JSON.stringify(profile, null, 2));
+  console.log('====================================');
 
   // Fetch all comments when signalPostId changes
   const {
@@ -45,6 +51,9 @@ const CommentSheet = ({ signalPostId }) => {
 
   // Handle long press to show delete alert
   const handleLongPress = (comment) => {
+    if (comment?.user?.id !== profile?.id) {
+      return;
+    }
     Alert.alert(
       "Delete Comment",
       "Are you sure you want to delete this comment?",

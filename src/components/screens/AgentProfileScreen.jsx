@@ -16,7 +16,7 @@ export const AgentProfileScreen = () => {
   const { data, loading, error } = useSignalProviderProfile();
 
   const agentProfile = data?.data;
-  
+
   useEffect(() => {
     if (agentProfile && userType === "SIGNAL_PROVIDER") {
       setProfile(agentProfile);
@@ -93,12 +93,12 @@ export const AgentProfileScreen = () => {
     {
       value: `${agentProfile?.success_rate}%` || "0%",
       label: "Success rate",
-      onPress: () => {},
+      onPress: () => { },
     },
     {
       value: `${agentProfile?.win_post}: ${agentProfile?.lose_post}` || "0:0",
       label: "Win/Loss ratio",
-      onPress: () => {},
+      onPress: () => { },
     },
     // {
     //   value: "XXXX",
