@@ -57,7 +57,7 @@ const UserAgentDetailsForm = ({ setStep }) => {
       Alert.alert("All field is required");
       return;
     }
-    
+
 
     setLoading(true);
 
@@ -70,16 +70,18 @@ const UserAgentDetailsForm = ({ setStep }) => {
 
   return (
     <View style={styles.container}>
+      <View style={{ paddingTop: 10 }}>
+        <AuthHeader step={4} setStep={setStep} />
+      </View>
+
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={20}
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
       >
-        <View style={{ paddingTop: 10 }}>
-          <AuthHeader step={4} setStep={setStep} />
-        </View>
         <ScrollView
-          contentContainerStyle={{ padding: 20, paddingBottom: 80 }}
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
@@ -87,11 +89,6 @@ const UserAgentDetailsForm = ({ setStep }) => {
             <FontAwesome name="vcard-o" size={28} color="gray" />
             <Text style={styles.title}>Your details</Text>
           </View>
-
-          {/* <Text style={styles.subtitle}>
-            Lorem ipsum dolor sit amet, adipiscing elit, sed eiusmod tempor
-            incididunt.
-          </Text> */}
 
           <View style={styles.form}>
             <TextField
@@ -149,11 +146,14 @@ const UserAgentDetailsForm = ({ setStep }) => {
                 }
               />
             )}
-
-            <Buttons onPress={handleUserDetailsSubmit} isLoading={loading} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Fixed bottom section outside KeyboardAvoidingView */}
+      <View style={styles.bottomSection}>
+        <Buttons onPress={handleUserDetailsSubmit} isLoading={loading} />
+      </View>
     </View>
   );
 };
@@ -162,9 +162,20 @@ export default UserAgentDetailsForm;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30,
     flex: 1,
-    height: "100%",
+    backgroundColor: "#FFF",
+    paddingTop: 30,
+    width: "100%",
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 20,
   },
   title: {
     fontSize: 20,
@@ -190,6 +201,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 20,
     overflow: "hidden",
+  },
+  bottomSection: {
+    width: "100%",
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    backgroundColor: "#FFF",
   },
   confirmPasswordContainer: {
     position: "relative",

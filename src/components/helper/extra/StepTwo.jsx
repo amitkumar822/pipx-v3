@@ -68,8 +68,8 @@ export const StepTwo = ({ type, step, setStep }) => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, paddingBottom: 10 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={20}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
     >
       <View style={styles.mainsection}>
         <View style={styles.topsection}>

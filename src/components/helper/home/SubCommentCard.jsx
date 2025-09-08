@@ -171,8 +171,8 @@ const SubCommentCard = ({
           {/* Replies inside reply */}
           {reply.replies?.length > 0 &&
             reply.replies.map((subReply) => (
-              <Pressable onLongPress={() => handleLongPress(subReply)} delayLongPress={500}>
-                <View key={subReply.id} className="mt-3 ml-2">
+              <Pressable key={subReply.id} onLongPress={() => handleLongPress(subReply)} delayLongPress={500}>
+                <View className="mt-3 ml-2">
                   <View className="flex-row gap-2.5 bg-[#F9F9F9] rounded-xl p-3 shadow-sm border border-gray-100">
                     {/* Avatar */}
                     <AppImage
