@@ -81,7 +81,7 @@ export const StepThree = ({ type, step, setStep }) => {
         </View>
       </View>
       <View style={styles.bottomsection}>
-        <Buttons onPress={handleUserNextPage} isLoading={loading} />
+        <Buttons onPress={handleUserNextPage} isLoading={loading} disabled={!userName} />
       </View>
     </KeyboardAvoidingView>
   );

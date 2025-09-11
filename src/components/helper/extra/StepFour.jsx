@@ -89,12 +89,12 @@ export const StepFour = ({ type, step, setStep, loginType }) => {
       // Prepare login data based on login type
       const loginWithPhone = {
         mobile: email_or_mobile,
-        password: password,
+        password: password.trim(),
       };
 
       const loginWithEmail = {
         email: email_or_mobile,
-        password: password,
+        password: password.trim(),
       };
 
       setLoading(true);
@@ -195,6 +195,7 @@ export const StepFour = ({ type, step, setStep, loginType }) => {
         <Buttons
           onPress={onContinue}
           isLoading={loading || loginMutation.loading}
+          disabled={!password}
         />
       </View>
     </View>

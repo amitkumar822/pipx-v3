@@ -9,7 +9,7 @@ import { AuthHeader } from "../helper/auth/AuthHeader";
 import { useRouter } from "expo-router";
 import apiService from "@/src/services/api";
 
-const AddressForm = ({ registrationType, setStep }) => {
+const AddressForm = ({ registrationType, setStep, step }) => {
   const router = useRouter();
 
   const {
@@ -128,7 +128,7 @@ const AddressForm = ({ registrationType, setStep }) => {
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <View style={{ marginLeft: -35 }}>
-          <AuthHeader step={4} setStep={setStep} />
+          <AuthHeader  step={step -1} setStep={setStep}  />
         </View>
 
         {/* Skip button also same handler used when user skip direact call api previous data send */}
@@ -193,7 +193,11 @@ const AddressForm = ({ registrationType, setStep }) => {
 export default AddressForm;
 
 const styles = StyleSheet.create({
-  container: { padding: 20, paddingTop: 40 },
+  container: { 
+    padding: 20, 
+    paddingTop: 40, 
+    width: "100%" 
+  },
   headerRow: {
     width: "100%",
     flexDirection: "row",

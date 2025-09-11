@@ -171,7 +171,11 @@ export const StepFive = ({ type, step, setStep }) => {
         </View>
       </View>
       <View style={styles.bottomsection}>
-        <Buttons onPress={onContinue} isLoading={loading} />
+        <Buttons
+          onPress={onContinue}
+          isLoading={loading}
+          disabled={!confirm_password}
+        />
       </View>
     </KeyboardAvoidingView>
   );

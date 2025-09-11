@@ -83,9 +83,9 @@ export default function EmailAuth() {
       ) : (
         <></>
       )}
-      {step === 6 ? <UserAgentDetailsForm setStep={setStep} /> : <></>}
+      {step === 6 ? <UserAgentDetailsForm setStep={setStep} step={step} /> : <></>}
       {step === 7 ? (
-        <AddressForm registrationType="email" setStep={setStep} />
+        <AddressForm registrationType="email" setStep={setStep} step={step} />
       ) : (
         <></>
       )}

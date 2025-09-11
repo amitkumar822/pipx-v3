@@ -18,7 +18,7 @@ import { useUserProvider } from "@/src/context/user/userContext";
 import { AuthHeader } from "../helper/auth/AuthHeader";
 import FileUploadField from "./helper/FileUploadField";
 
-const UserAgentDetailsForm = ({ setStep }) => {
+const UserAgentDetailsForm = ({ setStep, step }) => {
   const { setUserAgentDetails, regRoleType } = useUserProvider();
 
   const [userDetails, setUserDetails] = useState({
@@ -51,13 +51,23 @@ const UserAgentDetailsForm = ({ setStep }) => {
 
   const [loading, setLoading] = useState(false);
 
+  const requiredFields =
+    regRoleType === "SIGNAL_PROVIDER"
+      ? ["firstName", "lastName", "birthday", "gender", "document"]
+      : ["firstName", "lastName", "birthday", "gender"];
+
+  const isFormValid = requiredFields.every((key) => {
+    const value = userDetails[key];
+    return value && (typeof value !== "string" || value.trim().length > 0);
+  });
+
   // handle Submit
   const handleUserDetailsSubmit = async () => {
-    if (!userDetails) {
-      Alert.alert("All field is required");
+   
+    if (!isFormValid) {
+      Alert.alert("All fields are required");
       return;
     }
-
 
     setLoading(true);
 
@@ -71,7 +81,7 @@ const UserAgentDetailsForm = ({ setStep }) => {
   return (
     <View style={styles.container}>
       <View style={{ paddingTop: 10 }}>
-        <AuthHeader step={4} setStep={setStep} />
+        <AuthHeader step={step - 1} setStep={setStep} />
       </View>
 
       <KeyboardAvoidingView
@@ -152,7 +162,7 @@ const UserAgentDetailsForm = ({ setStep }) => {
 
       {/* Fixed bottom section outside KeyboardAvoidingView */}
       <View style={styles.bottomSection}>
-        <Buttons onPress={handleUserDetailsSubmit} isLoading={loading} />
+        <Buttons onPress={handleUserDetailsSubmit} isLoading={loading} disabled={!isFormValid} />
       </View>
     </View>
   );

@@ -24,10 +24,11 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
   // login loading state management
   const [loading, setLoading] = useState(false);
 
+  // Validate email format if it looks like an email
+  const trimmedEmail = userEmail.toLocaleLowerCase().trim();
+  const isEmail = trimmedEmail.includes("@") && trimmedEmail.includes(".com");
+
   const onContinue = async () => {
-    // Validate email format if it looks like an email
-    const trimmedEmail = userEmail.toLocaleLowerCase().trim();
-    const isEmail = trimmedEmail.includes("@");
 
     const isValidEmail = validateEmail(trimmedEmail) !== null;
 
@@ -84,10 +85,10 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
         setOtpEmail(response?.data?.otp);
         setEmail_or_mobile(userEmail.toLocaleLowerCase().trim());
         setStep(2);
-      } catch (error) {
+      } catch (error) {        
         Toast.show({
           type: "error",
-          text1: error?.message || "Failed to generate OTP",
+          text1: error?.response?.message?.email[0] || "Failed to generate OTP",
         });
         setShowError(true);
       } finally {
@@ -166,6 +167,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
             onPress={onContinue}
             title={type === "forgotpassword" ? "Reset Password" : "Continue"}
             isLoading={loading}
+            disabled={!trimmedEmail}
           />
         </View>
       </KeyboardAvoidingView>

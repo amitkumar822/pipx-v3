@@ -9,13 +9,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import apiService from "@/src/services/api";
 
 export const StepTwo = ({ type, step, setStep }) => {
-  const { otpEmail, email_or_mobile } = useUserProvider();
+  const { email_or_mobile } = useUserProvider();
 
   const [otp, setOtp] = useState("");
-
-  useEffect(() => {
-    setOtp(otpEmail);
-  }, [otpEmail]);
 
   const [loading, setLoading] = useState(false);
 
@@ -111,7 +107,7 @@ export const StepTwo = ({ type, step, setStep }) => {
       </View>
 
       <View style={styles.bottomsection}>
-        <Buttons onPress={handleOtpVerify} isLoading={loading} />
+        <Buttons onPress={handleOtpVerify} isLoading={loading} disabled={!otp} />
       </View>
     </KeyboardAvoidingView>
   );

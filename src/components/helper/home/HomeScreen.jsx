@@ -55,9 +55,6 @@ const HomeScreen = () => {
         setIsLoadingMore(true);
         setPage((prev) => prev + 1);
       }
-      console.log('====================================');
-      console.log("handleLoadMore");
-      console.log('====================================');
     }, 300),
     [hasNextPage, isLoadingMore, isSignalPostsLoading, page]
   );

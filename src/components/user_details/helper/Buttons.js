@@ -7,13 +7,21 @@ import {
   View,
 } from "react-native";
 
-const Buttons = ({ onPress, title = "Continue", isLoading = false }) => {
+const Buttons = ({
+  onPress,
+  title = "Continue",
+  isLoading = false,
+  disabled = false,
+}) => {
   return (
-    <View style={{width: "100%"}}>
+    <View style={{ width: "100%" }}>
       <Pressable
-        style={[styles.button, isLoading && styles.disabledButton]}
+        style={[
+          styles.button,
+          (isLoading || disabled) && styles.disabledButton,
+        ]}
         onPress={onPress}
-        disabled={isLoading}
+        disabled={isLoading || disabled}
       >
         {isLoading ? (
           <View style={styles.loadingContainer}>
