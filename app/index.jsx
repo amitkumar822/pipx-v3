@@ -15,9 +15,10 @@ TextInput.defaultProps.style = {
   paddingHorizontal: 12,
   paddingVertical: 8,
   borderRadius: 8,
+  color: "#000"
 };
 
-TextInput.defaultProps.placeholderTextColor = "#666";
+TextInput.defaultProps.placeholderTextColor = "#000";
 
 /**
  * ================================
@@ -29,7 +30,7 @@ TextInput.defaultProps.placeholderTextColor = "#666";
  * - Can be overridden locally in individual TextInput components
  */
 TextInput.defaultProps = TextInput.defaultProps || {};
-TextInput.defaultProps.placeholderTextColor = "#9CA3AF"; // default placeholder color
+TextInput.defaultProps.placeholderTextColor = "#000"; // default placeholder color
 TextInput.defaultProps.style = [
   TextInput.defaultProps.style,
   { backgroundColor: "#1a1a1a", color: "#FFFFFF" },
