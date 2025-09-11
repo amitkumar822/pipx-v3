@@ -1,8 +1,10 @@
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import React from "react";
 import { RFValue } from "react-native-responsive-fontsize";
+import { useRouter } from "expo-router";
 
 const HomeHeader = ({ showTab, setShowTab }) => {
+  const router = useRouter();
   const labels = [
     "Agent Signals",
     "By currency",
@@ -12,13 +14,16 @@ const HomeHeader = ({ showTab, setShowTab }) => {
   const handlePress = (label) => {
     switch (label) {
       case "Agent Signals":
-        setShowTab("Agent Signals");
+        // setShowTab("Agent Signals");
+        router.push("/");
         break;
       case "By currency":
-        setShowTab("By currency");
+        // setShowTab("By currency");
+        router.push("/by-currency");
         break;
       case "Agent":
-        setShowTab("Agent");
+        // setShowTab("Agent");
+        router.push("/agent");
         break;
       default:
         console.log("Unhandled press:", label);

@@ -2,7 +2,6 @@ import { Text, View } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import HomeHeader from "./HomeHeader";
 import { AgentHomeScreen } from "../../screens/AgentHomeScreen";
-import RecentlyViewedScreen from "../../screens/RecentlyViewedScreen";
 import ByCurrencyScreen from "../../screens/ByCurrencyScreen";
 import AgentScreen from "../../screens/AgentScreen";
 import { useAllSignalPosts } from "@/src/hooks/useApi";
@@ -69,7 +68,19 @@ const HomeScreen = () => {
     <SafeAreaView className="h-screen">
       <HomeHeader showTab={showTab} setShowTab={setShowTab} />
       <>
-        {showTab === "Agent Signals" && (
+        <AgentHomeScreen
+          signalPostsData={posts}
+          signalPostsError={signalPostsError}
+          isLoading={isSignalPostsLoading}
+          isFetching={isFetchingSignalPosts}
+          refetch={refetch}
+          page={page}
+          setPage={setPage}
+          isLoadingMore={isLoadingMore}
+          hasNextPage={hasNextPage}
+          handleLoadMore={handleLoadMore}
+        />
+        {/* {showTab === "Agent Signals" && (
           <AgentHomeScreen
             signalPostsData={posts}
             signalPostsError={signalPostsError}
@@ -83,12 +94,10 @@ const HomeScreen = () => {
             handleLoadMore={handleLoadMore}
           />
         )}
-        {showTab === "Recently viewed" && <RecentlyViewedScreen />}
-        {showTab === "Lorem" && <Text>Lorem Content</Text>}
         {showTab === "By currency" && (
           <ByCurrencyScreen showTab={showTab} setShowTab={setShowTab} />
         )}
-        {showTab === "Agent" && <AgentScreen />}
+        {showTab === "Agent" && <AgentScreen />} */}
       </>
     </SafeAreaView>
   );
