@@ -17,6 +17,7 @@ const TextField = ({
         style={styles.input}
         secureTextEntry={secureTextEntry}
         editable={editable}
+        importantForAutofill="no"
       />
     </View>
   );
@@ -35,6 +36,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 12,
     fontSize: 16,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#FFFFFF",
   },
 });
