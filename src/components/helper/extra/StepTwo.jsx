@@ -5,13 +5,16 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useUserProvider } from "@/src/context/user/userContext";
 import Buttons from "../../user_details/helper/Buttons";
 import Toast from "react-native-toast-message";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import apiService from "@/src/services/api";
 
 export const StepTwo = ({ type, step, setStep }) => {
-  const { email_or_mobile } = useUserProvider();
+   const { otpEmail, email_or_mobile } = useUserProvider();
 
   const [otp, setOtp] = useState("");
+
+  useEffect(() => {
+    setOtp(otpEmail);
+  }, [otpEmail]);
 
   const [loading, setLoading] = useState(false);
 

@@ -81,7 +81,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
   return (
     <View style={styles.container}>
       <View style={{ paddingTop: 10 }}>
-        <AuthHeader step={step - 1} setStep={setStep} />
+        <AuthHeader step={step - 2} setStep={setStep} />
       </View>
 
       <KeyboardAvoidingView

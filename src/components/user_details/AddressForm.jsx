@@ -148,11 +148,7 @@ const AddressForm = ({ registrationType, setStep, step }) => {
         <SimpleLineIcons name="location-pin" size={26} color="gray" />
         <Text style={styles.title}>Your address</Text>
       </View>
-
-      {/* <Text style={styles.subtitle}>
-        Lorem ipsum dolor sit amet, adipiscing elit, sed eiusmod tempor
-        incididunt.
-      </Text> */}
+      
       <TextField
         placeholder="Address"
         value={address.address}

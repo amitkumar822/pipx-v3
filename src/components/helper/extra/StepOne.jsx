@@ -133,7 +133,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
                 <Text style={styles.mailtitletxt}>Forgot your password?</Text>
               ) : (
                 <Text style={styles.mailtitletxt}>
-                  Enter your username/email
+                  Enter your email
                 </Text>
               )}
             </View>

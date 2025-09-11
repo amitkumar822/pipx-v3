@@ -11,7 +11,12 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { SignalCard } from "../helper/home/SignalCard";
 import apiService from "../../services/api";
 import { useUserProvider } from "@/src/context/user/userContext";
-import { GestureHandlerRootView, PanGestureHandler, ScrollView, State } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+  ScrollView,
+  State,
+} from "react-native-gesture-handler";
 import CommentSheet from "../helper/home/CommentSheet";
 import Toast from "react-native-toast-message";
 import { EndOfListComponent } from "../EndOfListComponent";
@@ -52,7 +57,8 @@ export const AgentHomeScreen = ({
       const velocityThreshold = 500; // Velocity threshold
 
       // Check if should close based on distance OR velocity
-      const shouldClose = translationY > threshold || velocityY > velocityThreshold;
+      const shouldClose =
+        translationY > threshold || velocityY > velocityThreshold;
 
       if (shouldClose) {
         closeCommentModal();
@@ -74,20 +80,19 @@ export const AgentHomeScreen = ({
 
   // This will hold the like/unlike status for each post
   const [likeUnlikeData, setLikeUnlikeData] = useState([]);
+  const [isLoadingLike, setIsLoadingLike] = useState(false);
 
   // Get Like Unlike and Dislike functionality - moved up and memoized
   const fetchLikeUnlike = async () => {
     try {
+      setIsLoadingLike(true);
       const response = await apiService.likeGet();
       if (response.statusCode === 200) {
         setLikeUnlikeData(response?.data);
       }
     } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error.message || "Failed to fetch like/unlike data",
-      });
+      setIsLoadingLike(false);
+      // like unlike error
     }
   };
 
@@ -174,10 +179,11 @@ export const AgentHomeScreen = ({
     ));
   };
 
-  if (isLoading && page === 1) {
+  if (isLoading && page === 1 && isLoadingLike) {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <ScrollView style={styles.skeletonContainer}
+        <ScrollView
+          style={styles.skeletonContainer}
           showsVerticalScrollIndicator={false}
         >
           {renderSkeletonCards()}
@@ -218,7 +224,7 @@ export const AgentHomeScreen = ({
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {(
+      {signalPostsData?.length !== 0 && (
         <FlatList
           data={signalPostsData}
           renderItem={renderSignalPost}
