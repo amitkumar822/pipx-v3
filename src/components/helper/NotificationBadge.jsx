@@ -3,20 +3,9 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { router } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import apiService from "../../services/api";
-import Toast from "react-native-toast-message";
 
 export const NotificationBadge = ({ iconSize = 24, iconColor = "#666" }) => {
   const [notificationCount, setNotificationCount] = useState(0);
-  const [loading, setLoading] = useState(false);
-
-  // useEffect(() => {
-  //   fetchNotificationCount();
-
-  //   // Set up interval to check for new notifications every 30 seconds
-  //   const interval = setInterval(fetchNotificationCount, 30000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,21 +27,13 @@ export const NotificationBadge = ({ iconSize = 24, iconColor = "#666" }) => {
 
   const fetchNotificationCount = async () => {
     try {
-      setLoading(true);
       const response = await apiService.getNotificationCount();
 
       if (response.statusCode === 200 && response.data) {
         setNotificationCount(response.data["Total count"] || 0);
       }
     } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Failed to fetch notification count",
-      });
       // Don't show error for notification count - fail silently
-    } finally {
-      setLoading(false);
     }
   };
 

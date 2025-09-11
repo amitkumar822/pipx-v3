@@ -2,7 +2,6 @@ import {
   Text,
   StyleSheet,
   View,
-  ScrollView,
   ActivityIndicator,
   FlatList,
 } from "react-native";
@@ -11,7 +10,6 @@ import NotificationCard from "../helper/notification/NotificationCard";
 import apiService from "../../services/api";
 import { BackHeader } from "../helper/auth/BackHeader";
 import NoNotifications from "../helper/animation/NoFoundNotification";
-import Toast from "react-native-toast-message";
 
 export default function NotificationScreen() {
   const [notifications, setNotifications] = useState([]);
@@ -32,11 +30,6 @@ export default function NotificationScreen() {
         setNotifications([]);
       }
     } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error fetching notifications",
-        text2: error.message || "Something went wrong",
-      });
       setNotifications([]);
     } finally {
       setLoading(false);

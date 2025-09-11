@@ -26,7 +26,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
 
   // Validate email format if it looks like an email
   const trimmedEmail = userEmail.toLocaleLowerCase().trim();
-  const isEmail = trimmedEmail.includes("@") && trimmedEmail.includes(".com");
+  const isEmail = trimmedEmail.includes("@");
 
   const onContinue = async () => {
 
