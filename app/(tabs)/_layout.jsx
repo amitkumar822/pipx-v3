@@ -4,14 +4,12 @@ import React, { useContext, useEffect } from "react";
 import {
   Platform,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { router } from "expo-router";
 import { AuthContext } from "@/src/store/AuthContext";
 import { NotificationBadge } from "@/src/components/helper/NotificationBadge";
-import { RFValue } from "react-native-responsive-fontsize";
 
 export default function TabLayout() {
   const { userType } = useContext(AuthContext);
@@ -32,6 +30,7 @@ export default function TabLayout() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarHideOnKeyboard: true,
+        tabBarLabelPosition: "below-icon", // force consistent layout
         tabBarIcon: ({ focused, size }) => {
           let iconName;
           if (route.name === "index") {
@@ -53,6 +52,8 @@ export default function TabLayout() {
           }
           return <Ionicons name={iconName} size={size} color={"black"} />;
         },
+        // This ensures both icon + label are clickable
+        tabBarButton: (props) => <TouchableOpacity {...props} activeOpacity={0.7} />,
       })}
     >
       <Tabs.Screen
@@ -114,7 +115,7 @@ export const PostTabButton = () => {
           name="add"
           color="#ffffff"
           style={{
-            fontSize: RFValue(40), // Adjust the size as needed
+            fontSize: 44,
           }}
         />
       </View>
@@ -141,8 +142,8 @@ const styles = StyleSheet.create({
     }),
   },
   button: {
-    width: RFValue(52),
-    height: RFValue(52),
+    width: 55,
+    height: 55,
     borderRadius: 50,
     backgroundColor: "#007AFF",
     justifyContent: "center",
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    borderWidth: RFValue(4),
+    borderWidth: 4,
     borderColor: "#ffffff",
   },
 });
