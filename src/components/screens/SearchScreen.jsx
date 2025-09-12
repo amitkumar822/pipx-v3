@@ -12,7 +12,6 @@ import SearchCard from "../helper/search/SearchCard";
 import { Feather } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
-import Loading from "../Loading";
 import NoResultsFound from "../NoResultsFound";
 
 function SearchScreen({
@@ -25,6 +24,7 @@ function SearchScreen({
   handleLoadMore = () => {},
   isFetchingMore = false,
   hasNextPage = false,
+  loadingWhileSearching = false,
 }) {
   const insets = useSafeAreaInsets();
 
@@ -90,31 +90,42 @@ function SearchScreen({
 
         <View className="w-full h-[2px] bg-[#EBF5FF] shadow-[#EBF5FF]" />
 
+        {loadingWhileSearching ? (
+          <View className="flex-1 items-center justify-center px-4 py-8">
+            <ActivityIndicator size="large" color="#007AFF" />
+            <Text className="text-gray-500 text-base font-medium text-center mt-3">
+              Searching...
+            </Text>
+          </View>
+        ) : null}
+
         {/* Responsive List */}
-        <FlatList
-          data={searchData}
-          renderItem={({ item }) => (
-            <SearchCard searchData={item} userType={userType} />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{
-            paddingBottom: bottomHeight,
-            paddingTop: 8,
-          }}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => <NoResultsFound />}
-          refreshing={refreshing}
-          onRefresh={handleRefresh}
-          // ✅ Pagination
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={footerComponentList()}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          windowSize={5}
-          removeClippedSubviews={true}
-          extraData={[hasNextPage, isFetchingMore, searchData?.length]}
-        />
+        {!loadingWhileSearching && (
+          <FlatList
+            data={searchData}
+            renderItem={({ item }) => (
+              <SearchCard searchData={item} userType={userType} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{
+              paddingBottom: bottomHeight,
+              paddingTop: 8,
+            }}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={() => <NoResultsFound />}
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            // ✅ Pagination
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={footerComponentList()}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            windowSize={5}
+            removeClippedSubviews={true}
+            extraData={[hasNextPage, isFetchingMore, searchData?.length]}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

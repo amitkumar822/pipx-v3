@@ -20,6 +20,7 @@ export const API_ENDPOINTS = {
   UPDATE_USER_PROFILE: "/update_user_profile/",
   GET_SIGNAL_PROVIDER_PROFILE: "/get_signal_provider_profile/",
   UPDATE_SIGNAL_PROVIDER_PROFILE: "/update_signal_provider_profile/",
+  DELETE_PROFILE_IMAGE: "/delete_user_profile_image/",
 
   // Assets
   CREATE_ASSET: "/create_asset/",

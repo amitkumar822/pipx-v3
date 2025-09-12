@@ -429,6 +429,12 @@ class ApiService {
     );
   }
 
+  async deleteProfileImage(): Promise<ApiResponse> {
+    return this.makeRequest(API_ENDPOINTS.DELETE_PROFILE_IMAGE, {
+      method: "DELETE",
+    });
+  }
+
   // Asset APIs
   async createAsset(name: string): Promise<ApiResponse> {
     return this.makeRequest(API_ENDPOINTS.CREATE_ASSET, {

@@ -43,11 +43,11 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
     if (userType === "SIGNAL_PROVIDER") {
       // Call the block/unblock mutation for SIGNAL_PROVIDER
       signalProviderBlockedUsers(profile?.id, {
-        onSuccess: (res) => {
+        onSuccess: () => {
           setModalType("success");
           setTimeout(() => {
-            router.back();
-          }, 3000);
+            router.push("/(tabs)/search");
+          }, 500);
         },
         onError: (error) => {
           Alert.alert(
@@ -60,11 +60,11 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
     } else if (userType === "USER") {
       // Call the block/unblock mutation for USER
       blockUnblockMutation.mutate(profile?.id, {
-        onSuccess: (res) => {
+        onSuccess: () => {
           setModalType("success");
           setTimeout(() => {
-            router.back();
-          }, 3000);
+            router.push("/(tabs)/search");
+          }, 500);
         },
         onError: (error) => {
           Alert.alert(
@@ -157,7 +157,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
                       </Text>
 
                       <Text
-                        className={`text-xs text-gray-600 font-medium ${visitType ? "hidden" : ""}`}
+                        className={`text-gray-600 font-medium ${visitType ? "hidden" : ""}`}
                         numberOfLines={1}
                         style={{ flexShrink: 1, fontSize: RFValue(12) }}
                       >
@@ -183,7 +183,6 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
                     <Pressable
                       onPress={() => router.push("/profile/editprofile")}
                       className={`p-1`}
-                      // className={`p-1 ${visitType ? "hidden" : ""}`}
                     >
                       <MaterialIcons name="edit" size={18} color="#7E7E7E" />
                     </Pressable>
@@ -249,9 +248,11 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
                             {stat?.value ? String(stat.value) : "0"}
                           </Text>
                           <Text
-                            className="font-medium text-gray-600 text-center leading-4"
+                            className=" text-center"
                             style={{
                               fontSize: RFValue(7.5),
+                              color: "#000",
+                              fontWeight: "500",
                             }}
                           >
                             {stat?.label || "0"}

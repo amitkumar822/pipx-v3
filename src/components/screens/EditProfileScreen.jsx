@@ -10,20 +10,21 @@ import {
   Platform,
   Alert,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import { ProfileHeader } from "../helper/profile/ProfileHeader";
-import { Image } from "expo-image";
 import { router } from "expo-router";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useUserProvider } from "@/src/context/user/userContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
+import * as ImagePicker from "expo-image-picker";
 import CountryPicker from "react-native-country-picker-modal";
 import {
   useUpdateUserProfile,
   useUpdateSignalProviderProfile,
+  useDeleteProfileImage,
 } from "@/src/hooks/useApi";
 import Toast from "react-native-toast-message";
 import { AppImage } from "../utils/AppImage";
@@ -48,7 +49,7 @@ export const EditProfileScreen = () => {
     address: "",
     address1: "",
     old_password: "",
-    new_password: "",
+    password: "",
     confirm_password: "",
     profile_image: null,
     mobile: "",
@@ -66,11 +67,22 @@ export const EditProfileScreen = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   // Gender options
-  const genderOptions = ["Male", "Female", "Other"];
+  const genderOptions = ["Male", "Female", "Others"];
   const [showGenderPicker, setShowGenderPicker] = useState(false);
 
   // state to manage DatePicker visibility
   const [showDOBPicker, setShowDOBPicker] = useState(false);
+
+  // state to manage image picker options
+  const [showImagePickerOptions, setShowImagePickerOptions] = useState(false);
+
+  // Password visibility states
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Loading state
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // convert string to Date safely
   const parseDate = (dateStr) => {
@@ -101,38 +113,85 @@ export const EditProfileScreen = () => {
     }
   }, [profile]);
 
-  // Image picker function
-  const pickImage = useCallback(async () => {
+  // Image picker function for gallery
+  const pickImageFromGallery = useCallback(async () => {
     try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: "image/*",
-        copyToCacheDirectory: true,
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
       });
 
       if (result.canceled) {
         return;
       }
 
-      // Get the selected asset
-      const asset = result.assets[0];
-
       // Set the image URI for display purposes
-      setSelectedImage(asset.uri);
+      setSelectedImage(result.assets[0].uri);
 
       // Store the image file object for API upload
-      // This way the API service can create the proper FormData with a file
       setUserData((prev) => ({
         ...prev,
         profile_image: {
-          uri: asset.uri,
-          name: asset.name || `image.${asset.uri.split(".").pop()}`,
-          type: asset.mimeType || `image/${asset.uri.split(".").pop()}`,
+          uri: result.assets[0].uri,
+          name: `image.${result.assets[0].uri.split(".").pop()}`,
+          type: `image/${result.assets[0].uri.split(".").pop()}`,
         },
       }));
+
+      setShowImagePickerOptions(false);
     } catch (error) {
       Toast.show({
         type: "error",
         text1: "Error selecting image",
+        text2: error.message,
+      });
+    }
+  }, []);
+
+  // Image picker function for camera
+  const pickImageFromCamera = useCallback(async () => {
+    try {
+      // Request camera permissions
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
+        Toast.show({
+          type: "error",
+          text1: "Permission Required",
+          text2: "Camera permission is required to take photos",
+        });
+        return;
+      }
+
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (result.canceled) {
+        return;
+      }
+
+      // Set the image URI for display purposes
+      setSelectedImage(result.assets[0].uri);
+
+      // Store the image file object for API upload
+      setUserData((prev) => ({
+        ...prev,
+        profile_image: {
+          uri: result.assets[0].uri,
+          name: `image.${result.assets[0].uri.split(".").pop()}`,
+          type: `image/${result.assets[0].uri.split(".").pop()}`,
+        },
+      }));
+
+      setShowImagePickerOptions(false);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error taking photo",
         text2: error.message,
       });
     }
@@ -164,6 +223,9 @@ export const EditProfileScreen = () => {
   const signalProviderMutation = useUpdateSignalProviderProfile();
 
   const handleSubmit = async () => {
+    // Prevent multiple submissions
+    if (isUpdating) return;
+
     // Prepare data for submission
     const dataToSubmit = { ...userData };
 
@@ -176,18 +238,18 @@ export const EditProfileScreen = () => {
     // Remove empty passwords if not being changed
     if (
       !dataToSubmit.old_password &&
-      !dataToSubmit.new_password &&
+      !dataToSubmit.password &&
       !dataToSubmit.confirm_password
     ) {
       delete dataToSubmit.old_password;
-      delete dataToSubmit.new_password;
+      delete dataToSubmit.password;
       delete dataToSubmit.confirm_password;
     }
 
     // Validate password confirmation if changing password
     if (
-      dataToSubmit.new_password &&
-      dataToSubmit.new_password !== dataToSubmit.confirm_password
+      dataToSubmit.password &&
+      dataToSubmit.password !== dataToSubmit.confirm_password
     ) {
       Toast.show({
         type: "error",
@@ -197,13 +259,22 @@ export const EditProfileScreen = () => {
       return;
     }
 
+    setIsUpdating(true);
+
     if (userType === "USER") {
       // For regular user profile update
       userProfileMutation.mutate(dataToSubmit, {
         onSuccess: () => {
+          setIsUpdating(false);
+          Toast.show({
+            type: "success",
+            text1: "Profile Updated",
+            text2: "Your profile has been updated successfully!",
+          });
           router.back();
         },
         onError: (error) => {
+          setIsUpdating(false);
           Toast.show({
             type: "error",
             text1: "Update Failed",
@@ -215,6 +286,7 @@ export const EditProfileScreen = () => {
       // For signal provider profile update
       signalProviderMutation.mutate(dataToSubmit, {
         onSuccess: () => {
+          setIsUpdating(false);
           Toast.show({
             type: "success",
             text1: "Profile Updated",
@@ -223,6 +295,7 @@ export const EditProfileScreen = () => {
           router.back();
         },
         onError: (error) => {
+          setIsUpdating(false);
           Toast.show({
             type: "error",
             text1: "Update Failed",
@@ -231,6 +304,51 @@ export const EditProfileScreen = () => {
         },
       });
     }
+  };
+
+  // Mutation hooks for deleting profile image
+  const deleteProfileImageMutation = useDeleteProfileImage();
+
+  const handleDeleteProfileImage = () => {
+    if (isUpdating) return;
+    Alert.alert(
+      "Delete Profile Image",
+      "Are you sure you want to delete your profile image?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive", // optional for iOS
+          onPress: () => {
+            setIsUpdating(true);
+            deleteProfileImageMutation.mutate(null, {
+              onSuccess: () => {
+                setSelectedImage(null);
+                setUserData((prev) => ({
+                  ...prev,
+                  profile_image: null,
+                }));
+                router.back();
+                Toast.show({
+                  type: "success",
+                  text1: "Profile Image Deleted",
+                  text2: "Your profile image has been deleted successfully!",
+                });
+                setIsUpdating(false);
+              },
+              onError: (error) => {
+                Toast.show({
+                  type: "error",
+                  text1: "Delete Failed",
+                  text2: error?.message || "An error occurred. Please try again.",
+                });
+                setIsUpdating(false);
+              },
+            });
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -243,8 +361,8 @@ export const EditProfileScreen = () => {
       <View style={styles.profilecontainer}>
         <ProfileHeader
           backtxt={"Edit profile"}
-          righttxt={"Save"}
-          righticon={null}
+          righttxt={isUpdating ? "Updating..." : "Save"}
+          righticon={isUpdating ? "loading" : null}
           rightaction={handleSubmit}
           backaction={() => router.back()}
         />
@@ -258,16 +376,15 @@ export const EditProfileScreen = () => {
                 style={styles.image}
               />
               <View className="absolute bottom-0 bg-white/80 flex-row justify-center items-center gap-2 px-4 pb-1 w-28 rounded-full z-10">
-                <Pressable onPress={pickImage}>
+                <Pressable onPress={() => setShowImagePickerOptions(true)}>
                   <MaterialIcons name="edit" size={27} color="#007AFF" />
                 </Pressable>
                 <Pressable
-                  onPress={() => {
-                    setSelectedImage(null);
-                    setUserData((prev) => ({
-                      ...prev,
-                      profile_image: profile?.profile_image || null,
-                    }));
+                  onPress={handleDeleteProfileImage}
+                  disabled={isUpdating}
+                  style={{
+                    opacity: isUpdating ? 0.5 : 1,
+                    display: profile.profile_image ? "flex" : "none",
                   }}
                 >
                   <MaterialIcons name="delete" size={27} color="#fc0005" />
@@ -282,7 +399,7 @@ export const EditProfileScreen = () => {
                 </View>
                 <View style={styles.input}>
                   <TextInput
-                    style={styles.inputfield}
+                    style={[styles.inputfield, styles.firstNameField]}
                     placeholder="First Name"
                     keyboardType="default"
                     value={userData.first_name}
@@ -323,7 +440,7 @@ export const EditProfileScreen = () => {
                 <View style={styles.input}>
                   <View style={styles.phoneContainer}>
                     {/* Country Code Picker */}
-                    <Pressable style={styles.countryCode} onPress={() => {}}>
+                    <Pressable style={styles.countryCode} onPress={() => { }}>
                       <CountryPicker
                         withFilter
                         withFlag
@@ -363,10 +480,11 @@ export const EditProfileScreen = () => {
                 </View>
                 <View style={styles.input}>
                   <TextInput
-                    style={styles.inputfield}
+                    style={[styles.inputfield, styles.disabledField]}
                     placeholder="Email"
                     value={userData.email}
                     onChangeText={(text) => handleChange("email", text)}
+                    editable={false}
                   />
                 </View>
               </View>
@@ -441,6 +559,46 @@ export const EditProfileScreen = () => {
                   </Modal>
                 </View>
               </View>
+
+              {/* Image Picker Options Modal */}
+              <Modal
+                transparent={true}
+                visible={showImagePickerOptions}
+                animationType="fade"
+                onRequestClose={() => setShowImagePickerOptions(false)}
+              >
+                <Pressable
+                  style={styles.modalOverlay}
+                  onPress={() => setShowImagePickerOptions(false)}
+                >
+                  <View style={styles.imagePickerModalContent}>
+                    <Text style={styles.modalTitle}>Select Image Source</Text>
+
+                    <Pressable
+                      style={styles.imagePickerOption}
+                      onPress={pickImageFromCamera}
+                    >
+                      <MaterialIcons name="camera-alt" size={24} color="#007AFF" />
+                      <Text style={styles.imagePickerOptionText}>Take Photo</Text>
+                    </Pressable>
+
+                    <Pressable
+                      style={styles.imagePickerOption}
+                      onPress={pickImageFromGallery}
+                    >
+                      <MaterialIcons name="photo-library" size={24} color="#007AFF" />
+                      <Text style={styles.imagePickerOptionText}>Choose from Gallery</Text>
+                    </Pressable>
+
+                    <Pressable
+                      style={styles.cancelButton}
+                      onPress={() => setShowImagePickerOptions(false)}
+                    >
+                      <Text style={styles.cancelButtonText}>Cancel</Text>
+                    </Pressable>
+                  </View>
+                </Pressable>
+              </Modal>
 
               {/* render DOB input */}
               <View style={styles.singlerow}>
@@ -532,37 +690,88 @@ export const EditProfileScreen = () => {
                   <Text>Change password</Text>
                 </View>
                 <View style={styles.input} className="gap-2">
-                  <TextInput
-                    style={styles.inputfield}
-                    placeholder="Old Password"
-                    keyboardType="default"
-                    secureTextEntry={true}
-                    value={userData.old_password}
-                    onChangeText={(text) => handleChange("old_password", text)}
-                  />
-                  <TextInput
-                    style={styles.inputfield}
-                    placeholder="New Password"
-                    keyboardType="default"
-                    secureTextEntry={true}
-                    value={userData.new_password}
-                    onChangeText={(text) => handleChange("new_password", text)}
-                  />
-                  <TextInput
-                    style={styles.inputfield}
-                    placeholder="Confirm Password"
-                    keyboardType="default"
-                    secureTextEntry={true}
-                    value={userData.confirm_password}
-                    onChangeText={(text) =>
-                      handleChange("confirm_password", text)
-                    }
-                  />
+                  {/* Old Password Field */}
+                  <View style={styles.passwordContainer}>
+                    <TextInput
+                      style={styles.passwordInput}
+                      placeholder="Old Password"
+                      keyboardType="default"
+                      secureTextEntry={!showOldPassword}
+                      value={userData.old_password}
+                      onChangeText={(text) => handleChange("old_password", text)}
+                    />
+                    <Pressable
+                      style={styles.eyeIcon}
+                      onPress={() => setShowOldPassword(!showOldPassword)}
+                    >
+                      <MaterialIcons
+                        name={showOldPassword ? "visibility" : "visibility-off"}
+                        size={20}
+                        color="#666"
+                      />
+                    </Pressable>
+                  </View>
+
+                  {/* New Password Field */}
+                  <View style={styles.passwordContainer}>
+                    <TextInput
+                      style={styles.passwordInput}
+                      placeholder="New Password"
+                      keyboardType="default"
+                      secureTextEntry={!showNewPassword}
+                      value={userData.password}
+                      onChangeText={(text) => handleChange("password", text)}
+                    />
+                    <Pressable
+                      style={styles.eyeIcon}
+                      onPress={() => setShowNewPassword(!showNewPassword)}
+                    >
+                      <MaterialIcons
+                        name={showNewPassword ? "visibility" : "visibility-off"}
+                        size={20}
+                        color="#666"
+                      />
+                    </Pressable>
+                  </View>
+
+                  {/* Confirm Password Field */}
+                  <View style={styles.passwordContainer}>
+                    <TextInput
+                      style={styles.passwordInput}
+                      placeholder="Confirm Password"
+                      keyboardType="default"
+                      secureTextEntry={!showConfirmPassword}
+                      value={userData.confirm_password}
+                      onChangeText={(text) =>
+                        handleChange("confirm_password", text)
+                      }
+                    />
+                    <Pressable
+                      style={styles.eyeIcon}
+                      onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      <MaterialIcons
+                        name={showConfirmPassword ? "visibility" : "visibility-off"}
+                        size={20}
+                        color="#666"
+                      />
+                    </Pressable>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
         </ScrollView>
+
+        {/* Loading Overlay */}
+        {isUpdating && (
+          <View style={styles.loadingOverlay}>
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#007AFF" />
+              <Text style={styles.loadingText}>Updating Profile...</Text>
+            </View>
+          </View>
+        )}
       </View>
     </KeyboardAvoidingView>
   );
@@ -628,12 +837,13 @@ const styles = StyleSheet.create({
   },
   inputfield: {
     width: "100%",
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#FFFFFF",
     height: 36,
     paddingVertical: 8,
     paddingHorizontal: 8,
     borderRadius: 8,
     fontSize: 16,
+    color: "#000000",
   },
   // Phone input styles
   phoneContainer: {
@@ -644,7 +854,7 @@ const styles = StyleSheet.create({
   },
   countryCode: {
     width: "37%",
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#FFFFFF",
     height: 36,
     borderRadius: 8,
     marginRight: 8,
@@ -664,17 +874,18 @@ const styles = StyleSheet.create({
   },
   phoneInput: {
     flex: 1,
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#FFFFFF",
     height: 36,
     paddingVertical: 8,
     paddingHorizontal: 8,
     borderRadius: 8,
     fontSize: 16,
+    color: "#000000",
   },
   // Gender dropdown styles
   genderDropdown: {
     width: "100%",
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#FFFFFF",
     height: 36,
     borderRadius: 8,
     paddingHorizontal: 8,
@@ -682,6 +893,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    color: "#000000",
   },
   modalOverlay: {
     flex: 1,
@@ -705,6 +917,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 16,
     textAlign: "center",
+    color: "#000000",
   },
   genderOption: {
     flexDirection: "row",
@@ -716,6 +929,7 @@ const styles = StyleSheet.create({
   },
   genderOptionText: {
     fontSize: 16,
+    color: "#000000",
   },
   cancelButton: {
     marginTop: 16,
@@ -723,10 +937,97 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#f0f0f0",
     borderRadius: 8,
+    color: "#000000",
   },
   cancelButtonText: {
     fontSize: 16,
     color: "#007AFF",
+    fontWeight: "500",
+  },
+  // First name field styles
+  firstNameField: {
+    backgroundColor: "#FFFFFF",
+    color: "#000000",
+  },
+  // Disabled field styles
+  disabledField: {
+    backgroundColor: "#F5F5F5",
+    color: "#999999",
+  },
+  // Image picker modal styles
+  imagePickerModalContent: {
+    width: "80%",
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 16,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  imagePickerOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+  imagePickerOptionText: {
+    fontSize: 16,
+    marginLeft: 12,
+    color: "#333",
+  },
+  // Password field styles
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+  },
+  passwordInput: {
+    flex: 1,
+    height: 36,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    fontSize: 16,
+    color: "#000000",
+  },
+  eyeIcon: {
+    padding: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  // Loading overlay styles
+  loadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+  },
+  loadingContainer: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 12,
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#333",
     fontWeight: "500",
   },
 });

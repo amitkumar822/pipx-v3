@@ -74,19 +74,25 @@ const UserSearchScreen = () => {
     setIsFetchingMore(false);
   }, [data]);
 
-  if (isLoading && page === 1) {
+  const loadingWhileSearching = searchTerm?.toLowerCase()?.trim() !== "" && (isLoading || isFetching);
+  const showInitialLoading = isLoading && page === 1 && !searchTerm?.toLowerCase()?.trim();
+
+  if (showInitialLoading) {
     return (
-      <GestureHandlerRootView style={{ flex: 1, paddingHorizontal: 10 }}>
-        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-          {Array.from({ length: 30 }).map((_, index) => (
-            <SearchCardSkeleton key={index} />
-          ))}
-        </ScrollView>
-      </GestureHandlerRootView>
+      <>
+       <GestureHandlerRootView style={{ flex: 1, paddingHorizontal: 10 }}>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+            {Array.from({ length: 30 }).map((_, index) => (
+              <SearchCardSkeleton key={index} />
+            ))}
+          </ScrollView>
+        </GestureHandlerRootView>
+
+      </>
     );
   }
 
-  if (error) {
+  if (error && searchTerm?.toLowerCase()?.trim() === "") {
     return (
       <View className="flex-1 items-center justify-center px-4">
         <Text className="text-red-400 text-base font-medium text-center mb-4">
@@ -95,9 +101,8 @@ const UserSearchScreen = () => {
 
         <View className="mt-2">
           <Pressable
-            className={`bg-blue-500 px-6 py-3 rounded-lg items-center justify-center min-w-[100px] ${
-              isFetching ? "opacity-70" : ""
-            }`}
+            className={`bg-blue-500 px-6 py-3 rounded-lg items-center justify-center min-w-[100px] ${isFetching ? "opacity-70" : ""
+              }`}
             disabled={isFetching}
             onPress={() => {
               setPage(1);
@@ -107,7 +112,7 @@ const UserSearchScreen = () => {
             {isFetching ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <Text className="text-white text-base font-semibold">Retry</Text>
+              <Text className="text-white text-base font-semibold">Refresh</Text>
             )}
           </Pressable>
         </View>
@@ -129,6 +134,7 @@ const UserSearchScreen = () => {
         isFetchingMore={isFetchingMore}
         hasNextPage={data?.hasNextPage}
         userType="User"
+        loadingWhileSearching={loadingWhileSearching}
       />
     </>
   );

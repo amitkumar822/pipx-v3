@@ -18,7 +18,6 @@ import {
   State,
 } from "react-native-gesture-handler";
 import CommentSheet from "../helper/home/CommentSheet";
-import Toast from "react-native-toast-message";
 import { EndOfListComponent } from "../EndOfListComponent";
 import SkeletonSignalPostCard from "../helper/home/SkeletonSignalPostCard";
 
@@ -214,7 +213,7 @@ export const AgentHomeScreen = ({
             {isFetching ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <Text style={styles.retryText}>Retry</Text>
+              <Text style={styles.retryText}>Refresh</Text>
             )}
           </Pressable>
         </View>
@@ -224,7 +223,7 @@ export const AgentHomeScreen = ({
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {signalPostsData?.length !== 0 && (
+      {(
         <FlatList
           data={signalPostsData}
           renderItem={renderSignalPost}

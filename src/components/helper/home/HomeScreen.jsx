@@ -1,22 +1,18 @@
 import { Text, View } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import HomeHeader from "./HomeHeader";
+import React, { useCallback, useEffect, useState, useMemo, memo } from "react";
 import { AgentHomeScreen } from "../../screens/AgentHomeScreen";
-import ByCurrencyScreen from "../../screens/ByCurrencyScreen";
-import AgentScreen from "../../screens/AgentScreen";
 import { useAllSignalPosts } from "@/src/hooks/useApi";
 import debounce from "lodash/debounce";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 
-const HomeScreen = () => {
-  const [showTab, setShowTab] = useState("Agent Signals");
-
+const HomeScreen = memo(() => {
   // pagination state
   const [page, setPage] = useState(1);
-  let perPage = 10; // Set your desired per page value here
+  const perPage = 10; // Set your desired per page value here
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // This hook fetches the signal posts of the agent in home screen
   const {
@@ -31,22 +27,41 @@ const HomeScreen = () => {
       perPage,
     },
     {
-      enabled: showTab === "Agent Signals",
+      enabled: true, // Always enabled since this is the Agent Signals screen
     }
   );
 
+  // Initialize component state on mount
   useEffect(() => {
-    if (signalPostsData?.data) {
+    if (!isInitialized) {
+      setPosts([]);
+      setPage(1);
+      setHasNextPage(true);
+      setIsLoadingMore(false);
+      setIsInitialized(true);
+    }
+  }, [isInitialized]);
+
+  // Memoize the posts update logic to prevent unnecessary re-renders
+  useEffect(() => {
+    
+    if (signalPostsData?.data && Array.isArray(signalPostsData.data) && signalPostsData.data.length > 0) {
       if (page === 1) {
-        setPosts(signalPostsData.data); // fresh
+        setPosts(signalPostsData.data);
       } else {
-        setPosts((prev) => [...prev, ...signalPostsData.data]);
+        setPosts((prev) => {
+          const newPosts = [...prev, ...signalPostsData.data];
+          return newPosts;
+        });
       }
       // Update hasNextPage based on API response
       setHasNextPage(!!signalPostsData?.hasNextPage);
+    } else {
+      setPosts([]);
     }
-  }, [signalPostsData?.data, page]);
+  }, [signalPostsData, page, posts.length, isInitialized]);
 
+  // Memoize the load more function to prevent recreation on every render
   const handleLoadMore = useCallback(
     debounce(() => {
       // Check if we have more pages and not currently loading
@@ -55,7 +70,7 @@ const HomeScreen = () => {
         setPage((prev) => prev + 1);
       }
     }, 300),
-    [hasNextPage, isLoadingMore, isSignalPostsLoading, page]
+    [hasNextPage, isLoadingMore, isSignalPostsLoading]
   );
 
   useEffect(() => {
@@ -64,43 +79,35 @@ const HomeScreen = () => {
     }
   }, [signalPostsData, page]);
 
-  return (
-    <SafeAreaView className="h-screen">
-      <HomeHeader showTab={showTab} setShowTab={setShowTab} />
-      <>
-        <AgentHomeScreen
-          signalPostsData={posts}
-          signalPostsError={signalPostsError}
-          isLoading={isSignalPostsLoading}
-          isFetching={isFetchingSignalPosts}
-          refetch={refetch}
-          page={page}
-          setPage={setPage}
-          isLoadingMore={isLoadingMore}
-          hasNextPage={hasNextPage}
-          handleLoadMore={handleLoadMore}
-        />
-        {/* {showTab === "Agent Signals" && (
-          <AgentHomeScreen
-            signalPostsData={posts}
-            signalPostsError={signalPostsError}
-            isLoading={isSignalPostsLoading}
-            isFetching={isFetchingSignalPosts}
-            refetch={refetch}
-            page={page}
-            setPage={setPage}
-            isLoadingMore={isLoadingMore}
-            hasNextPage={hasNextPage}
-            handleLoadMore={handleLoadMore}
-          />
-        )}
-        {showTab === "By currency" && (
-          <ByCurrencyScreen showTab={showTab} setShowTab={setShowTab} />
-        )}
-        {showTab === "Agent" && <AgentScreen />} */}
-      </>
-    </SafeAreaView>
+  // Handle screen focus - refresh data when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      if (isInitialized) {
+        console.log("HomeScreen: Refreshing data on focus");
+        setPage(1);
+        setPosts([]);
+        setHasNextPage(true);
+        setIsLoadingMore(false);
+        refetch();
+      }
+    }, [isInitialized, refetch])
   );
-};
+
+  // Memoize the AgentHomeScreen props to prevent unnecessary re-renders
+  const agentHomeScreenProps = useMemo(() => ({
+    signalPostsData: posts,
+    signalPostsError,
+    isLoading: isSignalPostsLoading,
+    isFetching: isFetchingSignalPosts,
+    refetch,
+    page,
+    setPage,
+    isLoadingMore,
+    hasNextPage,
+    handleLoadMore,
+  }), [posts, signalPostsError, isSignalPostsLoading, isFetchingSignalPosts, refetch, page, isLoadingMore, hasNextPage, handleLoadMore]);
+
+  return <AgentHomeScreen {...agentHomeScreenProps} />;
+});
 
 export default HomeScreen;

@@ -104,11 +104,6 @@ const visitprofile = () => {
       label: "Net Pips", //▶️
       onPress: () => {},
     },
-    // {
-    //   value: "XXXX",
-    //   label: "Average Pips/Trade",
-    //   onPress: () => {},
-    // },
   ];
 
   const statsDataByRole =

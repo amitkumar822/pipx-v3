@@ -143,13 +143,19 @@ export const useUpdateSignalProviderProfile = () => {
   });
 };
 
-// Asset Hooks
-// export const useAssets = () => {
-//   return useQuery({
-//     queryKey: [QUERY_KEYS.ASSETS],
-//     queryFn: () => apiService.getAssets(),
-//   });
-// };
+export const useDeleteProfileImage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => apiService.deleteProfileImage(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_PROFILE] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.SIGNAL_PROVIDER_PROFILE],
+      });
+    },
+  });
+};
 
 export const useCreateAsset = () => {
   const queryClient = useQueryClient();
@@ -410,17 +416,26 @@ export const useSignalProviderProfileById = (signalProviderId: number) => {
 };
 
 // Signal Post Hooks
-export const useAllSignalPosts = ({
-  page,
-  perPage,
-}: {
-  page: number;
-  perPage: number;
-}) => {
+export const useAllSignalPosts = (
+  {
+    page,
+    perPage,
+  }: {
+    page: number;
+    perPage: number;
+  },
+  options: { enabled?: boolean } = {}
+) => {
+  const { enabled = true } = options;
+  
   // This hook fetches all signal posts
   return useQuery({
     queryKey: [QUERY_KEYS.SIGNAL_POSTS, page, perPage],
     queryFn: () => apiService.getAllSignalPosts({ page, perPage }),
+    enabled,
+    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+    refetchOnWindowFocus: false, // Don't refetch on window focus
+    refetchOnMount: true, // Always refetch on mount
   });
 };
 

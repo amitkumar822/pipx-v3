@@ -79,19 +79,25 @@ const AgentSearchScreen = () => {
     setIsFetchingMore(false);
   }, [data]);
 
-  if (isLoading && page === 1) {
+  const loadingWhileSearching = searchTerm?.toLowerCase()?.trim() !== "" && (isLoading || isFetching);
+  const showInitialLoading = isLoading && page === 1 && !searchTerm?.toLowerCase()?.trim();
+
+  if (showInitialLoading) {
     return (
-      <GestureHandlerRootView style={{ flex: 1, paddingHorizontal: 10 }}>
-        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-          {Array.from({ length: 30 }).map((_, index) => (
-            <SearchCardSkeleton key={index} />
-          ))}
-        </ScrollView>
-      </GestureHandlerRootView>
+      <>
+        <GestureHandlerRootView style={{ flex: 1, paddingHorizontal: 10 }}>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+            {Array.from({ length: 30 }).map((_, index) => (
+              <SearchCardSkeleton key={index} />
+            ))}
+          </ScrollView>
+        </GestureHandlerRootView>
+
+      </>
     );
   }
 
-  if (error) {
+  if (error && searchTerm?.toLowerCase()?.trim() === "") {
     return (
       <View className="flex-1 items-center justify-center px-4">
         <Text className="text-red-400 text-base font-medium text-center mb-4">
@@ -128,11 +134,11 @@ const AgentSearchScreen = () => {
         handleRefresh={handleRefresh}
         setRefreshing={setRefreshing}
         refreshing={refreshing}
-        // ✅ Pagination
         handleLoadMore={handleLoadMore}
         isFetchingMore={isFetchingMore}
         hasNextPage={data?.hasNextPage}
         userType="SIGNAL_PROVIDER"
+        loadingWhileSearching={loadingWhileSearching}
       />
     </>
   );
