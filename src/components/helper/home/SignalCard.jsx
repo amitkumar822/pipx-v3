@@ -49,6 +49,7 @@ export const SignalCard = memo(
     likeCount,
     dislikeCount,
     commentCount,
+    signalOwnPostReportButtonHidde = false,
   }) => {
     // Optimized navigation
     const handlePress = useCallback(() => {
@@ -316,7 +317,8 @@ export const SignalCard = memo(
           </TouchableOpacity>
 
           {/* Right Side: 3-dot button */}
-          <Pressable
+          {!signalOwnPostReportButtonHidde && (
+            <Pressable
             onPress={() => {
               setVisible(true);
               setModalType("postReport");
@@ -324,7 +326,8 @@ export const SignalCard = memo(
             className="p-2"
           >
             <MaterialIcons name="more-vert" size={20} color="#666" />
-          </Pressable>
+            </Pressable>
+          )}
         </View>
 
         {/* Feed */}
@@ -499,10 +502,10 @@ export const SignalCard = memo(
             <MaterialIcons
               name="thumb-up-alt"
               size={RFValue(15)}
-              color="#007AFF"
+              color="#6B7280"
             />
             <View className="flex-row items-center justify-center flex-wrap">
-              <Text className="text-blue-600" style={{ fontSize: RFValue(9) }}>
+              <Text className="text-gray-500" style={{ fontSize: RFValue(9) }}>
                 Liked by{" "}
               </Text>
               <AnimatedNumber
@@ -511,10 +514,10 @@ export const SignalCard = memo(
                 animateToNumber={localLikeCount}
                 fontStyle={{
                   fontSize: RFValue(9),
-                  color: "#007AFF",
+                  color: "#6B7280",
                 }}
               />
-              <Text className="text-blue-600" style={{ fontSize: RFValue(9) }}>
+              <Text className="text-gray-500" style={{ fontSize: RFValue(9) }}>
                 {" "}
                 people
               </Text>
@@ -526,7 +529,7 @@ export const SignalCard = memo(
             <MaterialIcons
               name="thumb-down-alt"
               size={RFValue(15)}
-              color="#BDBDBD"
+              color="#6B7280"
             />
             <View className="flex-row flex-wrap items-center">
               <Text className="text-gray-500" style={{ fontSize: RFValue(9) }}>
@@ -538,7 +541,7 @@ export const SignalCard = memo(
                 animateToNumber={localDislikeCount}
                 fontStyle={{
                   fontSize: RFValue(9),
-                  color: "#9E9E9E",
+                  color: "#6B7280",
                 }}
               />
               <Text className="text-gray-500" style={{ fontSize: RFValue(9) }}>
@@ -555,7 +558,7 @@ export const SignalCard = memo(
               openCommentModal(postId);
             }}
           >
-            <MaterialIcons name="comment" size={RFValue(15)} color="#666" />
+            <MaterialIcons name="comment" size={RFValue(15)} color="#6B7280" />
             <View className="flex-row items-center flex-wrap">
               <AnimatedNumber
                 includeComma={false}
@@ -563,10 +566,10 @@ export const SignalCard = memo(
                 animateToNumber={localCommentCount}
                 fontStyle={{
                   fontSize: RFValue(9),
-                  color: "#4B5563",
+                  color: "#6B7280",
                 }}
               />
-              <Text className="text-gray-600" style={{ fontSize: RFValue(9) }}>
+              <Text className="text-gray-500" style={{ fontSize: RFValue(9) }}>
                 {" "}
                 comments
               </Text>

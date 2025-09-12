@@ -64,6 +64,7 @@ const Agentcheckpostview = () => {
         isLoadingMore={isLoadingMore}
         hasNextPage={hasNextPage}
         handleLoadMore={handleLoadMore}
+        signalOwnPostReportButtonHidde={true}
       />
     </SafeAreaView>
   );

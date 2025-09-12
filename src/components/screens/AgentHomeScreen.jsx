@@ -32,6 +32,7 @@ export const AgentHomeScreen = ({
   isLoadingMore,
   hasNextPage,
   handleLoadMore,
+  signalOwnPostReportButtonHidde = false,
 }) => {
   // =========== Comment Modal Open Functionality ===================
   const [modalVisible, setModalVisible] = useState(false);
@@ -138,6 +139,7 @@ export const AgentHomeScreen = ({
           likeCount={item.like_count}
           dislikeCount={item.dislike_count}
           commentCount={item.post_comment_count}
+          signalOwnPostReportButtonHidde={signalOwnPostReportButtonHidde}
         />
       );
     },
