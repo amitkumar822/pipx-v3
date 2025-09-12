@@ -14,6 +14,7 @@ import Toast from "react-native-toast-message";
 import { useUserProvider } from "@/src/context/user/userContext";
 import Buttons from "@/src/components/user_details/helper/Buttons";
 import apiService from "@/src/services/api";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const PhoneAuthStepOne = ({ type, setStep }) => {
   const { setOtp, setEmail_or_mobile } = useUserProvider();
@@ -90,55 +91,57 @@ export const PhoneAuthStepOne = ({ type, setStep }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, paddingBottom: 10 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={20}
-    >
-      <View style={styles.mainsection}>
-        <View style={styles.topsection}>
-          {/* Back button */}
-          <AuthHeader step={0} setStep={setStep} />
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1, paddingBottom: 10 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={20}
+      >
+        <View style={styles.mainsection}>
+          <View style={styles.topsection}>
+            {/* Back button */}
+            <AuthHeader step={0} setStep={setStep} />
 
-          <View style={styles.mailsign}>
-            <Feather name="phone" size={40} color="#D7D7D7" />
-          </View>
-          <View style={styles.mailtitle}>
-            {type === "signup" ? (
-              <Text style={styles.mailtitletxt}>Your phone number</Text>
-            ) : (
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "700",
-                }}
-              >
-                Your registered phone number
-              </Text>
-            )}
-          </View>
-          <View style={styles.mailsubtitle}>
-            <Text style={styles.mailsubtitletxt}>Enter your phone number.</Text>
-          </View>
+            <View style={styles.mailsign}>
+              <Feather name="phone" size={40} color="#D7D7D7" />
+            </View>
+            <View style={styles.mailtitle}>
+              {type === "signup" ? (
+                <Text style={styles.mailtitletxt}>Your phone number</Text>
+              ) : (
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "700",
+                  }}
+                >
+                  Your registered phone number
+                </Text>
+              )}
+            </View>
+            <View style={styles.mailsubtitle}>
+              <Text style={styles.mailsubtitletxt}>Enter your phone number.</Text>
+            </View>
 
-          {/* Phone Input Field */}
-          <View style={styles.emailinputwrap}>
-            <PhoneInput
-              mobile={mobile}
-              onChangeMobile={onChangeMobile}
-              countryDetails={countryDetails}
-              setCountryDetails={setCountryDetails}
-            />
+            {/* Phone Input Field */}
+            <View style={styles.emailinputwrap}>
+              <PhoneInput
+                mobile={mobile}
+                onChangeMobile={onChangeMobile}
+                countryDetails={countryDetails}
+                setCountryDetails={setCountryDetails}
+              />
+            </View>
+            {type === "signup" ? <View></View> : <></>}
           </View>
-          {type === "signup" ? <View></View> : <></>}
         </View>
-      </View>
 
-      {/* Continue Button */}
-      <View style={styles.bottomsection}>
-        <Buttons onPress={handlePhoneSubmit} isLoading={loading} />
-      </View>
-    </KeyboardAvoidingView>
+        {/* Continue Button */}
+        <View style={styles.bottomsection}>
+          <Buttons onPress={handlePhoneSubmit} isLoading={loading} />
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

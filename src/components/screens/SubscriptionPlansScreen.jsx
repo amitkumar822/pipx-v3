@@ -623,7 +623,7 @@ export const SubscriptionPlansScreen = () => {
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
           <Pressable style={styles.retryButton} onPress={fetchPlans}>
-            <Text style={styles.retryButtonText}>Retry</Text>
+            <Text style={styles.retryButtonText}>Refresh</Text>
           </Pressable>
         </View>
       </View>

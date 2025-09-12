@@ -23,6 +23,7 @@ export default function NotificationScreen() {
     try {
       setLoading(true);
       const response = await apiService.getNotifications();
+      console.log("response: ", JSON.stringify(response, null, 2));
 
       if (response.statusCode === 200 && response.data) {
         setNotifications(response.data);
@@ -30,6 +31,7 @@ export default function NotificationScreen() {
         setNotifications([]);
       }
     } catch (error) {
+      console.log("error: ", JSON.stringify(error, null, 2));
       setNotifications([]);
     } finally {
       setLoading(false);
@@ -54,8 +56,10 @@ export default function NotificationScreen() {
 
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-          <Text style={styles.loadingText}>Loading notifications...</Text>
+          <>
+            <ActivityIndicator size="large" color="#007AFF" />
+            <Text style={styles.loadingText}>Loading notifications...</Text>
+          </>
         </View>
       ) : (
         <>
@@ -79,13 +83,12 @@ export default function NotificationScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     width: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    // backgroundColor: "#FFFFFF",
+    backgroundColor: "#FFFFFF",
   },
   notifcontainer: {
     flexGrow: 1,

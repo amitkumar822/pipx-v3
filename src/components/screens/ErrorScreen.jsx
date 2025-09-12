@@ -18,7 +18,7 @@ const ErrorScreen = ({ error, refetch }) => {
             : JSON.stringify(error?.response?.detail, null, 2) || JSON.stringify(error, null, 2) || "Something went wrong."}
         </Text>
 
-        {/* ✅ Conditionally show retry button only if `refetch` is passed */}
+        {/* ✅ Conditionally show refresh button only if `refetch` is passed */}
         {typeof refetch === "function" && (
           <Pressable
             onPress={refetch}
@@ -27,7 +27,7 @@ const ErrorScreen = ({ error, refetch }) => {
           >
             <Feather name="rotate-ccw" size={RFValue(16)} color="#fff" />
             <Text className="text-white ml-2" style={{ fontSize: RFValue(14) }}>
-              Retry
+              Refresh
             </Text>
           </Pressable>
         )}

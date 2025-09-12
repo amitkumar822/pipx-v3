@@ -10,7 +10,7 @@ export default function UserProfile() {
 
   if (userType === "USER") {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <AppStatusBar backgroundColor="#FFF" barStyle="dark-content" />
         <UserProfileScreen />
       </SafeAreaView>
@@ -18,7 +18,7 @@ export default function UserProfile() {
   }
   if (userType === "SIGNAL_PROVIDER") {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <AppStatusBar backgroundColor="#FFF" barStyle="dark-content" />
         <AgentProfileScreen />
       </SafeAreaView>

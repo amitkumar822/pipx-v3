@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState, useMemo, memo } from "react";
 import { AgentHomeScreen } from "../../screens/AgentHomeScreen";
 import { useAllSignalPosts } from "@/src/hooks/useApi";
 import debounce from "lodash/debounce";
+import { View } from "react-native";
 
 const HomeScreen = () => {
 
@@ -56,17 +57,19 @@ const HomeScreen = () => {
   }, [signalPostsData, page]);
 
   return (
-    <AgentHomeScreen
-      signalPostsData={posts}
-      signalPostsError={signalPostsError}
-      isLoading={isSignalPostsLoading}
-      isFetching={isFetchingSignalPosts}
-      refetch={refetch}
-      setPage={setPage}
-      isLoadingMore={isLoadingMore}
-      hasNextPage={hasNextPage}
-      handleLoadMore={handleLoadMore}
-    />
+    <View style={{ flex: 1 }}>
+      <AgentHomeScreen
+        signalPostsData={posts}
+        signalPostsError={signalPostsError}
+        isLoading={isSignalPostsLoading}
+        isFetching={isFetchingSignalPosts}
+        refetch={refetch}
+        setPage={setPage}
+        isLoadingMore={isLoadingMore}
+        hasNextPage={hasNextPage}
+        handleLoadMore={handleLoadMore}
+      />
+    </View>
   );
 };
 

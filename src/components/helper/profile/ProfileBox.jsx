@@ -121,6 +121,11 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
     handlerReport: handleReportUserSignalProvider,
   };
 
+  // console.log('====================================');
+  // console.log("profile2: ", profile?.user_type);
+  // console.log("statsDataByRole2: ", JSON.stringify(statsDataByRole, null, 2));
+  // console.log('====================================');
+
   return (
     <View className="w-full">
       {!profile ? (
@@ -216,7 +221,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
             {/* Stats */}
             <View className="flex-1 px-2 mb-5">
               <View className="flex-row flex-wrap ">
-                {(profile?.user_type &&
+                {(
                   statsDataByRole?.map((stat, index) => (
                     <Pressable
                       key={index}

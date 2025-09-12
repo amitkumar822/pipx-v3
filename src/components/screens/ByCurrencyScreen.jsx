@@ -116,7 +116,7 @@ const ByCurrencyScreen = ({ setShowTab }) => {
             {assetsLoading ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <Text className="text-white text-base font-semibold">Retry</Text>
+              <Text className="text-white text-base font-semibold">Refresh</Text>
             )}
           </Pressable>
         </View>

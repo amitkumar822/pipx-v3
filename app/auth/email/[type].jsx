@@ -12,7 +12,7 @@ import { AppStatusBar } from "@/src/components/utils/AppStatusBar";
 
 export default function EmailAuth() {
   const { type } = useLocalSearchParams();
-  const [step, setStep] = useState(6);
+  const [step, setStep] = useState(1);
 
   const validateEmail = (email) => {
     return String(email)

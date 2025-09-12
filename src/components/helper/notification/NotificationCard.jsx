@@ -21,7 +21,7 @@ const NotificationCard = ({ notification }) => {
   const hasAttachment = notification?.attachment || false;
 
   return (
-    <Pressable className="min-w-full bg-gray-50 px-4 py-3 border-b border-gray-300">
+    <Pressable className="min-w-full px-4 py-3 border-b border-gray-300" style={{ backgroundColor: "#FFFFFF" }}>
       {/* Header with avatar and sender info */}
       <View className="flex-row items-start w-full">
         {/* Avatar */}

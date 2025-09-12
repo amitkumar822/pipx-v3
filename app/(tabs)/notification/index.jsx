@@ -8,7 +8,7 @@ export default function Notif() {
   const { userType } = useContext(AuthContext);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <AppStatusBar backgroundColor="#FFF" barStyle="dark-content" />
       <NotificationScreen />
     </SafeAreaView>
