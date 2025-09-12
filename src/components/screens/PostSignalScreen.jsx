@@ -71,10 +71,7 @@ export default function PostSignalScreen() {
 
       if (response.statusCode === 200 && response.data) {
         setAssets(response.data);
-        if (response.data.length > 0) {
-          setSelectedAsset(response.data[0]);
-          setFormData((prev) => ({ ...prev, asset: response.data[0].id }));
-        }
+        // Don't auto-select first asset, let user choose
       }
     } catch (error) {
       Toast.show({
@@ -93,34 +90,40 @@ export default function PostSignalScreen() {
   const validateForm = () => {
     const newErrors = {};
 
+    // Required field: Asset
     if (!selectedAsset) {
       newErrors.asset = "Please select an asset";
     }
 
-    if (formData.tp1) {
-      if (isNaN(parseFloat(formData.tp1))) {
-        newErrors.tp1 = "TP1 must be a valid number";
-      }
+    // Required field: Take Profit 1
+    if (!formData.tp1 || formData.tp1.trim() === "") {
+      newErrors.tp1 = "Take Profit 1 is required";
+    } else if (isNaN(parseFloat(formData.tp1))) {
+      newErrors.tp1 = "Take Profit 1 must be a valid number";
     }
 
-    if (formData.tp2) {
+    // Optional field: Take Profit 2
+    if (formData.tp2 && formData.tp2.trim() !== "") {
       if (isNaN(parseFloat(formData.tp2))) {
-        newErrors.tp2 = "TP2 must be a valid number";
+        newErrors.tp2 = "Take Profit 2 must be a valid number";
       }
     }
 
-    if (formData.tp3) {
+    // Optional field: Take Profit 3
+    if (formData.tp3 && formData.tp3.trim() !== "") {
       if (isNaN(parseFloat(formData.tp3))) {
-        newErrors.tp3 = "TP3 must be a valid number";
+        newErrors.tp3 = "Take Profit 3 must be a valid number";
       }
     }
 
-    if (formData.stop_loss) {
-      if (isNaN(parseFloat(formData.stop_loss))) {
-        newErrors.stop_loss = "Stop loss must be a valid number";
-      }
+    // Required field: Stop Loss
+    if (!formData.stop_loss || formData.stop_loss.trim() === "") {
+      newErrors.stop_loss = "Stop Loss is required";
+    } else if (isNaN(parseFloat(formData.stop_loss))) {
+      newErrors.stop_loss = "Stop Loss must be a valid number";
     }
 
+    // Required field: Caption
     const captionValidation = validateRequired(formData.caption, "Caption");
     if (!captionValidation.isValid) {
       newErrors.caption = captionValidation.message;
@@ -136,7 +139,6 @@ export default function PostSignalScreen() {
   // Handle form submission
   const handleSubmit = async () => {
     if (!validateForm()) {
-      Alert.alert("Validation Error", "Please fix the errors and try again");
       return;
     }
     setLoading(true);
@@ -162,7 +164,7 @@ export default function PostSignalScreen() {
             onPress: () => {
               // Reset form
               setFormData({
-                asset: assets.length > 0 ? assets[0].id : "",
+                asset: "",
                 tp1: "",
                 tp2: "",
                 tp3: "",
@@ -171,7 +173,7 @@ export default function PostSignalScreen() {
                 description: "",
               });
               setErrors({});
-              setSelectedAsset(assets.length > 0 ? assets[0] : null);
+              setSelectedAsset(null);
               setIsBuy(true);
               setIsEnabled(false);
               setSignalType("Scalping");
@@ -283,7 +285,9 @@ export default function PostSignalScreen() {
 
               <View style={styles.newpostsignalcontainer}>
                 <View style={styles.assetbox}>
-                  <Text style={{ fontSize: 18, fontWeight: "600" }}>Asset</Text>
+                  <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                    Asset <Text style={{ color: "#FF3B30" }}>*</Text>
+                  </Text>
                   {assetsLoading ? (
                     <View
                       style={[
@@ -301,7 +305,7 @@ export default function PostSignalScreen() {
                       ]}
                       onPress={() => {
                         if (assets.length > 0) {
-                          setAssetModalVisible(true); // Show modal instead of Alert
+                          setAssetModalVisible(true);
                         }
                       }}
                     >
@@ -385,14 +389,14 @@ export default function PostSignalScreen() {
                 <View style={styles.coltwobox}>
                   <View style={styles.halfassetbox}>
                     <Text style={{ fontSize: 18, fontWeight: "600" }}>
-                      Take Profit 1
+                      Take Profit 1 <Text style={{ color: "#FF3B30" }}>*</Text>
                     </Text>
                     <TextInput
                       style={[
                         styles.datetimefield,
                         errors.tp1 && styles.inputError,
                       ]}
-                      placeholder="Optional"
+                      placeholder="Required"
                       keyboardType="numeric"
                       value={formData.tp1}
                       onChangeText={(value) => updateFormData("tp1", value)}
@@ -442,7 +446,7 @@ export default function PostSignalScreen() {
                   </View>
                   <View style={styles.halfassetbox}>
                     <Text style={{ fontSize: 18, fontWeight: "600" }}>
-                      Caption
+                      Caption <Text style={{ color: "#FF3B30" }}>*</Text>
                     </Text>
                     <TextInput
                       style={[
@@ -464,14 +468,14 @@ export default function PostSignalScreen() {
                 <View style={styles.coltwobox}>
                   <View style={styles.halfassetbox}>
                     <Text style={{ fontSize: 18, fontWeight: "600" }}>
-                      Stop Loss
+                      Stop Loss <Text style={{ color: "#FF3B30" }}>*</Text>
                     </Text>
                     <TextInput
                       style={[
                         styles.datetimefield,
                         errors.stop_loss && styles.inputError,
                       ]}
-                      placeholder="Optional"
+                      placeholder="Required"
                       keyboardType="numeric"
                       value={formData.stop_loss}
                       onChangeText={(value) =>
@@ -536,7 +540,12 @@ export default function PostSignalScreen() {
                     disabled={loading}
                   >
                     {loading ? (
-                      <ActivityIndicator size="small" color="#FFF" />
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                        <ActivityIndicator size="small" color="#FFF" />
+                        <Text style={styles.postsignalsubmittxt}>
+                          Posting Signal...
+                        </Text>
+                      </View>
                     ) : (
                       <Text style={styles.postsignalsubmittxt}>
                         Post Signal
