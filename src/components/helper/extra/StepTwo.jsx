@@ -6,9 +6,10 @@ import { useUserProvider } from "@/src/context/user/userContext";
 import Buttons from "../../user_details/helper/Buttons";
 import Toast from "react-native-toast-message";
 import apiService from "@/src/services/api";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const StepTwo = ({ type, step, setStep }) => {
-   const { otpEmail, email_or_mobile } = useUserProvider();
+  const { otpEmail, email_or_mobile } = useUserProvider();
 
   const [otp, setOtp] = useState("");
 
@@ -65,54 +66,56 @@ export const StepTwo = ({ type, step, setStep }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, paddingBottom: 10 }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-    >
-      <View style={styles.mainsection}>
-        <View style={styles.topsection}>
-          {/* Back button */}
-          <AuthHeader step={step - 1} setStep={setStep} />
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1, paddingBottom: 10 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={20}
+      >
+        <View style={styles.mainsection}>
+          <View style={styles.topsection}>
+            {/* Back button */}
+            <AuthHeader step={step - 1} setStep={setStep} />
 
-          <View style={styles.mailsign}>
-            <Ionicons name="send" size={40} color="#D7D7D7" />
+            <View style={styles.mailsign}>
+              <Ionicons name="send" size={40} color="#D7D7D7" />
+            </View>
+            <View style={styles.mailtitle}>
+              {type === "signup" || type === "forgotpassword" ? (
+                <Text style={styles.mailtitletxt}>
+                  Confirm your email address
+                </Text>
+              ) : (
+                <Text></Text>
+              )}
+            </View>
+            <View style={styles.mailsubtitle}>
+              {type === "signup" || type === "forgotpassword" ? (
+                <Text style={styles.mailsubtitletxt}>
+                  Enter the OTP sent to {email_or_mobile}
+                </Text>
+              ) : (
+                <Text></Text>
+              )}
+            </View>
+            <View style={styles.emailinputwrap}>
+              <TextInput
+                style={styles.emailinput}
+                onChangeText={(text) => setOtp(text)}
+                value={otp}
+                placeholder="OTP"
+                keyboardType="numeric"
+              />
+            </View>
+            {type === "signup" ? <View></View> : <></>}
           </View>
-          <View style={styles.mailtitle}>
-            {type === "signup" || type === "forgotpassword" ? (
-              <Text style={styles.mailtitletxt}>
-                Confirm your email address
-              </Text>
-            ) : (
-              <Text></Text>
-            )}
-          </View>
-          <View style={styles.mailsubtitle}>
-            {type === "signup" || type === "forgotpassword" ? (
-              <Text style={styles.mailsubtitletxt}>
-                Enter the OTP sent to {email_or_mobile}
-              </Text>
-            ) : (
-              <Text></Text>
-            )}
-          </View>
-          <View style={styles.emailinputwrap}>
-            <TextInput
-              style={styles.emailinput}
-              onChangeText={(text) => setOtp(text)}
-              value={otp}
-              placeholder="OTP"
-              keyboardType="numeric"
-            />
-          </View>
-          {type === "signup" ? <View></View> : <></>}
         </View>
-      </View>
 
-      <View style={styles.bottomsection}>
-        <Buttons onPress={handleOtpVerify} isLoading={loading} disabled={!otp} />
-      </View>
-    </KeyboardAvoidingView>
+        <View style={styles.bottomsection}>
+          <Buttons onPress={handleOtpVerify} isLoading={loading} disabled={!otp} />
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -123,7 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: 12,
-    paddingTop: 40,
+    paddingTop: 10,
   },
   topsection: {
     width: "100%",
@@ -172,16 +175,17 @@ const styles = StyleSheet.create({
   },
   emailinput: {
     width: "100%",
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#FFFFFF",
     height: 56,
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 14,
     marginTop: 20,
     borderColor: "#007AFF",
-    borderWidth: 2,
+    borderWidth: 1,
     bordeRadius: 14,
     fontSize: 16,
+    color: "#000000",
   },
   bottomsection: {
     width: "100%",
@@ -195,7 +199,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginTop: 20,
     borderColor: "#007AFF",
-    borderWidth: 2,
+    borderWidth: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

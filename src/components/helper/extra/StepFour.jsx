@@ -19,6 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useUserProvider } from "@/src/context/user/userContext";
 import { useLogin } from "@/src/hooks/useApi";
 import { RFValue } from "react-native-responsive-fontsize";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const StepFour = ({ type, step, setStep, loginType }) => {
   const router = useRouter();
@@ -124,11 +125,11 @@ export const StepFour = ({ type, step, setStep, loginType }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={20}
       >
         <View style={styles.mainsection}>
           <View style={styles.topsection}>
@@ -188,17 +189,17 @@ export const StepFour = ({ type, step, setStep, loginType }) => {
             )}
           </View>
         </View>
+
+        {/* Fixed bottom section outside KeyboardAvoidingView */}
+        <View style={styles.bottomsection}>
+          <Buttons
+            onPress={onContinue}
+            isLoading={loading || loginMutation.loading}
+            disabled={!password}
+          />
+        </View>
       </KeyboardAvoidingView>
-      
-      {/* Fixed bottom section outside KeyboardAvoidingView */}
-      <View style={styles.bottomsection}>
-        <Buttons
-          onPress={onContinue}
-          isLoading={loading || loginMutation.loading}
-          disabled={!password}
-        />
-      </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingTop: 40,
+    paddingTop: 10,
   },
   topsection: {
     width: "100%",
@@ -261,15 +262,16 @@ const styles = StyleSheet.create({
   },
   emailinput: {
     width: "100%",
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#FFFFFF",
     height: 56,
     paddingVertical: 16,
     paddingHorizontal: 16,
     marginTop: 20,
     borderColor: "#007aff",
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 14,
     fontSize: 16,
+    color: "#000000",
   },
   eyeIconContainer: {
     position: "absolute",
@@ -290,7 +292,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginTop: 20,
     borderColor: "#007AFF",
-    borderWidth: 2,
+    borderWidth: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

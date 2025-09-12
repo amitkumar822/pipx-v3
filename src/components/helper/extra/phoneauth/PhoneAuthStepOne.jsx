@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: 12,
-    paddingTop: 40,
+    paddingTop: 10,
   },
   topsection: {
     width: "100%",
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginTop: 20,
     borderColor: "#007AFF",
-    borderWidth: 2,
+    borderWidth: 1,
     bordeRadius: 14,
     fontSize: 16,
   },

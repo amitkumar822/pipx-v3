@@ -27,7 +27,7 @@ const AgentDetailsForm = () => {
 export default AgentDetailsForm;
 
 const styles = StyleSheet.create({
-  container: { padding: 20, paddingTop: 40 },
+  container: { padding: 20, paddingTop: 10 },
   title: { fontSize: 20, fontWeight: '700', marginBottom: 4 },
   subtitle: { color: '#666', marginBottom: 16 },
   uploadBtn: {

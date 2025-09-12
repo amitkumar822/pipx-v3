@@ -19,6 +19,7 @@ import { useUserProvider } from "@/src/context/user/userContext";
 import Toast from "react-native-toast-message";
 import apiService from "@/src/services/api";
 import { RFValue } from "react-native-responsive-fontsize";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const StepFive = ({ type, step, setStep }) => {
   const { setConfirmPassword, userAgentPassword, email_or_mobile } =
@@ -113,71 +114,73 @@ export const StepFive = ({ type, step, setStep }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, paddingBottom: 10 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={20}
-    >
-      <View style={styles.mainsection}>
-        <View style={styles.topsection}>
-          {/* Back button */}
-          <AuthHeader step={step - 1} setStep={setStep} />
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1, paddingBottom: 10 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={20}
+      >
+        <View style={styles.mainsection}>
+          <View style={styles.topsection}>
+            {/* Back button */}
+            <AuthHeader step={step - 1} setStep={setStep} />
 
-          <View style={styles.mailsign}>
-            <Feather name="lock" size={40} color="#D7D7D7" />
-          </View>
-          <View style={styles.mailtitle}>
-            {type === "signup" || type === "forgotpassword" ? (
-              <Text style={styles.mailtitletxt}>Re-enter password</Text>
-            ) : (
-              <Text></Text>
-            )}
-          </View>
-          <View style={styles.emailinputwrap}>
-            <TextInput
-              style={styles.emailinput}
-              onChangeText={setConfirm_password}
-              value={confirm_password}
-              placeholder="password"
-              keyboardType="default"
-              secureTextEntry={showPassword ? false : true}
-            />
-
-            <View style={{ position: "absolute", right: 35, top: "45%" }}>
-              {showPassword ? (
-                <Pressable onPress={() => setShowPassword(!showPassword)}>
-                  <Ionicons name="eye-off-outline" size={26} color="#007aff" />
-                </Pressable>
+            <View style={styles.mailsign}>
+              <Feather name="lock" size={40} color="#D7D7D7" />
+            </View>
+            <View style={styles.mailtitle}>
+              {type === "signup" || type === "forgotpassword" ? (
+                <Text style={styles.mailtitletxt}>Re-enter password</Text>
               ) : (
-                <Pressable onPress={() => setShowPassword(!showPassword)}>
-                  <Ionicons name="eye-outline" size={26} color="#007aff" />
-                </Pressable>
+                <Text></Text>
               )}
             </View>
-          </View>
+            <View style={styles.emailinputwrap}>
+              <TextInput
+                style={styles.emailinput}
+                onChangeText={setConfirm_password}
+                value={confirm_password}
+                placeholder="password"
+                keyboardType="default"
+                secureTextEntry={showPassword ? false : true}
+              />
 
-          {type === "signup" || type === "forgotpassword" ? (
-            <View style={{ paddingLeft: 25 }}>
-              <Text style={styles.rulesTitle}>Your password must include:</Text>
-              {renderRule(isLengthValid, "8–32 characters long")}
-              {renderRule(hasLower, "1 lowercase character (a–z)")}
-              {renderRule(hasUpper, "1 uppercase character (A–Z)")}
-              {renderRule(hasNumber, "1 number")}
-              {renderRule(hasSpecial, "1 special character e.g. !@#$%")}
+              <View style={{ position: "absolute", right: 35, top: "45%" }}>
+                {showPassword ? (
+                  <Pressable onPress={() => setShowPassword(!showPassword)}>
+                    <Ionicons name="eye-off-outline" size={26} color="#007aff" />
+                  </Pressable>
+                ) : (
+                  <Pressable onPress={() => setShowPassword(!showPassword)}>
+                    <Ionicons name="eye-outline" size={26} color="#007aff" />
+                  </Pressable>
+                )}
+              </View>
             </View>
-          ) : (
-            <></>
-          )}
+
+            {type === "signup" || type === "forgotpassword" ? (
+              <View style={{ paddingLeft: 25 }}>
+                <Text style={styles.rulesTitle}>Your password must include:</Text>
+                {renderRule(isLengthValid, "8–32 characters long")}
+                {renderRule(hasLower, "1 lowercase character (a–z)")}
+                {renderRule(hasUpper, "1 uppercase character (A–Z)")}
+                {renderRule(hasNumber, "1 number")}
+                {renderRule(hasSpecial, "1 special character e.g. !@#$%")}
+              </View>
+            ) : (
+              <></>
+            )}
+          </View>
         </View>
-      </View>
-      <View style={styles.bottomsection}>
-        <Buttons
-          onPress={onContinue}
-          isLoading={loading}
-          disabled={!confirm_password}
-        />
-      </View>
-    </KeyboardAvoidingView>
+        <View style={styles.bottomsection}>
+          <Buttons
+            onPress={onContinue}
+            isLoading={loading}
+            disabled={!confirm_password}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -194,7 +197,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     gap: 12,
-    paddingTop: 40,
+    paddingTop: 10,
   },
   mailsign: {
     width: "100%",
@@ -238,16 +241,17 @@ const styles = StyleSheet.create({
   },
   emailinput: {
     width: "100%",
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#FFFFFF",
     height: 56,
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 14,
     marginTop: 20,
     borderColor: "#007aff",
-    borderWidth: 2,
+    borderWidth: 1,
     bordeRadius: 14,
     fontSize: 16,
+    color: "#000000",
   },
   bottomsection: {
     width: "100%",
@@ -261,7 +265,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginTop: 20,
     borderColor: "#007AFF",
-    borderWidth: 2,
+    borderWidth: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

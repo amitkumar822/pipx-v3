@@ -13,6 +13,7 @@ import Buttons from "../../user_details/helper/Buttons";
 import Toast from "react-native-toast-message";
 import { useUserProvider } from "@/src/context/user/userContext";
 import apiService from "@/src/services/api";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const StepOne = ({ type, setStep, validateEmail }) => {
   const { setOtpEmail, setEmail_or_mobile } = useUserProvider();
@@ -55,13 +56,8 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
           });
         }
       } catch (error) {
-        console.log("Error sending reset OTP:", JSON.stringify(error, null, 2));
-        Toast.show({
-          type: "error",
-          text1: error?.message || "Failed to send reset otp",
-        });
         setShowError(true);
-        setErrMsg("Failed to send reset otp4444.");
+        setErrMsg( error?.message || "Failed to send reset.");
       } finally {
         setLoading(false);
       }
@@ -108,9 +104,9 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
   };
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
-        style={{ flex: 1, paddingBottom: 10 }}
+        style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={20}
       >
@@ -171,7 +167,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
           />
         </View>
       </KeyboardAvoidingView>
-    </>
+    </SafeAreaView>
   );
 };
 
@@ -182,7 +178,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: 12,
-    paddingTop: 40,
+    paddingTop: 10,
   },
   topsection: {
     width: "100%",
@@ -231,16 +227,17 @@ const styles = StyleSheet.create({
   },
   emailinput: {
     width: "100%",
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#FFFFFF",
     height: 56,
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 14,
     marginTop: 20,
     borderColor: "#007AFF",
-    borderWidth: 2,
+    borderWidth: 1,
     bordeRadius: 14,
     fontSize: 16,
+    color: "#000000",
   },
   bottomsection: {
     width: "100%",
@@ -254,7 +251,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginTop: 20,
     borderColor: "#007AFF",
-    borderWidth: 2,
+    borderWidth: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

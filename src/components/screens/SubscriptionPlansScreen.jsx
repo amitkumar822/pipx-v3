@@ -727,7 +727,7 @@ const styles = StyleSheet.create({
   },
   planCardSubscribed: {
     borderColor: "#28a745",
-    borderWidth: 2,
+    borderWidth: 1,
     backgroundColor: "#f8fff9",
   },
   planHeader: {
@@ -879,7 +879,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     backgroundColor: "transparent",
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: "#FF3B30",
     paddingVertical: 12,
     paddingHorizontal: 32,

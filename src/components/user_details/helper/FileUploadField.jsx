@@ -98,15 +98,6 @@ const FileUploadField = ({ onFileSelect }) => {
       if (result?.assets?.length) {
         const pickedFile = result.assets[0];
 
-        // ✅ Convert to Blob immediately for FormData
-        const blob = await uriToBlob(pickedFile.uri);
-
-        // const fileForUpload = {
-        //   name: pickedFile.name || "document.pdf",
-        //   type: pickedFile.mimeType || "application/pdf",
-        //   blob,
-        // };
-
         onFileSelect?.({
           uri: pickedFile.uri,
           name: pickedFile.name,
@@ -114,7 +105,6 @@ const FileUploadField = ({ onFileSelect }) => {
         });
 
         setFile(pickedFile);
-        // onFileSelect?.(fileForUpload); // Pass ready-to-append file to parent
       }
     } catch (err) {
       console.error("Error selecting file:", err);
@@ -122,37 +112,35 @@ const FileUploadField = ({ onFileSelect }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <>
       <Pressable style={styles.uploadBtn} onPress={handlePickFile}>
         <Text style={styles.uploadText}>
           {file?.name || "Upload a verified document"}
         </Text>
         <MaterialIcons name="upload-file" size={20} color="#666" />
       </Pressable>
-    </View>
+    </>
   );
 };
 
 export default FileUploadField;
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 20,
-  },
   uploadBtn: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderColor: "#ccc",
+    borderColor: "#007AFF",
     borderWidth: 1,
     borderRadius: 12,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
+    color: "#000000",
     paddingVertical: 14,
     paddingHorizontal: 16,
   },
   uploadText: {
     fontSize: 14,
-    color: "#000",
+    color: "#000000",
     fontWeight: "500",
   },
 });

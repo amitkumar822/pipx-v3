@@ -17,6 +17,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useUserProvider } from "@/src/context/user/userContext";
 import { AuthHeader } from "../helper/auth/AuthHeader";
 import FileUploadField from "./helper/FileUploadField";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const UserAgentDetailsForm = ({ setStep, step }) => {
   const { setUserAgentDetails, regRoleType } = useUserProvider();
@@ -79,15 +80,15 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={{ paddingTop: 10 }}>
         <AuthHeader step={step - 2} setStep={setStep} />
       </View>
 
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={20}
       >
         <ScrollView
           style={styles.scrollView}
@@ -107,6 +108,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
               onChangeText={(text) =>
                 setUserDetails({ ...userDetails, firstName: text })
               }
+              
             />
 
             <TextField
@@ -115,6 +117,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
               onChangeText={(text) =>
                 setUserDetails({ ...userDetails, lastName: text })
               }
+              
             />
 
             {/* 🎯 Birthday - Touchable Date Picker */}
@@ -123,6 +126,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
                 placeholder="Birthday (mm/dd/yyyy)"
                 value={userDetails.birthday}
                 editable={false}
+                
               />
             </TouchableOpacity>
             {showDatePicker && (
@@ -145,7 +149,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
                 <Picker.Item label="Select Gender" value="" />
                 <Picker.Item label="Male" value="Male" />
                 <Picker.Item label="Female" value="Female" />
-                <Picker.Item label="Other" value="Other" />
+                <Picker.Item label="Others" value="Others" />
               </Picker>
             </View>
 
@@ -154,6 +158,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
                 onFileSelect={(file) =>
                   setUserDetails({ ...userDetails, document: file })
                 }
+                
               />
             )}
           </View>
@@ -164,7 +169,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
       <View style={styles.bottomSection}>
         <Buttons onPress={handleUserDetailsSubmit} isLoading={loading} disabled={!isFormValid} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -174,7 +179,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFF",
-    paddingTop: 30,
+    paddingTop: 5,
     width: "100%",
   },
   keyboardAvoidingView: {
@@ -207,10 +212,12 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#007AFF",
     borderRadius: 8,
     marginBottom: 20,
     overflow: "hidden",
+    backgroundColor: "#FFFFFF",
+    color: "#000000",
   },
   bottomSection: {
     width: "100%",

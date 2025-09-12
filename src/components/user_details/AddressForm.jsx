@@ -8,6 +8,7 @@ import { useUserProvider } from "@/src/context/user/userContext";
 import { AuthHeader } from "../helper/auth/AuthHeader";
 import { useRouter } from "expo-router";
 import apiService from "@/src/services/api";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const AddressForm = ({ registrationType, setStep, step }) => {
   const router = useRouter();
@@ -125,10 +126,10 @@ const AddressForm = ({ registrationType, setStep, step }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerRow}>
         <View style={{ marginLeft: -35 }}>
-          <AuthHeader  step={step -1} setStep={setStep}  />
+          <AuthHeader step={step - 1} setStep={setStep} />
         </View>
 
         {/* Skip button also same handler used when user skip direact call api previous data send */}
@@ -148,7 +149,7 @@ const AddressForm = ({ registrationType, setStep, step }) => {
         <SimpleLineIcons name="location-pin" size={26} color="gray" />
         <Text style={styles.title}>Your address</Text>
       </View>
-      
+
       <TextField
         placeholder="Address"
         value={address.address}
@@ -182,17 +183,19 @@ const AddressForm = ({ registrationType, setStep, step }) => {
           isLoading={isLoading}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default AddressForm;
 
 const styles = StyleSheet.create({
-  container: { 
-    padding: 20, 
-    paddingTop: 40, 
-    width: "100%" 
+  container: {
+    flex: 1,
+    backgroundColor: "#FFF",
+    padding: 20,
+    paddingTop: 8,
+    width: "100%"
   },
   headerRow: {
     width: "100%",
