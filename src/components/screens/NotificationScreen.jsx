@@ -30,8 +30,7 @@ export default function NotificationScreen() {
       } else {
         setNotifications([]);
       }
-    } catch (error) {
-      console.log("error: ", JSON.stringify(error, null, 2));
+    } catch (error) { 
       setNotifications([]);
     } finally {
       setLoading(false);
