@@ -166,7 +166,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
                     </View>
                   </View>
                   {visitType ? (
-                    <Pressable
+                    userType === "USER" && <Pressable
                       onPress={() => {
                         setModalType("both");
                         setVisible(true);

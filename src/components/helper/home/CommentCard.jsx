@@ -17,7 +17,6 @@ import { useCreateReplyToComment, useLikeComment, useDeleteComment } from "@/src
 import DateFormatter from "../../utils/DateFormatter";
 import Toast from "react-native-toast-message";
 import SubCommentCard from "./SubCommentCard";
-import { useMemo } from "react";
 import { AppImage } from "../../utils/AppImage";
 
 const CommentCard = ({
