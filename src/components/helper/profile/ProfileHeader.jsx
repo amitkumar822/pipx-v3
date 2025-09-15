@@ -18,7 +18,7 @@ export const ProfileHeader = memo(({
           name="chevron-back-outline"
           color="#1E1E1E"
           style={{
-            fontSize: RFValue(16),
+            fontSize: 17,
           }}
         />
         <Text style={styles.backtxt}>{backtxt}</Text>

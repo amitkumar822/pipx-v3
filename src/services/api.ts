@@ -911,8 +911,8 @@ class ApiService {
   }
 
   // Visit Notification
-  async visitNotificationLikeDisLikeComment(notificationId: number): Promise<ApiResponse> {
-    return this.makeRequest(`${API_ENDPOINTS.VISIT_NOTIFICATION_LIKE_DISLIKE_COMMENT}${notificationId}/`, {
+  async visitNotificationLikeDisLikeComment(notificationPostId: number): Promise<ApiResponse> {
+    return this.makeRequest(`${API_ENDPOINTS.VISIT_NOTIFICATION_LIKE_DISLIKE_COMMENT}${notificationPostId}/`, {
       method: "GET",
     });
   }

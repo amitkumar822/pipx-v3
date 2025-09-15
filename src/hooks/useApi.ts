@@ -658,8 +658,8 @@ export const useDeleteNotification = () => {
 export const useVisitNotificationLikeDisLikeComment = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (notificationId: number) =>
-      apiService.visitNotificationLikeDisLikeComment(notificationId),
+    mutationFn: (notificationPostId: number) =>
+      apiService.visitNotificationLikeDisLikeComment(notificationPostId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] });
     },

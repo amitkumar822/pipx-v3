@@ -1,14 +1,13 @@
 import React from "react";
 import { View, Text, Dimensions } from "react-native";
 import LottieView from "lottie-react-native";
-import { RFValue } from "react-native-responsive-fontsize";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 
-const NoNotifications = () => {
+const NoNotifications = ({errorMessage = "No Notifications Found"}) => {
   return (
-    <View className="flex-1 w-full items-center justify-center">
+    <SafeAreaView className="flex-1 w-full items-center justify-center">
       {/* Lottie Animation */}
       <LottieView 
         source={require("@/assets/animation/Notification_Bell.json")}
@@ -19,16 +18,16 @@ const NoNotifications = () => {
       
       {/* Text */}
       <Text className=" font-semibold text-gray-800 -mt-8" style={{
-        fontSize: RFValue(16),
+        fontSize: 17,
       }}>
-        No Notifications Found
+        {errorMessage}
       </Text>
       <Text className=" text-gray-500 text-center mt-2" style={{
-        fontSize: RFValue(12),
+        fontSize: 13,
       }}>
         You’re all caught up! New notifications will appear here.
       </Text>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -12,6 +12,7 @@ import { BackHeader } from "../helper/auth/BackHeader";
 import NoNotifications from "../helper/animation/NoFoundNotification";
 import { useDeleteNotification, useVisitNotificationLikeDisLikeComment } from "@/src/hooks/useApi";
 import Toast from "react-native-toast-message";
+import { router } from "expo-router";
 
 let perPage = 25;
 export default function NotificationScreen() {
@@ -20,9 +21,9 @@ export default function NotificationScreen() {
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchNotifications();
@@ -59,13 +60,11 @@ export default function NotificationScreen() {
         setHasNextPage(false);
       }
     } catch (error) {
-      console.log('====================================');
-      console.log("Error fetching notifications:", JSON.stringify(error, null, 2));
-      console.log('====================================');
       if (pageNum === 1) {
         setNotifications([]);
       }
       setHasNextPage(false);
+      setError(error?.message || error?.response?.data?.message || "Failed to fetch notifications");
     } finally {
       setLoading(false);
       setIsLoadingMore(false);
@@ -106,22 +105,21 @@ export default function NotificationScreen() {
   const { mutate: visitNotificationLikeDisLikeCommentMutation } = useVisitNotificationLikeDisLikeComment();
 
   const handleVisitNotification = (notification) => {
-    console.log('====================================');
-    console.log("Visit Notification", JSON.stringify(notification, null, 2));
-    console.log('====================================');
-    const notificationId = notification.id;
-    if (notification.category === "dislike_un_dislike_post") {
-      visitNotificationLikeDisLikeCommentMutation(notificationId, {
+    // console.log('====================================');
+    // console.log("Visit Notification", JSON.stringify(notification, null, 2));
+    // console.log('====================================');
+    if (notification.category === "like_unlike_post") {
+      const notificationPostId = notification.extra_data?.post_id;
+      visitNotificationLikeDisLikeCommentMutation(notificationPostId, {
         onSuccess: (res) => {
-          // console.log('====================================');
-          // console.log("Visit Notification Like Dis Like Comment", JSON.stringify(res, null, 2));
-          // console.log('====================================');
-          setNotifications(prev => prev.map(notification => notification.id === notificationId ? { ...notification, unread: true } : notification));
+         router.push({
+          pathname: "/agentcheckpostview",
+          params: {
+            postId: notificationPostId,
+          },
+         });
         },
         onError: (error) => {
-          // console.log('====================================');
-          // console.log("Error visiting notification", JSON.stringify(error, null, 2));
-          // console.log('====================================');
           Toast.show({
             type: "error",
             text1: "Error visiting notification",
@@ -129,18 +127,24 @@ export default function NotificationScreen() {
           });
         },
       });
-    } else if(notification.category === "follow_request") {
-      Toast.show({
-        type: "info",
-        text1: "Other functionality is not available yet",
-        text2: "We are working on it",
+    } else if (notification.category === "follow_request") {
+      // Visit User Profile when user follow
+      const signalProviderId = notification?.extra_data?.user_id;
+      if (!signalProviderId) return;
+      router.push({
+        pathname: "/visitprofile",
+        params: {
+          id: String(signalProviderId),
+          userType: "USER",
+          backRoutePath: "/(tabs)/notification",
+        },
       });
     }
   };
 
   const renderEmptyComponent = () => (
     <View className="min-w-full h-screen -top-28">
-      <NoNotifications />
+      <NoNotifications errorMessage={error} />
     </View>
   );
 

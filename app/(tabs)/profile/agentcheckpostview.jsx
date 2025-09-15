@@ -51,7 +51,7 @@ const Agentcheckpostview = () => {
   );
 
   return (
-    <SafeAreaView className="h-screen">
+    <SafeAreaView className="flex-1">
       <BackHeader />
       <AgentHomeScreen
         signalPostsData={posts}

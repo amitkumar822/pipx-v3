@@ -58,7 +58,7 @@ const NotificationCard = ({ notification, onDelete, onVisit }) => {
       delayLongPress={500}
       className="min-w-full px-4 py-3 border-b border-gray-300"
       style={{
-        backgroundColor: notification?.unread ? "#FFFFFF" : "#e6eef7",
+        backgroundColor: "#FFFFFF",
       }}
     >
       {/* Header with avatar and sender info */}
