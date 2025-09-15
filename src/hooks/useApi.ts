@@ -617,12 +617,18 @@ export const useMonthlyProfitAnalysis = () => {
 };
 
 // Notification Hooks
-export const useNotifications = () => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.NOTIFICATIONS],
-    queryFn: () => apiService.getNotifications(),
-  });
-};
+// export const useNotifications = ({
+//   page,
+//   perPage,
+// }: {
+//   page: number;
+//   perPage: number;
+// }) => {
+//   return useQuery({
+//     queryKey: [QUERY_KEYS.NOTIFICATIONS],
+//     queryFn: () => apiService.getNotifications(page, perPage),
+//   });
+// };
 
 export const useNotificationCount = () => {
   return useQuery({
@@ -631,3 +637,15 @@ export const useNotificationCount = () => {
     refetchInterval: 30000, // Refetch every 30 seconds
   });
 };
+
+export const useDeleteNotification = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (notificationId: number) => apiService.deleteNotification(notificationId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATION_COUNT] });
+    },
+  });
+}

@@ -3,6 +3,7 @@ import { View, Text, Pressable, Image, Alert } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { AppImage } from "../../utils/AppImage";
 import { format, isToday, isYesterday } from "date-fns";
+import { useDeleteNotification } from "@/src/hooks/useApi";
 
 const NotificationCard = ({ notification, onDelete }) => {
   const formatTime = (dateString) => {
@@ -24,6 +25,7 @@ const NotificationCard = ({ notification, onDelete }) => {
   // Notification metadata
   const sender = notification?.sender_first_name + " " + notification?.sender_last_name;
   const content = notification?.description || notification?.message || "New notification";
+  
 
   const handleDelete = () => {
     Alert.alert(

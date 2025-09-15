@@ -903,6 +903,14 @@ class ApiService {
     );
   }
 
+  // Delete Notification
+  async deleteNotification(notificationId: number): Promise<ApiResponse> {
+    return this.makeRequest(API_ENDPOINTS.DELETE_NOTIFICATION, {
+      method: "DELETE",
+      body: JSON.stringify({ id: notificationId }),
+    });
+  }
+
   async getNotificationCount(): Promise<ApiResponse> {
     return this.makeRequest(API_ENDPOINTS.NOTIFICATION_COUNT, {
       method: "GET",

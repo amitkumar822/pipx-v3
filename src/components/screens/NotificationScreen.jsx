@@ -10,6 +10,8 @@ import NotificationCard from "../helper/notification/NotificationCard";
 import apiService from "../../services/api";
 import { BackHeader } from "../helper/auth/BackHeader";
 import NoNotifications from "../helper/animation/NoFoundNotification";
+import { useDeleteNotification } from "@/src/hooks/useApi";
+import Toast from "react-native-toast-message";
 
 let perPage = 25;
 export default function NotificationScreen() {
@@ -69,8 +71,25 @@ export default function NotificationScreen() {
     }
   };
 
+  const { mutate: deleteNotificationMutation } = useDeleteNotification();
+
   const handleDeleteNotification = (notificationId) => {
-    setNotifications(prev => prev.filter(notification => notification.id !== notificationId));
+    deleteNotificationMutation(notificationId, {
+      onSuccess: () => {
+        setNotifications(prev => prev.filter(notification => notification.id !== notificationId));
+        Toast.show({
+          type: "success",
+          text1: "Notification deleted successfully",
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: "Error deleting notification",
+          text2: error.message || "Please try again later",
+        });
+      },
+    });
   };
 
   const renderNotification = ({ item }) => (

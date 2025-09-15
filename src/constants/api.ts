@@ -74,6 +74,7 @@ export const API_ENDPOINTS = {
   // Notifications
   NOTIFICATIONS: "/notification_api/",
   NOTIFICATION_COUNT: "/count_notification_api/",
+  DELETE_NOTIFICATION: "/delete_notification_api/",
 };
 
 // User Types
