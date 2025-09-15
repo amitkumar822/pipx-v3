@@ -229,7 +229,7 @@ export const AgentHomeScreen = ({
         <FlatList
           data={signalPostsData}
           renderItem={renderSignalPost}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item?.id?.toString()}
           estimatedItemSize={320} // Measure your actual card height
           contentContainerStyle={{
             paddingVertical: 10,

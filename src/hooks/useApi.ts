@@ -655,13 +655,10 @@ export const useDeleteNotification = () => {
   });
 };
 
-export const useVisitNotificationLikeDisLikeComment = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (notificationPostId: number) =>
-      apiService.visitNotificationLikeDisLikeComment(notificationPostId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] });
-    },
+export const useVisitNotificationLikeDisLikeComment = (notificationPostId: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.NOTIFICATIONS, notificationPostId],
+    queryFn: () => apiService.visitNotificationLikeDisLikeComment(notificationPostId),
+    enabled: !!notificationPostId,
   });
 };

@@ -10,7 +10,7 @@ import NotificationCard from "../helper/notification/NotificationCard";
 import apiService from "../../services/api";
 import { BackHeader } from "../helper/auth/BackHeader";
 import NoNotifications from "../helper/animation/NoFoundNotification";
-import { useDeleteNotification, useVisitNotificationLikeDisLikeComment } from "@/src/hooks/useApi";
+import { useDeleteNotification } from "@/src/hooks/useApi";
 import Toast from "react-native-toast-message";
 import { router } from "expo-router";
 
@@ -102,31 +102,15 @@ export default function NotificationScreen() {
     />
   );
 
-  const { mutate: visitNotificationLikeDisLikeCommentMutation } = useVisitNotificationLikeDisLikeComment();
-
   const handleVisitNotification = (notification) => {
-    // console.log('====================================');
-    // console.log("Visit Notification", JSON.stringify(notification, null, 2));
-    // console.log('====================================');
-    if (notification.category === "like_unlike_post") {
+    if (notification.category === "like_unlike_post" || notification.category === "post_comment" || notification.category === "dislike_un_dislike_post") {
       const notificationPostId = notification.extra_data?.post_id;
-      visitNotificationLikeDisLikeCommentMutation(notificationPostId, {
-        onSuccess: (res) => {
-         router.push({
-          pathname: "/agentcheckpostview",
-          params: {
-            postId: notificationPostId,
-          },
-         });
-        },
-        onError: (error) => {
-          Toast.show({
-            type: "error",
-            text1: "Error visiting notification",
-            text2: error.message || error.response.data.message || "Please try again later",
-          });
-        },
-      });
+      if (notificationPostId) {
+        router.push({
+          pathname: "(tabs)/notification/singal-post-view",
+          params: { notificationPostId: notificationPostId }
+        });
+      }
     } else if (notification.category === "follow_request") {
       // Visit User Profile when user follow
       const signalProviderId = notification?.extra_data?.user_id;
