@@ -48,7 +48,7 @@ export default function NotificationScreen() {
         if (pageNum === 1 || isRefresh) {
           setNotifications(response.data);
         } else {
-          setNotifications(prev => [...prev, ...response.data]);
+          setNotifications((prev) => [...prev, ...response.data]);
         }
 
         // Check if there are more pages
@@ -64,7 +64,11 @@ export default function NotificationScreen() {
         setNotifications([]);
       }
       setHasNextPage(false);
-      setError(error?.message || error?.response?.data?.message || "Failed to fetch notifications");
+      setError(
+        error?.message ||
+          error?.response?.data?.message ||
+          "Failed to fetch notifications"
+      );
     } finally {
       setLoading(false);
       setIsLoadingMore(false);
@@ -77,7 +81,9 @@ export default function NotificationScreen() {
   const handleDeleteNotification = (notificationId) => {
     deleteNotificationMutation(notificationId, {
       onSuccess: () => {
-        setNotifications(prev => prev.filter(notification => notification.id !== notificationId));
+        setNotifications((prev) =>
+          prev.filter((notification) => notification.id !== notificationId)
+        );
         Toast.show({
           type: "success",
           text1: "Notification deleted successfully",
@@ -103,12 +109,17 @@ export default function NotificationScreen() {
   );
 
   const handleVisitNotification = (notification) => {
-    if (notification.category === "like_unlike_post" || notification.category === "post_comment" || notification.category === "dislike_un_dislike_post") {
+    if (
+      notification.category === "like_unlike_post" ||
+      notification.category === "post_comment" ||
+      notification.category === "dislike_un_dislike_post" ||
+      notification.category === "notify_subscriber"
+    ) {
       const notificationPostId = notification.extra_data?.post_id;
       if (notificationPostId) {
         router.push({
           pathname: "(tabs)/notification/singal-post-view",
-          params: { notificationPostId: notificationPostId }
+          params: { notificationPostId: notificationPostId },
         });
       }
     } else if (notification.category === "follow_request") {
@@ -160,7 +171,9 @@ export default function NotificationScreen() {
     if (!hasNextPage && notifications.length > 0) {
       return (
         <View style={styles.endMessage}>
-          <Text style={styles.endMessageText}>You've reached the end - no more data</Text>
+          <Text style={styles.endMessageText}>
+            You've reached the end - no more data
+          </Text>
         </View>
       );
     }
@@ -170,9 +183,7 @@ export default function NotificationScreen() {
 
   return (
     <View style={styles.container} className="bg-gray-50">
-      <BackHeader
-        style={{ backgroundColor: "#FFFFFF" }}
-      />
+      <BackHeader style={{ backgroundColor: "#FFFFFF" }} />
 
       {loading ? (
         <View style={styles.loadingContainer}>

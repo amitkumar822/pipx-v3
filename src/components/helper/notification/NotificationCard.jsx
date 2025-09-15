@@ -1,9 +1,8 @@
 import React from "react";
-import { View, Text, Pressable, Image, Alert } from "react-native";
+import { View, Text, Pressable, Alert } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { AppImage } from "../../utils/AppImage";
 import { format, isToday, isYesterday } from "date-fns";
-import { useDeleteNotification } from "@/src/hooks/useApi";
 
 const NotificationCard = ({ notification, onDelete, onVisit }) => {
   const formatTime = (dateString) => {
@@ -54,8 +53,6 @@ const NotificationCard = ({ notification, onDelete, onVisit }) => {
   return (
     <Pressable
       onPress={handleVisitNotification}
-      onLongPress={handleDelete}
-      delayLongPress={500}
       className="min-w-full px-4 py-3 border-b border-gray-300"
       style={{
         backgroundColor: "#FFFFFF",
@@ -89,9 +86,9 @@ const NotificationCard = ({ notification, onDelete, onVisit }) => {
         </View>
 
         {/* Delete button */}
-        {/* <Pressable onPress={handleDelete}>
+        <Pressable onPress={handleDelete}>
           <MaterialIcons name="delete" size={18} color="#e0414c" />
-        </Pressable> */}
+        </Pressable>
       </View>
 
       {/* Notification content */}

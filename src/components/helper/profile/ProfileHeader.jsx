@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   backtxt: {
-    fontSize: RFValue(16),
+    fontSize: 16,
     color: "#1E1E1E",
     fontWeight: "600",
     lineHeight: 26,

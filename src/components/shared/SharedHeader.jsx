@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity, Pressable } from "react-native";
 import React, { useCallback, useMemo, memo } from "react";
-import { RFValue } from "react-native-responsive-fontsize";
 import { useRouter, usePathname } from "expo-router";
 
 const SharedHeader = memo(() => {
@@ -61,7 +60,7 @@ const SharedHeader = memo(() => {
                     <Text
                         className="font-extrabold text-black"
                         style={{
-                            fontSize: RFValue(24),
+                            fontSize: 25,
                         }}
                     >
                         PipX
@@ -78,7 +77,7 @@ const SharedHeader = memo(() => {
                             <Text
                                 className={`text-center px-4 py-2 rounded-xl font-semibold bg-[#EBF5FF] ${isActive ? "text-[#2E75FF]" : " text-[#50555C]"
                                     }`}
-                                style={{ fontSize: RFValue(12) }}
+                                style={{ fontSize: 13 }}
                             >
                                 {label}
                             </Text>
