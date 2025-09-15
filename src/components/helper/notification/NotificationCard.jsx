@@ -15,10 +15,8 @@ const NotificationCard = ({ notification }) => {
   };
 
   // Notification metadata
-  const sender = notification?.sender || "PipX Team";
+  const sender = notification?.sender_first_name + " " + notification?.sender_last_name;
   const content = notification?.description || notification?.message || "New notification";
-  const isRepost = notification?.isRepost || false;
-  const hasAttachment = notification?.attachment || false;
 
   return (
     <Pressable className="min-w-full px-4 py-3 border-b border-gray-300" style={{ backgroundColor: "#FFFFFF" }}>
@@ -36,50 +34,28 @@ const NotificationCard = ({ notification }) => {
             <MaterialIcons name="person" size={RFValue(16)} color="#0073b1" />
           )}
         </View>
-        
+
         {/* Sender and time */}
         <View className="flex-1">
           <View className="flex-row items-center flex-wrap">
-            <Text className="font-semibold text-gray-900" style={{ fontSize: RFValue(14) }}>
+            <Text className="font-semibold text-gray-900 capitalize" style={{ fontSize: RFValue(14) }}>
               {sender}
             </Text>
-            {isRepost && (
-              <Text className="text-gray-500 ml-1" style={{ fontSize: RFValue(12) }}>
-                reposted
-              </Text>
-            )}
             <Text className="text-gray-500 ml-1" style={{ fontSize: RFValue(12) }}>
               • {formatTime(notification?.created_at)}
             </Text>
           </View>
         </View>
-        
+
         {/* Options button */}
         <MaterialIcons name="more-vert" size={RFValue(16)} color="#666" />
       </View>
-      
+
       {/* Notification content */}
       <View className="mb-1 -mt-3 mx-[52px]">
         <Text className="text-gray-800 mb-1" style={{ fontSize: RFValue(14) }}>
           {content}
         </Text>
-        
-        {/* Attachment preview if exists */}
-        {hasAttachment && (
-          <View className="border border-gray-200 rounded-lg p-3 mt-2">
-            <View className="flex-row">
-              <View className="w-10 h-10 bg-gray-100 rounded mr-3" />
-              <View>
-                <Text className="font-medium text-gray-900" style={{ fontSize: RFValue(12) }}>
-                  {notification.attachment.title || "Attachment"}
-                </Text>
-                <Text className="text-gray-500" style={{ fontSize: RFValue(10) }}>
-                  {notification.attachment.source || "PipX"}
-                </Text>
-              </View>
-            </View>
-          </View>
-        )}
       </View>
 
     </Pressable>

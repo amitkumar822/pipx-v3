@@ -894,10 +894,13 @@ class ApiService {
   }
 
   // Notification APIs
-  async getNotifications(): Promise<ApiResponse> {
-    return this.makeRequest(API_ENDPOINTS.NOTIFICATIONS, {
-      method: "GET",
-    });
+  async getNotifications(page: number, perPage: number): Promise<ApiResponse> {
+    return this.makeRequest(
+      `${API_ENDPOINTS.NOTIFICATIONS}?page=${page}&per_page=${perPage}`,
+      {
+        method: "GET",
+      }
+    );
   }
 
   async getNotificationCount(): Promise<ApiResponse> {
