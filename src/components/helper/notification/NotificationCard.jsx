@@ -1,14 +1,21 @@
 import React from "react";
-import { View, Text, Pressable, Image } from "react-native";
-import { RFValue } from "react-native-responsive-fontsize";
-import { format } from "date-fns";
+import { View, Text, Pressable, Image, Alert } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { AppImage } from "../../utils/AppImage";
+import { format, isToday, isYesterday } from "date-fns";
 
-const NotificationCard = ({ notification }) => {
+const NotificationCard = ({ notification, onDelete }) => {
   const formatTime = (dateString) => {
     try {
-      return format(new Date(dateString), "h:mm a");
+      const date = new Date(dateString);
+  
+      if (isToday(date)) {
+        return format(date, "h:mm a");
+      } else if (isYesterday(date)) {
+        return "Yesterday";
+      } else {
+        return format(date, "dd MMM yyyy");
+      }
     } catch {
       return "Just now";
     }
@@ -18,42 +25,68 @@ const NotificationCard = ({ notification }) => {
   const sender = notification?.sender_first_name + " " + notification?.sender_last_name;
   const content = notification?.description || notification?.message || "New notification";
 
+  const handleDelete = () => {
+    Alert.alert(
+      "Delete Notification",
+      "Are you sure you want to delete this notification?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            onDelete?.(notification.id);
+          },
+        },
+      ]
+    );
+  };
+
   return (
-    <Pressable className="min-w-full px-4 py-3 border-b border-gray-300" style={{ backgroundColor: "#FFFFFF" }}>
+    <Pressable className="min-w-full px-4 py-3 border-b border-gray-300"
+      style={{
+        backgroundColor: notification?.unread ? "#FFFFFF" : "#e6eef7",
+      }}
+    >
       {/* Header with avatar and sender info */}
       <View className="flex-row items-start w-full">
-        {/* Avatar */}
+        {/* sender_image */}
         <View className="w-10 h-10 rounded-full bg-blue-50 mr-3 flex items-center justify-center overflow-hidden">
-          {notification?.avatar ? (
+          {notification?.sender_image ? (
             <AppImage
-              uri={notification.avatar}
+              uri={notification.sender_image}
               contentFit="cover"
               style={{ width: "100%", height: "100%" }}
             />
           ) : (
-            <MaterialIcons name="person" size={RFValue(16)} color="#0073b1" />
+            <MaterialIcons name="person" size={16} color="#0073b1" />
           )}
         </View>
 
         {/* Sender and time */}
         <View className="flex-1">
           <View className="flex-row items-center flex-wrap">
-            <Text className="font-semibold text-gray-900 capitalize" style={{ fontSize: RFValue(14) }}>
+            <Text className="font-semibold text-gray-900 capitalize" style={{ fontSize: 14 }}>
               {sender}
             </Text>
-            <Text className="text-gray-500 ml-1" style={{ fontSize: RFValue(12) }}>
-              • {formatTime(notification?.created_at)}
+            <Text className="text-gray-500 ml-1" style={{ fontSize: 12 }}>
+              • {formatTime(notification?.notification_time)}
             </Text>
           </View>
         </View>
 
-        {/* Options button */}
-        <MaterialIcons name="more-vert" size={RFValue(16)} color="#666" />
+        {/* Delete button */}
+        <Pressable onPress={handleDelete}>
+          <MaterialIcons name="delete" size={18} color="#e0414c" />
+        </Pressable>
       </View>
 
       {/* Notification content */}
       <View className="mb-1 -mt-3 mx-[52px]">
-        <Text className="text-gray-800 mb-1" style={{ fontSize: RFValue(14) }}>
+        <Text className="text-gray-800 mb-1" style={{ fontSize: 14 }}>
           {content}
         </Text>
       </View>

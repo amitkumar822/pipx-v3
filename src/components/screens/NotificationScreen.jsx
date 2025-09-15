@@ -69,8 +69,16 @@ export default function NotificationScreen() {
     }
   };
 
+  const handleDeleteNotification = (notificationId) => {
+    setNotifications(prev => prev.filter(notification => notification.id !== notificationId));
+  };
+
   const renderNotification = ({ item }) => (
-    <NotificationCard key={item.id} notification={item} />
+    <NotificationCard 
+      key={item.id} 
+      notification={item} 
+      onDelete={handleDeleteNotification}
+    />
   );
 
   const renderEmptyComponent = () => (
@@ -118,7 +126,7 @@ export default function NotificationScreen() {
   return (
     <View style={styles.container} className="bg-gray-50">
       <BackHeader
-        style={{ backgroundColor: "#F8FAFC" }}
+        style={{ backgroundColor: "#FFFFFF" }}
       />
 
       {loading ? (
@@ -165,12 +173,9 @@ const styles = StyleSheet.create({
   notifcontainer: {
     flexGrow: 1,
     width: "100%",
-    paddingHorizontal: 8,
-    paddingVertical: 10,
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
-    // alignItems: "center",
   },
   loadingContainer: {
     flex: 1,
