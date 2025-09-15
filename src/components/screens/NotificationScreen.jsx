@@ -10,7 +10,7 @@ import NotificationCard from "../helper/notification/NotificationCard";
 import apiService from "../../services/api";
 import { BackHeader } from "../helper/auth/BackHeader";
 import NoNotifications from "../helper/animation/NoFoundNotification";
-import { useDeleteNotification } from "@/src/hooks/useApi";
+import { useDeleteNotification, useVisitNotificationLikeDisLikeComment } from "@/src/hooks/useApi";
 import Toast from "react-native-toast-message";
 
 let perPage = 25;
@@ -59,7 +59,9 @@ export default function NotificationScreen() {
         setHasNextPage(false);
       }
     } catch (error) {
-      console.error("Error fetching notifications:", error);
+      console.log('====================================');
+      console.log("Error fetching notifications:", JSON.stringify(error, null, 2));
+      console.log('====================================');
       if (pageNum === 1) {
         setNotifications([]);
       }
@@ -93,15 +95,51 @@ export default function NotificationScreen() {
   };
 
   const renderNotification = ({ item }) => (
-    <NotificationCard 
-      key={item.id} 
-      notification={item} 
+    <NotificationCard
+      key={item.id}
+      notification={item}
       onDelete={handleDeleteNotification}
+      onVisit={handleVisitNotification}
     />
   );
 
+  const { mutate: visitNotificationLikeDisLikeCommentMutation } = useVisitNotificationLikeDisLikeComment();
+
+  const handleVisitNotification = (notification) => {
+    console.log('====================================');
+    console.log("Visit Notification", JSON.stringify(notification, null, 2));
+    console.log('====================================');
+    const notificationId = notification.id;
+    if (notification.category === "dislike_un_dislike_post") {
+      visitNotificationLikeDisLikeCommentMutation(notificationId, {
+        onSuccess: (res) => {
+          // console.log('====================================');
+          // console.log("Visit Notification Like Dis Like Comment", JSON.stringify(res, null, 2));
+          // console.log('====================================');
+          setNotifications(prev => prev.map(notification => notification.id === notificationId ? { ...notification, unread: true } : notification));
+        },
+        onError: (error) => {
+          // console.log('====================================');
+          // console.log("Error visiting notification", JSON.stringify(error, null, 2));
+          // console.log('====================================');
+          Toast.show({
+            type: "error",
+            text1: "Error visiting notification",
+            text2: error.message || error.response.data.message || "Please try again later",
+          });
+        },
+      });
+    } else if(notification.category === "follow_request") {
+      Toast.show({
+        type: "info",
+        text1: "Other functionality is not available yet",
+        text2: "We are working on it",
+      });
+    }
+  };
+
   const renderEmptyComponent = () => (
-    <View className="min-w-full">
+    <View className="min-w-full h-screen -top-28">
       <NoNotifications />
     </View>
   );
@@ -130,7 +168,7 @@ export default function NotificationScreen() {
         </View>
       );
     }
-    
+
     if (!hasNextPage && notifications.length > 0) {
       return (
         <View style={styles.endMessage}>
@@ -138,7 +176,7 @@ export default function NotificationScreen() {
         </View>
       );
     }
-    
+
     return null;
   };
 

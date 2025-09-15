@@ -905,9 +905,15 @@ class ApiService {
 
   // Delete Notification
   async deleteNotification(notificationId: number): Promise<ApiResponse> {
-    return this.makeRequest(API_ENDPOINTS.DELETE_NOTIFICATION, {
+    return this.makeRequest(`${API_ENDPOINTS.DELETE_NOTIFICATION}${notificationId}/`, {
       method: "DELETE",
-      body: JSON.stringify({ id: notificationId }),
+    });
+  }
+
+  // Visit Notification
+  async visitNotificationLikeDisLikeComment(notificationId: number): Promise<ApiResponse> {
+    return this.makeRequest(`${API_ENDPOINTS.VISIT_NOTIFICATION_LIKE_DISLIKE_COMMENT}${notificationId}/`, {
+      method: "GET",
     });
   }
 

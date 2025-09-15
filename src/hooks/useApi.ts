@@ -121,7 +121,9 @@ export const useUpdateUserProfile = () => {
   });
 };
 
-export const useSignalProviderProfile = (options: { enabled?: boolean } = {}) => {
+export const useSignalProviderProfile = (
+  options: { enabled?: boolean } = {}
+) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SIGNAL_PROVIDER_PROFILE],
     queryFn: () => apiService.getSignalProviderProfile(),
@@ -427,7 +429,7 @@ export const useAllSignalPosts = (
   options: { enabled?: boolean } = {}
 ) => {
   const { enabled = true } = options;
-  
+
   // This hook fetches all signal posts
   return useQuery({
     queryKey: [QUERY_KEYS.SIGNAL_POSTS, page, perPage],
@@ -642,10 +644,24 @@ export const useDeleteNotification = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (notificationId: number) => apiService.deleteNotification(notificationId),
+    mutationFn: (notificationId: number) =>
+      apiService.deleteNotification(notificationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATION_COUNT] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.NOTIFICATION_COUNT],
+      });
     },
   });
-}
+};
+
+export const useVisitNotificationLikeDisLikeComment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (notificationId: number) =>
+      apiService.visitNotificationLikeDisLikeComment(notificationId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.NOTIFICATIONS] });
+    },
+  });
+};

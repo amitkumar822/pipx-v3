@@ -5,11 +5,11 @@ import { AppImage } from "../../utils/AppImage";
 import { format, isToday, isYesterday } from "date-fns";
 import { useDeleteNotification } from "@/src/hooks/useApi";
 
-const NotificationCard = ({ notification, onDelete }) => {
+const NotificationCard = ({ notification, onDelete, onVisit }) => {
   const formatTime = (dateString) => {
     try {
       const date = new Date(dateString);
-  
+
       if (isToday(date)) {
         return format(date, "h:mm a");
       } else if (isYesterday(date)) {
@@ -25,7 +25,7 @@ const NotificationCard = ({ notification, onDelete }) => {
   // Notification metadata
   const sender = notification?.sender_first_name + " " + notification?.sender_last_name;
   const content = notification?.description || notification?.message || "New notification";
-  
+
 
   const handleDelete = () => {
     Alert.alert(
@@ -47,8 +47,16 @@ const NotificationCard = ({ notification, onDelete }) => {
     );
   };
 
+  const handleVisitNotification = () => {
+    onVisit?.(notification);
+  };
+
   return (
-    <Pressable className="min-w-full px-4 py-3 border-b border-gray-300"
+    <Pressable
+      onPress={handleVisitNotification}
+      onLongPress={handleDelete}
+      delayLongPress={500}
+      className="min-w-full px-4 py-3 border-b border-gray-300"
       style={{
         backgroundColor: notification?.unread ? "#FFFFFF" : "#e6eef7",
       }}
@@ -81,9 +89,9 @@ const NotificationCard = ({ notification, onDelete }) => {
         </View>
 
         {/* Delete button */}
-        <Pressable onPress={handleDelete}>
+        {/* <Pressable onPress={handleDelete}>
           <MaterialIcons name="delete" size={18} color="#e0414c" />
-        </Pressable>
+        </Pressable> */}
       </View>
 
       {/* Notification content */}
