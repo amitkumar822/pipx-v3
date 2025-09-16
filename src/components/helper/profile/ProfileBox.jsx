@@ -1,9 +1,8 @@
 import React, { useContext, useState } from "react";
-import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
-import { RFValue } from "react-native-responsive-fontsize";
 import ReportBlockModal from "../ReportBlockModel";
 import {
   useBlockUnblockSignalProvider,
@@ -148,7 +147,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
                       <Text
                         className="text-black font-bold capitalize"
                         style={{
-                          fontSize: RFValue(15),
+                          fontSize: 16,
                           flex: 1,
                           flexWrap: "wrap",
                         }}
@@ -159,7 +158,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
                       <Text
                         className={`text-gray-600 font-medium ${visitType ? "hidden" : ""}`}
                         numberOfLines={1}
-                        style={{ flexShrink: 1, fontSize: RFValue(12) }}
+                        style={{ flexShrink: 1, fontSize: 13 }}
                       >
                         ({profile?.username})
                       </Text>
@@ -226,7 +225,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
                       <LinearGradient
                         colors={
                           profile?.user_type === "USER" &&
-                          stat.label === "Blocked"
+                            stat.label === "Blocked"
                             ? ["#ffeae8", "#ffeae8"]
                             : ["#d3e8ff", "#e6f2ff"]
                         }
@@ -236,13 +235,12 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
                       >
                         <View className=" rounded-xl py-3 justify-center items-center min-h-[60px]">
                           <Text
-                            className={`font-bold mb-0.5 ${
-                              stat.label === "Success rate"
+                            className={`font-bold mb-0.5 ${stat.label === "Success rate"
                                 ? "text-green-500"
                                 : "text-black"
-                            }`}
+                              }`}
                             style={{
-                              fontSize: RFValue(15),
+                              fontSize: 16,
                             }}
                           >
                             {stat?.value ? String(stat.value) : "0"}
@@ -250,7 +248,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
                           <Text
                             className=" text-center"
                             style={{
-                              fontSize: RFValue(7.5),
+                              fontSize: 9,
                               color: "#000",
                               fontWeight: "500",
                             }}
