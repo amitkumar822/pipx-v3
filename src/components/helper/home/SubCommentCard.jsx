@@ -6,6 +6,7 @@ import {
   TextInput,
   replyLoading,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import React, { memo, useMemo, useState } from "react";
 import DateFormatter from "../../utils/DateFormatter";
@@ -35,10 +36,47 @@ const SubCommentCard = ({
     return reply?.replies?.length || 0;
   }, [reply?.replies]);
 
+  const renderReplyComment = ({ item }) => {
+    const subReply = item;
+    return (<Pressable key={subReply.id} onLongPress={() => handleLongPress(subReply)} delayLongPress={500}>
+      <View className="mt-3 ml-2">
+        <View className="flex-row gap-2.5 bg-[#F9F9F9] rounded-xl p-3 shadow-sm border border-gray-100">
+          {/* Avatar */}
+          <AppImage
+            uri={subReply.user?.profile_image}
+            contentFit="cover"
+            style={{
+              width: 34,
+              height: 34,
+            }}
+          />
+
+          {/* Reply Content */}
+          <View className="flex-1">
+            <View className="flex-row justify-between items-center">
+              <Text className="font-semibold text-[13px] text-gray-900">
+                {subReply.user.first_name} {subReply.user.last_name}
+              </Text>
+              <Text
+                className="text-gray-500"
+                style={{ fontSize: RFValue(11) }}
+              >
+                <DateFormatter date={subReply?.created_at} />
+              </Text>
+            </View>
+
+            <Text className="mt-1 text-[13px] text-[#333] leading-[18px]">
+              {subReply.comment}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </Pressable>)
+  }
 
 
   return (
-    <View key={reply.id} className="mt-3 ml-1">
+    <View className="mt-3 ml-1">
       <View className="flex-row gap-2.5">
         <AppImage
           uri={reply?.user?.profile_image || reply?.image}
@@ -170,42 +208,12 @@ const SubCommentCard = ({
 
           {/* Replies inside reply */}
           {reply.replies?.length > 0 &&
-            reply.replies.map((subReply) => (
-              <Pressable key={subReply.id} onLongPress={() => handleLongPress(subReply)} delayLongPress={500}>
-                <View className="mt-3 ml-2">
-                  <View className="flex-row gap-2.5 bg-[#F9F9F9] rounded-xl p-3 shadow-sm border border-gray-100">
-                    {/* Avatar */}
-                    <AppImage
-                      uri={subReply.user?.profile_image}
-                      contentFit="cover"
-                      style={{
-                        width: 34,
-                        height: 34,
-                      }}
-                    />
-
-                    {/* Reply Content */}
-                    <View className="flex-1">
-                      <View className="flex-row justify-between items-center">
-                        <Text className="font-semibold text-[13px] text-gray-900">
-                          {subReply.user.first_name} {subReply.user.last_name}
-                        </Text>
-                        <Text
-                          className="text-gray-500"
-                          style={{ fontSize: RFValue(11) }}
-                        >
-                          <DateFormatter date={subReply?.created_at} />
-                        </Text>
-                      </View>
-
-                      <Text className="mt-1 text-[13px] text-[#333] leading-[18px]">
-                        {subReply.comment}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </Pressable>
-            ))}
+            <FlatList
+              data={reply.replies}
+              renderItem={renderReplyComment}
+              keyExtractor={(item) => item.id.toString()}
+            />
+          }
         </View>
       </View>
     </View>

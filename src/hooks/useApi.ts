@@ -487,11 +487,19 @@ export const useLikedPosts = () => {
 };
 
 // Get Signal Post Comments
-export const useGetSignalPostComments = (postId: number) => {
+export const useGetSignalPostComments = ({
+  postId,
+  page = 1,
+  perPage = 10000,
+}: {
+  postId: number;
+  page: number;
+  perPage: number;
+}) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.POST_COMMENTS, postId],
-    queryFn: () => apiService.getMainComment(postId),
-    enabled: !!postId, // Only run if postId is provided
+    queryKey: [QUERY_KEYS.POST_COMMENTS, postId, page, perPage],
+    queryFn: () => apiService.getMainComment(postId, page, perPage),
+    // enabled: !!postId, // Only run if postId is provided
   });
 };
 
@@ -525,10 +533,10 @@ export const useCreateReplyToComment = () => {
 };
 
 // Get Comments reply message
-export const useGetReplyCommentMessage = (commentId: number) => {
+export const useGetReplyCommentMessage = ({commentId, page=1, perPage=10000}: {commentId: number, page: number, perPage: number}) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.GET_REPLY_COMMENT_MESSAGE, commentId],
-    queryFn: () => apiService.getReplyCommentMessage(commentId),
+    queryKey: [QUERY_KEYS.GET_REPLY_COMMENT_MESSAGE, commentId, page, perPage],
+    queryFn: () => apiService.getReplyCommentMessage(commentId, page, perPage),
     enabled: !!commentId, // Only run if commentId is provided
   });
 };
@@ -655,10 +663,13 @@ export const useDeleteNotification = () => {
   });
 };
 
-export const useVisitNotificationLikeDisLikeComment = (notificationPostId: number) => {
+export const useVisitNotificationLikeDisLikeComment = (
+  notificationPostId: number
+) => {
   return useQuery({
     queryKey: [QUERY_KEYS.NOTIFICATIONS, notificationPostId],
-    queryFn: () => apiService.visitNotificationLikeDisLikeComment(notificationPostId),
+    queryFn: () =>
+      apiService.visitNotificationLikeDisLikeComment(notificationPostId),
     enabled: !!notificationPostId,
   });
 };

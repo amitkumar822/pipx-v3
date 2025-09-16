@@ -28,22 +28,17 @@ const CommentSheet = ({ signalPostId }) => {
     data: allComments,
     isLoading: loading,
     error,
-  } = useGetSignalPostComments(signalPostId, {
-    enabled: !!signalPostId,
-  });
+  } = useGetSignalPostComments({ postId: signalPostId });
 
   const [activeReplyTarget, setActiveReplyTarget] = useState(null);
   const [replyText, setReplyText] = useState("");
 
   // Get Reply Comment Message for the active comment
   const { data: replyCommentMessage, isLoading: isReplyLoading } =
-    useGetReplyCommentMessage(activeReplyTarget?.id, {
-      enabled: !!activeReplyTarget?.id,
-    });
-
+    useGetReplyCommentMessage({ commentId: activeReplyTarget?.id });
 
   // Handle delete comment mutation hook
-  const { mutate: deleteComment, isLoading: isDeleting } = useDeleteComment();
+  const { mutate: deleteComment } = useDeleteComment();
 
   // Handle long press to show delete alert
   const handleLongPress = (comment) => {

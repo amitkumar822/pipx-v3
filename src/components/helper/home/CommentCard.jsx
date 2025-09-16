@@ -13,7 +13,7 @@ import {
 import AnimatedNumber from "react-native-animated-numbers";
 import { Ionicons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useCreateReplyToComment, useLikeComment, useDeleteComment } from "@/src/hooks/useApi";
+import { useCreateReplyToComment, useLikeComment } from "@/src/hooks/useApi";
 import DateFormatter from "../../utils/DateFormatter";
 import Toast from "react-native-toast-message";
 import SubCommentCard from "./SubCommentCard";
@@ -138,6 +138,21 @@ const CommentCard = ({
       }
     );
   };
+
+  const renderReplyComment = ({ item }) => (
+    <SubCommentCard
+      reply={item}
+      setActiveSubReplyTarget={setActiveSubReplyTarget}
+
+      replyText={replyText}
+      setReplyText={setReplyText}
+      activeSubReplyTarget={activeSubReplyTarget}
+      handleSendReply={handleSendReply}
+      handleLike={handleLike}
+      likeTargetId={likeTargetId}
+      handleLongPress={handleLongPress}
+    />
+  );
 
   return (
     <View className="mt-4">
@@ -296,20 +311,11 @@ const CommentCard = ({
             Array.isArray(replyCommentMessage?.data) &&
             replyCommentMessage?.data.length > 0 && (
               <View className="mt-2">
-                {replyCommentMessage.data.map((reply) => (
-                  <SubCommentCard
-                    key={reply.id}
-                    reply={reply}
-                    setActiveSubReplyTarget={setActiveSubReplyTarget}
-                    replyText={replyText}
-                    setReplyText={setReplyText}
-                    activeSubReplyTarget={activeSubReplyTarget}
-                    handleSendReply={handleSendReply}
-                    handleLike={handleLike}
-                    likeTargetId={likeTargetId}
-                    handleLongPress={handleLongPress}
-                  />
-                ))}
+                <FlatList
+                  data={replyCommentMessage.data}
+                  renderItem={renderReplyComment}
+                  keyExtractor={(item) => item.id.toString()}
+                />
               </View>
             )}
         </View>

@@ -730,9 +730,9 @@ class ApiService {
   }
 
   // Get Main Comment for Signal Post
-  async getMainComment(postId: number): Promise<ApiResponse> {
+  async getMainComment(postId: number, page: number, perPage: number): Promise<ApiResponse> {
     return this.makeRequest(
-      `${API_ENDPOINTS.GET_MAIN_COMMENT}?post=${postId}`,
+      `${API_ENDPOINTS.GET_MAIN_COMMENT}?post=${postId}&page=${page}&per_page=${perPage}`,
       {
         method: "GET",
       }
@@ -781,9 +781,9 @@ class ApiService {
   }
 
   // GET comments reply message
-  async getReplyCommentMessage(commentId: number): Promise<ApiResponse> {
+  async getReplyCommentMessage(commentId: number, page: number, perPage: number): Promise<ApiResponse> {
     return this.makeRequest(
-      `${API_ENDPOINTS.GET_REPLY_COMMENT_MESSAGE}?comment_id=${commentId}`,
+      `${API_ENDPOINTS.GET_REPLY_COMMENT_MESSAGE}?comment_id=${commentId}&page=${page}&per_page=${perPage}`,
       {
         method: "GET",
       }
