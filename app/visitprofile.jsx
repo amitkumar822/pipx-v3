@@ -209,12 +209,14 @@ const visitprofile = () => {
     });
   };
 
+  const isSubscribed = profile?.subscription_info?.is_subscribed;
+  const subscribedEndDate = profile?.subscription_info?.subscribed_end_date;
   // Memoized date formatting
   const formattedDate = useMemo(() => {
-    const dateToFormat = profileData?.subscribed_end_date ? new Date(profileData?.subscribed_end_date) : "";
+    const dateToFormat = subscribedEndDate ? new Date(subscribedEndDate) : "";
 
     return dateToFormat ? format(dateToFormat, "dd MMMM yyyy") : "";
-  }, [profileData?.subscribed_end_date]);
+  }, [subscribedEndDate]);  
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
@@ -284,17 +286,17 @@ const visitprofile = () => {
               onPress={handleSubscribe}
               className="px-4 py-2 rounded-xl w-[48%] flex-row items-center space-x-2 justify-center gap-2"
               style={{
-                borderColor: profileData?.is_subscribed ? "#fbbf24" : "#5c9bf2",
+                borderColor: isSubscribed ? "#fbbf24" : "#5c9bf2",
                 borderWidth: 1,
               }}
             >
-              <FontAwesome name="star" size={16} color={profileData?.is_subscribed ? "#fbbf24" : "#5c9bf2"} />
+              <FontAwesome name="star" size={16} color={isSubscribed ? "#fbbf24" : "#5c9bf2"} />
               <Text
                 style={{
-                  color: profileData?.is_subscribed ? "#fbbf24" : "#5c9bf2",
+                  color: isSubscribed ? "#fbbf24" : "#5c9bf2",
                   fontWeight: "bold",
                 }}
-              >{profileData?.is_subscribed ? "Subscribed" : "Subscribe"}</Text>
+              >{isSubscribed ? "Subscribed" : "Subscribe"}</Text>
             </Pressable>
           </View>
 
@@ -305,7 +307,7 @@ const visitprofile = () => {
             </Text>
           </View>}
 
-          {profileData?.is_subscribed && <Pressable className="border border-yellow-400 px-4 py-2 rounded-xl w-full flex-row items-center justify-center">
+          {isSubscribed && <Pressable className="border border-yellow-400 px-4 py-2 rounded-xl w-full flex-row items-center justify-center">
             <Text className="text-yellow-500 text-center font-medium text-lg">
               Upgrade subscription
             </Text>

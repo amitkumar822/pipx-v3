@@ -57,7 +57,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
         }
       } catch (error) {
         setShowError(true);
-        setErrMsg( error?.message || "Failed to send reset.");
+        setErrMsg(error?.message || "Failed to send reset.");
       } finally {
         setLoading(false);
       }
@@ -81,7 +81,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
         setOtpEmail(response?.data?.otp);
         setEmail_or_mobile(userEmail.toLocaleLowerCase().trim());
         setStep(2);
-      } catch (error) {        
+      } catch (error) {
         Toast.show({
           type: "error",
           text1: error?.response?.message?.email[0] || "Failed to generate OTP",
@@ -133,13 +133,13 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
                 </Text>
               )}
             </View>
-            <View style={styles.mailsubtitle}>
-              {type === "signup" || type === "forgotpassword" ? (
+            {type === "signup" || type === "forgotpassword" ? (
+              <View style={styles.mailsubtitle}>
                 <Text style={styles.mailsubtitletxt}>Enter your email id</Text>
-              ) : (
-                <></>
-              )}
-            </View>
+              </View>
+            ) : (
+              <></>
+            )}
             <View style={styles.emailinputwrap}>
               <TextInput
                 style={styles.emailinput}
@@ -228,11 +228,10 @@ const styles = StyleSheet.create({
   emailinput: {
     width: "100%",
     backgroundColor: "#FFFFFF",
-    height: 56,
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 14,
-    marginTop: 20,
+    // marginTop: 20,
     borderColor: "#007AFF",
     borderWidth: 1,
     bordeRadius: 14,

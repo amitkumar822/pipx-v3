@@ -13,9 +13,9 @@ export const StepTwo = ({ type, step, setStep }) => {
 
   const [otp, setOtp] = useState("");
 
-  useEffect(() => {
-    setOtp(otpEmail);
-  }, [otpEmail]);
+  // useEffect(() => {
+  //   setOtp(otpEmail);
+  // }, [otpEmail]);
 
   const [loading, setLoading] = useState(false);
 
