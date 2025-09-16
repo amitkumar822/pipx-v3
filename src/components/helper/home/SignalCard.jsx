@@ -2,14 +2,12 @@ import {
   View,
   Text,
   Pressable,
-  Alert,
   ActivityIndicator,
   TextInput,
   TouchableOpacity,
 } from "react-native";
 import { format } from "date-fns";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { RFValue } from "react-native-responsive-fontsize";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LineChart } from "react-native-gifted-charts";
 import apiService from "../../../services/api";
@@ -391,14 +389,14 @@ export const SignalCard = memo(
                 <View className="w-full flex-col justify-end mb-2">
                   <Text
                     className="text-base font-medium text-black"
-                    style={{ fontSize: RFValue(10.2) }}
+                    style={{ fontSize: 12 }}
                   >
                     Date & Time:
                   </Text>
                   <Text
                     className="text-[#007AFF] font-bold mt-1"
                     style={{
-                      fontSize: RFValue(10),
+                      fontSize: 11,
                       flexShrink: 1,
                       flexWrap: "wrap",
                     }}
@@ -438,7 +436,7 @@ export const SignalCard = memo(
               name="like1"
               color={isLiked ? "#007AFD" : "#999"}
               style={{
-                fontSize: RFValue(19),
+                fontSize: 20,
                 flexShrink: 1,
                 flexWrap: "wrap",
               }}
@@ -452,7 +450,7 @@ export const SignalCard = memo(
               // className="bg-[#d98068]"
               color={isDisliked ? "#d98068" : "#999"}
               style={{
-                fontSize: RFValue(19),
+                fontSize: 20,
                 transform: [{ scaleX: -1 }],
               }}
             />
@@ -501,11 +499,11 @@ export const SignalCard = memo(
           <View className="flex-row items-center gap-x-1">
             <MaterialIcons
               name="thumb-up-alt"
-              size={RFValue(15)}
+              size={16}
               color="#6B7280"
             />
             <View className="flex-row items-center justify-center flex-wrap">
-              <Text className="text-gray-500" style={{ fontSize: RFValue(9) }}>
+              <Text className="text-gray-500" style={{ fontSize: 10 }}>
                 Liked by{" "}
               </Text>
               <AnimatedNumber
@@ -513,11 +511,11 @@ export const SignalCard = memo(
                 animationDuration={300}
                 animateToNumber={localLikeCount}
                 fontStyle={{
-                  fontSize: RFValue(9),
+                  fontSize: 10,
                   color: "#6B7280",
                 }}
               />
-              <Text className="text-gray-500" style={{ fontSize: RFValue(9) }}>
+              <Text className="text-gray-500" style={{ fontSize: 10 }}>
                 {" "}
                 people
               </Text>
@@ -528,11 +526,11 @@ export const SignalCard = memo(
           <View className="flex-row items-center gap-x-1">
             <MaterialIcons
               name="thumb-down-alt"
-              size={RFValue(15)}
+              size={16}
               color="#6B7280"
             />
             <View className="flex-row flex-wrap items-center">
-              <Text className="text-gray-500" style={{ fontSize: RFValue(9) }}>
+              <Text className="text-gray-500" style={{ fontSize: 10 }}>
                 Disliked by{" "}
               </Text>
               <AnimatedNumber
@@ -540,11 +538,11 @@ export const SignalCard = memo(
                 animationDuration={300}
                 animateToNumber={localDislikeCount}
                 fontStyle={{
-                  fontSize: RFValue(9),
+                  fontSize: 10,
                   color: "#6B7280",
                 }}
               />
-              <Text className="text-gray-500" style={{ fontSize: RFValue(9) }}>
+              <Text className="text-gray-500" style={{ fontSize: 10 }}>
                 {" "}
                 people
               </Text>
@@ -558,18 +556,18 @@ export const SignalCard = memo(
               openCommentModal(postId);
             }}
           >
-            <MaterialIcons name="comment" size={RFValue(15)} color="#6B7280" />
+            <MaterialIcons name="comment" size={16} color="#6B7280" />
             <View className="flex-row items-center flex-wrap">
               <AnimatedNumber
                 includeComma={false}
                 animationDuration={300}
                 animateToNumber={localCommentCount}
                 fontStyle={{
-                  fontSize: RFValue(9),
+                  fontSize: 10,
                   color: "#6B7280",
                 }}
               />
-              <Text className="text-gray-500" style={{ fontSize: RFValue(9) }}>
+              <Text className="text-gray-500" style={{ fontSize: 10 }}>
                 {" "}
                 comments
               </Text>
