@@ -6,7 +6,7 @@ import { UserFollowingScreen } from '@/src/components/screens/UserFollowingScree
 const AgentBlock = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-      {/* <UserFollowingScreen boxType="blocked" /> */}
+      <UserFollowingScreen boxType="blocked" blockedUserType="agent" />
     </SafeAreaView>
   )
 }

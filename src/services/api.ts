@@ -81,7 +81,7 @@ class ApiService {
   private async getAuthToken(): Promise<string | null> {
     try {
       const token = await AsyncStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
-      
+
       // Added token expiry check
       if (token) {
         try {
@@ -90,11 +90,13 @@ class ApiService {
           if (decoded?.exp) {
             const currentTime = Date.now();
             const expiryTime = decoded.exp * 1000; // Convert to milliseconds
-            
+
             if (currentTime >= expiryTime) {
-              console.log("Token expired during API request - triggering logout");
+              console.log(
+                "Token expired during API request - triggering logout"
+              );
               // Use dynamic import to avoid circular dependency
-              const { AuthEvents } = await import('./ApiInterceptor');
+              const { AuthEvents } = await import("./ApiInterceptor");
               AuthEvents.notifyTokenExpired();
               return null; // Return null to prevent using expired token
             }
@@ -102,12 +104,12 @@ class ApiService {
         } catch (decodeError) {
           console.error("Error decoding token:", decodeError);
           // Token is invalid, trigger logout
-          const { AuthEvents } = await import('./ApiInterceptor');
+          const { AuthEvents } = await import("./ApiInterceptor");
           AuthEvents.notifyTokenExpired();
           return null;
         }
       }
-      
+
       return token;
     } catch (error) {
       console.error("Error getting auth token:", error);
@@ -550,6 +552,16 @@ class ApiService {
     });
   }
 
+  // Get Blocked Users
+  async getBlockedUsers(page: number, perPage: number): Promise<ApiResponse> {
+    return this.makeRequest(
+      `${API_ENDPOINTS.AGENT_BLOCKED_USERS}?page=${page}&per_page=${perPage}`,
+      {
+        method: "GET",
+      }
+    );
+  }
+
   // User Report Signal Provider
   async userReportSignalProvider(
     signalProviderId: number
@@ -905,16 +917,24 @@ class ApiService {
 
   // Delete Notification
   async deleteNotification(notificationId: number): Promise<ApiResponse> {
-    return this.makeRequest(`${API_ENDPOINTS.DELETE_NOTIFICATION}${notificationId}/`, {
-      method: "DELETE",
-    });
+    return this.makeRequest(
+      `${API_ENDPOINTS.DELETE_NOTIFICATION}${notificationId}/`,
+      {
+        method: "DELETE",
+      }
+    );
   }
 
   // Visit Notification
-  async visitNotificationLikeDisLikeComment(notificationPostId: number): Promise<ApiResponse> {
-    return this.makeRequest(`${API_ENDPOINTS.VISIT_NOTIFICATION_LIKE_DISLIKE_COMMENT}${notificationPostId}/`, {
-      method: "GET",
-    });
+  async visitNotificationLikeDisLikeComment(
+    notificationPostId: number
+  ): Promise<ApiResponse> {
+    return this.makeRequest(
+      `${API_ENDPOINTS.VISIT_NOTIFICATION_LIKE_DISLIKE_COMMENT}${notificationPostId}/`,
+      {
+        method: "GET",
+      }
+    );
   }
 
   async getNotificationCount(): Promise<ApiResponse> {

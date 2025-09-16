@@ -15,6 +15,7 @@ import apiService from "../../services/api";
 import { useUserProvider } from "@/src/context/user/userContext";
 import {
   useBlockUnblockSignalProvider,
+  useSignalProviderBlockedUsers,
   useUnfollowSignalProvider,
 } from "@/src/hooks/useApi";
 import ReportBlockModal from "../helper/ReportBlockModel";
@@ -28,7 +29,7 @@ const NAME_WIDTH = ITEM_WIDTH * 0.55;
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
-export const UserFollowingScreen = ({ boxType }) => {
+export const UserFollowingScreen = ({ boxType, blockedUserType = "user" }) => {
   //^=============Start Pagination Functionality==============
   const [following, setFollowing] = useState([]);
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -95,7 +96,7 @@ export const UserFollowingScreen = ({ boxType }) => {
 
       const response =
         boxType === "blocked"
-          ? await apiService.getAgentBlocked(currentPage, perPage)
+          ? blockedUserType === "user" ? await apiService.getAgentBlocked(currentPage, perPage) : await apiService.getBlockedUsers(currentPage, perPage)
           : await apiService.getUserFollowing(currentPage, perPage);
 
       if (response.statusCode === 200 && response.data) {
@@ -125,26 +126,35 @@ export const UserFollowingScreen = ({ boxType }) => {
   const [fullName, setFullName] = useState("");
 
   // Handle unfollow action
-  const handleUnfollowUnBlock = async (signalProvider) => {
+  const handleUnfollowUnBlock = async (userDetails) => {
     if (boxType === "blocked") {
+      const userId = userDetails.signal_provider?.id || userDetails.user_id;
+
+      const firstName = userDetails.signal_provider?.first_name || userDetails.first_name;
+      const lastName = userDetails.signal_provider?.last_name || userDetails.last_name;
+      const username = userDetails.signal_provider?.username || userDetails.username;
       setVisible(true);
       setModalType("unblock");
-      setSignalProvId(signalProvider.id);
-      setUsername(signalProvider.username);
+      setSignalProvId(userId);
+      setUsername(username);
       setFullName(
-        `${signalProvider.first_name} ${" "} ${signalProvider.last_name}`
+        `${firstName} ${lastName}`
       );
       return;
     }
 
-    setUsername(signalProvider.username);
+    setUsername(userDetails.username);
     setVisible(true);
     setModalType("unfollow");
-    setSignalProvId(signalProvider.id);
+    setSignalProvId(userDetails.id);
   };
 
-  // Unblock Hook
+  // User Unblock Hook
   const blockUnblockMutation = useBlockUnblockSignalProvider();
+
+  // Signal Provider Unblock Hook
+  const { mutate: signalProviderUnblockUsers } =
+    useSignalProviderBlockedUsers();
 
   // Handle Unblock Signal Provider by USER
   const handleUnBlock = async () => {
@@ -153,27 +163,55 @@ export const UserFollowingScreen = ({ boxType }) => {
       return;
     }
 
-    blockUnblockMutation.mutateAsync(signalProvId, {
-      onSuccess: () => {
-        setSignalProvId("");
-        setIsOpened(false);
-        setModalType("success");
+    if (blockedUserType === "user") {
+      blockUnblockMutation.mutateAsync(signalProvId, {
+        onSuccess: () => {
+          setSignalProvId("");
+          setIsOpened(false);
+          setModalType("success");
 
-        setBlockFollowingDetails((prev) =>
-          prev.filter((item) => item.signal_provider.id !== signalProvId)
-        );
+          setBlockFollowingDetails((prev) =>
+            prev.filter((item) => item.signal_provider.id !== signalProvId)
+          );
 
-        setTimeout(() => {
-          setVisible(false);
-        }, 3000);
-      },
-      onError: (error) => {
-        Alert.alert(
-          "Error",
-          error?.message || "Failed to block/unblock the signal provider."
-        );
-      },
-    });
+          setTimeout(() => {
+            setVisible(false);
+          }, 500);
+        },
+        onError: (error) => {
+          Alert.alert(
+            "Error",
+            error?.message || "Failed to block/unblock the signal provider."
+          );
+        },
+      });
+    } else if (blockedUserType === "agent") {
+      setBlockFollowingDetails((prev) =>
+        prev.filter((item) => item.user_id !== signalProvId)
+      );
+      signalProviderUnblockUsers(signalProvId, {
+        onSuccess: () => {
+          setSignalProvId("");
+          setIsOpened(false);
+          setModalType("success");
+
+          setBlockFollowingDetails((prev) =>
+            prev.filter((item) => item.user_id !== signalProvId)
+          );
+
+          setTimeout(() => {
+            setVisible(false);
+          }, 500);
+        },
+        onError: (error) => {
+          Alert.alert(
+            "Error",
+            error?.message || "Failed to unblock the signal provider."
+          );
+        },
+      });
+    }
+    return;
   };
 
   // Handle Unfollow Signal Provider by USER Hook
@@ -343,7 +381,7 @@ const FollowerItem = memo(
     const handleUnfollow = async () => {
       setUnfollowing(true);
       try {
-        await onUnfollow(item.signal_provider);
+        await onUnfollow(item);
       } catch (error) {
         Alert.alert(
           "Error",
@@ -399,9 +437,8 @@ const FollowerItem = memo(
 
         {boxType === "following" ? (
           <Pressable
-            className={`border border-[#007AFF] px-2 py-1 rounded ${
-              unfollowing ? "opacity-50" : ""
-            }`}
+            className={`border border-[#007AFF] px-2 py-1 rounded ${unfollowing ? "opacity-50" : ""
+              }`}
             onPress={handleUnfollow}
             disabled={unfollowing}
           >
@@ -416,9 +453,8 @@ const FollowerItem = memo(
           </Pressable>
         ) : (
           <Pressable
-            className={`border border-blue-400 px-2 py-1 rounded ${
-              unfollowing ? "opacity-50" : ""
-            }`}
+            className={`border border-blue-400 px-2 py-1 rounded ${unfollowing ? "opacity-50" : ""
+              }`}
             onPress={handleUnfollow}
             disabled={unfollowing}
           >
