@@ -79,7 +79,7 @@ const SearchCard = memo(
             <View className="flex-1 flex-col justify-start items-start space-y-1">
               <Text
                 className="text-black leading-[24px] font-[Poppins] font-medium"
-                style={{ fontSize: RFValue(14) }}
+                style={{ fontSize: 15 }}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -91,14 +91,14 @@ const SearchCard = memo(
                   label={veryUserType ? "Followers" : "Following"}
                   value={count}
                 />
-                <StatItem label="Net Pips" value={netPips} />
-                <StatItem label="Signals" value={signals} />
+                {veryUserType && <StatItem label="Net Pips" value={netPips} />}
+                {veryUserType && <StatItem label="Signals" value={signals} />}
               </View>
             </View>
           </View>
 
           {/* Success Rate (Right Side) */}
-          <SuccessRateIndicator rate={profileData.success_rate} />
+         {veryUserType && <SuccessRateIndicator rate={profileData.success_rate} />}
         </View>
       </TouchableOpacity>
     );
@@ -132,13 +132,13 @@ const SuccessRateIndicator = memo(({ rate = 0 }) => (
   <View className="items-center ml-2 min-w-[60px]">
     <Text
       className="text-[#34A853] font-[Poppins] font-bold"
-      style={{ fontSize: RFValue(13) }}
+      style={{ fontSize: 14 }}
     >
       {rate}%
     </Text>
     <Text
       className="text-[#34A853] font-[Poppins] font-semibold"
-      style={{ fontSize: RFValue(12) }}
+      style={{ fontSize: 13 }}
     >
       Success
     </Text>

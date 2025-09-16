@@ -59,7 +59,7 @@ function SearchScreen({
         <View className="w-full flex-row items-center bg-[#EBF5FF] rounded-2xl mb-2 mt-2 px-4">
           <Feather
             name="search"
-            size={RFValue(20)}
+            size={21}
             color="#999"
             style={{ marginRight: 8 }}
           />
