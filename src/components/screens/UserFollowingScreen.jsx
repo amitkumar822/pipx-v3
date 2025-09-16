@@ -21,7 +21,6 @@ import ReportBlockModal from "../helper/ReportBlockModel";
 import { RFValue } from "react-native-responsive-fontsize";
 import debounce from "lodash/debounce";
 import { AppImage } from "../utils/AppImage";
-import NoResultsFound from "../NoResultsFound";
 
 const { width } = Dimensions.get("window");
 const ITEM_WIDTH = width * 0.95;

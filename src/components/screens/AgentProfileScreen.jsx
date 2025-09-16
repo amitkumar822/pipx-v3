@@ -100,16 +100,11 @@ export const AgentProfileScreen = () => {
       label: "Win/Loss ratio",
       onPress: () => { },
     },
-    // {
-    //   value: "XXXX",
-    //   label: "Lorem Ipsum",
-    //   onPress: () => {},
-    // },
-    // {
-    //   value: "XXXX",
-    //   label: "Lorem Ipsum",
-    //   onPress: () => {},
-    // },
+    {
+      value: agentProfile?.block_user_count || "0",
+      label: "Blocked",
+      onPress: () => router?.push("/profile/agentblock"),
+    },
   ];
 
   return (

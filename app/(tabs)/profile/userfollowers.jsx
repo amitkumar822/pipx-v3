@@ -25,11 +25,13 @@ export default function UserFollowers() {
         return response.data;
       }
     } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error.message,
-      });
+      if(error?.statusCode !== 400) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: error.message,
+        });
+      }
     }
   };
 
@@ -68,7 +70,7 @@ export default function UserFollowers() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <AppStatusBar backgroundColor="#FFF" barStyle="dark-content" />
       <AgentFollowersScreen
         followersData={follows}

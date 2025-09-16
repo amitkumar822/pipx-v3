@@ -1,5 +1,5 @@
 import { View, Text, Pressable, Alert, ActivityIndicator } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useProfileById } from "@/src/components/helper/profile/helper/useProfileById";
 import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,6 +13,7 @@ import {
 } from "@/src/hooks/useApi";
 import ReportBlockModal from "@/src/components/helper/ReportBlockModel";
 import { AppStatusBar } from "@/src/components/utils/AppStatusBar";
+import { format } from "date-fns";
 
 const visitprofile = () => {
   const { id, userType, backRoutePath } = useLocalSearchParams();
@@ -23,10 +24,7 @@ const visitprofile = () => {
     isLoading,
     error,
     refetch,
-  } = useProfileById(id, userType, {
-    staleTime: 0,
-    cacheTime: 0,
-  });
+  } = useProfileById(id, userType);
   // Using optional chaining for both profileData?.data and array access [0]
   const profile = profileData?.data?.[0];
 
@@ -67,7 +65,7 @@ const visitprofile = () => {
       value: profile?.following || "0",
       label: "Following",
       // onPress: () => router.push("/profile/userfollowing"), // this navigation is changed userFollowing route.push("/userfollowing"),
-      onPress: () => {},
+      onPress: () => { },
     },
     // {
     //   value: profile?.blocked_signal_provider || "0",
@@ -81,28 +79,28 @@ const visitprofile = () => {
     {
       value: profile?.signals || "0",
       label: "Signals Posted", //▶️
-      onPress: () => {},
+      onPress: () => { },
     },
     {
       value: String(followersCount || 0),
       label: "Followers",
       // onPress: () => router?.push("/profile/userfollowers"),
-      onPress: () => {},
+      onPress: () => { },
     },
     {
       value: `${profile?.success_rate}%` || "0%",
       label: "Win rate", //▶️
-      onPress: () => {},
+      onPress: () => { },
     },
     {
       value: `${profile?.longest_streak}` || "0",
       label: "Longest Streak",
-      onPress: () => {},
+      onPress: () => { },
     },
     {
       value: profile?.net_pips || "0",
       label: "Net Pips", //▶️
-      onPress: () => {},
+      onPress: () => { },
     },
   ];
 
@@ -211,10 +209,17 @@ const visitprofile = () => {
     });
   };
 
+  // Memoized date formatting
+  const formattedDate = useMemo(() => {
+    const dateToFormat = profileData?.subscribed_end_date ? new Date(profileData?.subscribed_end_date) : "";
+
+    return dateToFormat ? format(dateToFormat, "dd MMMM yyyy") : "";
+  }, [profileData?.subscribed_end_date]);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <AppStatusBar backgroundColor="#FFF" barStyle="dark-content" />
-      
+
       <ProfileHeader
         backtxt={`@${profileData?.data?.[0]?.username || "Profile"}`}
         righttxt={""}
@@ -257,9 +262,8 @@ const visitprofile = () => {
             <Pressable
               onPress={handleFollowUnfollowOpenModal}
               disabled={isProcessing}
-              className={`${
-                isFollowing ? "bg-white border border-red-500" : "bg-blue-500"
-              } px-6 py-2 rounded-xl w-[48%] flex-row items-center justify-center`}
+              className={`${isFollowing ? "bg-white border border-red-500" : "bg-blue-500"
+                } px-6 py-2 rounded-xl w-[48%] flex-row items-center justify-center`}
             >
               {isProcessing ? (
                 <ActivityIndicator
@@ -268,9 +272,8 @@ const visitprofile = () => {
                 />
               ) : (
                 <Text
-                  className={`${
-                    isFollowing ? "text-red-500" : "text-white"
-                  } text-base font-medium`}
+                  className={`${isFollowing ? "text-red-500" : "text-white"
+                    } text-base font-medium`}
                 >
                   {isFollowing ? "Unfollow" : "Follow"}
                 </Text>
@@ -279,25 +282,34 @@ const visitprofile = () => {
 
             <Pressable
               onPress={handleSubscribe}
-              className="border border-yellow-400 px-4 py-2 rounded-xl w-[48%] flex-row items-center space-x-2 justify-center gap-2"
+              className="px-4 py-2 rounded-xl w-[48%] flex-row items-center space-x-2 justify-center gap-2"
+              style={{
+                borderColor: profileData?.is_subscribed ? "#fbbf24" : "#5c9bf2",
+                borderWidth: 1,
+              }}
             >
-              <FontAwesome name="star" size={16} color="#fbbf24" />
-              <Text className="text-yellow-500 font-medium">Subscribed</Text>
+              <FontAwesome name="star" size={16} color={profileData?.is_subscribed ? "#fbbf24" : "#5c9bf2"} />
+              <Text
+                style={{
+                  color: profileData?.is_subscribed ? "#fbbf24" : "#5c9bf2",
+                  fontWeight: "bold",
+                }}
+              >{profileData?.is_subscribed ? "Subscribed" : "Subscribe"}</Text>
             </Pressable>
           </View>
 
-          <View className="bg-yellow-400 px-4 py-3 rounded-md mb-4 flex-row items-center justify-center gap-2">
+          {formattedDate && <View className="bg-yellow-400 px-4 py-3 rounded-md mb-4 flex-row items-center justify-center gap-2">
             <FontAwesome name="star" size={16} color="white" />
             <Text className="text-white text-xs font-bold">
-              Subscription is valid from 13ᵗʰ May, 2025 to 13ᵗʰ Nov, 2025
+              Subscription is valid {formattedDate}
             </Text>
-          </View>
+          </View>}
 
-          <Pressable className="border border-yellow-400 px-4 py-2 rounded-xl w-full flex-row items-center justify-center">
+          {profileData?.is_subscribed && <Pressable className="border border-yellow-400 px-4 py-2 rounded-xl w-full flex-row items-center justify-center">
             <Text className="text-yellow-500 text-center font-medium text-lg">
               Upgrade subscription
             </Text>
-          </Pressable>
+          </Pressable>}
         </View>
       )}
 
