@@ -6,6 +6,7 @@ import {
   FlatList,
   Pressable,
   Modal,
+  TouchableOpacity,
 } from "react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { SignalCard } from "../helper/home/SignalCard";
@@ -20,6 +21,7 @@ import {
 import CommentSheet from "../helper/home/CommentSheet";
 import { EndOfListComponent } from "../EndOfListComponent";
 import SkeletonSignalPostCard from "../helper/home/SkeletonSignalPostCard";
+import { router } from "expo-router";
 
 export const AgentHomeScreen = ({
   signalPostsData,
@@ -201,23 +203,34 @@ export const AgentHomeScreen = ({
         </Text>
 
         <View style={styles.retryButtonContainer}>
-          <Pressable
-            style={[
-              styles.retryButton,
-              isFetching && { opacity: 0.7 }, // dim when loading
-            ]}
-            disabled={isFetching}
-            onPress={() => {
-              setPage(1);
-              refetch();
-            }}
-          >
-            {isFetching ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <Text style={styles.retryText}>Refresh</Text>
-            )}
-          </Pressable>
+          {signalPostsError?.statusCode !== 404 ? (
+            <TouchableOpacity
+              style={[
+                styles.retryButton,
+                isFetching && { opacity: 0.7 }, // dim when loading
+              ]}
+              disabled={isFetching}
+              onPress={() => {
+                setPage(1);
+                refetch();
+              }}
+            >
+              {isFetching ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.retryText}>Refresh</Text>
+              )}
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={[styles.retryButton]}
+              onPress={() => {
+                router.push("/(tabs)/search");
+              }}
+            >
+              <Text style={styles.retryText}>Follow Signal Providers</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );
@@ -225,7 +238,7 @@ export const AgentHomeScreen = ({
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {(
+      {
         <FlatList
           data={signalPostsData}
           renderItem={renderSignalPost}
@@ -256,7 +269,7 @@ export const AgentHomeScreen = ({
             ) : null
           }
         />
-      )}
+      }
 
       <Modal
         visible={modalVisible}
@@ -308,13 +321,16 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: "#FF3B30",
+    color: "#cf3035",
     textAlign: "center",
     marginBottom: 20,
   },
   retryButtonContainer: {
-    marginTop: 15,
     alignItems: "center",
+  },
+  retryText: {
+    fontSize: 16,
+    color: "#FFFFFF",
   },
   retryButton: {
     fontSize: 16,
