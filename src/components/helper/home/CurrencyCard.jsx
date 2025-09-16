@@ -24,7 +24,7 @@ const CurrencyCard = ({ item }) => {
         asset_id: assetId,
       });
 
-      if (response.statusCode === 200 && response.data) {
+      if (response.statusCode === 200 && response?.data?.length > 0) {
         // Navigate to AgentScreen with the fetched data
         router.push({
           pathname: "/agent",
