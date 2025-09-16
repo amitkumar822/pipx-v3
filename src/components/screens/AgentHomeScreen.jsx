@@ -8,7 +8,7 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { SignalCard } from "../helper/home/SignalCard";
 import apiService from "../../services/api";
 import { useUserProvider } from "@/src/context/user/userContext";
@@ -22,6 +22,7 @@ import CommentSheet from "../helper/home/CommentSheet";
 import { EndOfListComponent } from "../EndOfListComponent";
 import SkeletonSignalPostCard from "../helper/home/SkeletonSignalPostCard";
 import { router } from "expo-router";
+import { AuthContext } from "@/src/store/AuthContext";
 
 export const AgentHomeScreen = ({
   signalPostsData,
@@ -36,6 +37,8 @@ export const AgentHomeScreen = ({
   handleLoadMore,
   signalOwnPostReportButtonHidde = false,
 }) => {
+  
+  const { userType } = useContext(AuthContext);
   // =========== Comment Modal Open Functionality ===================
   const [modalVisible, setModalVisible] = useState(false);
   const [signalPostId, setSignalPostId] = useState("");
@@ -196,6 +199,7 @@ export const AgentHomeScreen = ({
   }
 
   if (signalPostsError) {
+    const routePath = userType === "USER" ? "/(tabs)/search" : "/agent";
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>
@@ -225,7 +229,7 @@ export const AgentHomeScreen = ({
             <TouchableOpacity
               style={[styles.retryButton]}
               onPress={() => {
-                router.push("/(tabs)/search");
+                router.push(routePath);
               }}
             >
               <Text style={styles.retryText}>Follow Signal Providers</Text>
