@@ -285,7 +285,7 @@ export default function PostSignalScreen() {
 
               <View style={styles.newpostsignalcontainer}>
                 <View style={styles.assetbox}>
-                  <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                  <Text style={{ fontSize: 16, fontWeight: "500" }}>
                     Asset <Text style={{ color: "#FF3B30" }}>*</Text>
                   </Text>
                   {assetsLoading ? (
@@ -322,7 +322,7 @@ export default function PostSignalScreen() {
                 {/* Date and Time picker */}
                 <View style={styles.coltwobox}>
                   <View style={styles.halfassetbox}>
-                    <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                    <Text style={{ fontSize: 16, fontWeight: "500" }}>
                       Date
                     </Text>
                     <Pressable
@@ -341,7 +341,7 @@ export default function PostSignalScreen() {
                   {/* Direction */}
                   <>
                     <View style={styles.halfassetbox}>
-                      <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                      <Text style={{ fontSize: 16, fontWeight: "500" }}>
                         Direction
                       </Text>
                       <Pressable
@@ -388,7 +388,7 @@ export default function PostSignalScreen() {
 
                 <View style={styles.coltwobox}>
                   <View style={styles.halfassetbox}>
-                    <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                    <Text style={{ fontSize: 16, fontWeight: "500" }}>
                       Take Profit 1 <Text style={{ color: "#FF3B30" }}>*</Text>
                     </Text>
                     <TextInput
@@ -399,6 +399,7 @@ export default function PostSignalScreen() {
                       placeholder="Required"
                       keyboardType="numeric"
                       value={formData.tp1}
+                      placeholderTextColor="#999999"
                       onChangeText={(value) => updateFormData("tp1", value)}
                     />
                     {errors.tp1 && (
@@ -406,7 +407,7 @@ export default function PostSignalScreen() {
                     )}
                   </View>
                   <View style={styles.halfassetbox}>
-                    <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                    <Text style={{ fontSize: 16, fontWeight: "500" }}>
                       Take Profit 2
                     </Text>
                     <TextInput
@@ -417,6 +418,7 @@ export default function PostSignalScreen() {
                       placeholder="Optional"
                       keyboardType="numeric"
                       value={formData.tp2}
+                      placeholderTextColor="#999999"
                       onChangeText={(value) => updateFormData("tp2", value)}
                     />
                     {errors.tp2 && (
@@ -427,7 +429,7 @@ export default function PostSignalScreen() {
 
                 <View style={styles.coltwobox}>
                   <View style={styles.halfassetbox}>
-                    <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                    <Text style={{ fontSize: 16, fontWeight: "500" }}>
                       Take Profit 3
                     </Text>
                     <TextInput
@@ -438,6 +440,7 @@ export default function PostSignalScreen() {
                       placeholder="Optional"
                       keyboardType="numeric"
                       value={formData.tp3}
+                      placeholderTextColor="#999999"
                       onChangeText={(value) => updateFormData("tp3", value)}
                     />
                     {errors.tp3 && (
@@ -445,7 +448,7 @@ export default function PostSignalScreen() {
                     )}
                   </View>
                   <View style={styles.halfassetbox}>
-                    <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                    <Text style={{ fontSize: 16, fontWeight: "500" }}>
                       Caption <Text style={{ color: "#FF3B30" }}>*</Text>
                     </Text>
                     <TextInput
@@ -455,6 +458,7 @@ export default function PostSignalScreen() {
                       ]}
                       placeholder="Signal caption"
                       value={formData.caption}
+                      placeholderTextColor="#999999"
                       onChangeText={(value) => updateFormData("caption", value)}
                     />
                     {errors.caption && (
@@ -467,7 +471,7 @@ export default function PostSignalScreen() {
 
                 <View style={styles.coltwobox}>
                   <View style={styles.halfassetbox}>
-                    <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                    <Text style={{ fontSize: 16, fontWeight: "500" }}>
                       Stop Loss <Text style={{ color: "#FF3B30" }}>*</Text>
                     </Text>
                     <TextInput
@@ -478,6 +482,7 @@ export default function PostSignalScreen() {
                       placeholder="Required"
                       keyboardType="numeric"
                       value={formData.stop_loss}
+                      placeholderTextColor="#999999"
                       onChangeText={(value) =>
                         updateFormData("stop_loss", value)
                       }
@@ -489,7 +494,7 @@ export default function PostSignalScreen() {
                     )}
                   </View>
                   <View style={{ ...styles.halfassetbox, gap: 0 }}>
-                    <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                    <Text style={{ fontSize: 16, fontWeight: "500" }}>
                       Content Visibility
                     </Text>
                     <View
@@ -524,6 +529,7 @@ export default function PostSignalScreen() {
                     multiline
                     numberOfLines={3}
                     value={formData.description}
+                    placeholderTextColor="#999999"
                     onChangeText={(value) =>
                       updateFormData("description", value)
                     }
@@ -645,7 +651,6 @@ const styles = StyleSheet.create({
   inputfieldenabled: {
     width: "100%",
     backgroundColor: "#FFFFFF",
-    height: 36,
     paddingVertical: 8,
     paddingHorizontal: 8,
     borderRadius: 8,
@@ -675,8 +680,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
-    height: 36,
-    paddingVertical: 8,
+    paddingVertical: 6,
     paddingHorizontal: 8,
     borderRadius: 8,
     fontSize: 16,
@@ -708,22 +712,22 @@ const styles = StyleSheet.create({
     width: "50%",
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: 6,
   },
   buyselectedtxt: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   buyunselectedtxt: {
     color: "#A8A8A8",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   postsignalsubmit: {
     width: "100%",
     backgroundColor: "#007AFF",
-    height: 48,
+    padding: 12,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 12,

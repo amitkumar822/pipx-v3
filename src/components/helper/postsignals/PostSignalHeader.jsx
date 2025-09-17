@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   backtxt: {
-    fontSize: 24,
+    fontSize: 20,
     color: "#1E1E1E",
-    fontWeight: "600",
+    fontWeight: "500",
     lineHeight: 26,
   },
 });

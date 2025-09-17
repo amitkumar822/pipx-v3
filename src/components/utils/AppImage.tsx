@@ -9,7 +9,7 @@ type AppImageProps = {
   placeholder?: number; // Optional placeholder image
 };
 
-const DEFAULT_IMAGE = require("../../../assets/images/favicon.png");
+const DEFAULT_IMAGE = require("../../../assets/images/profile.png");
 
 export const AppImage: React.FC<AppImageProps> = ({
   uri,
