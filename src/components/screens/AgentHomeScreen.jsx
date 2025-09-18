@@ -226,14 +226,38 @@ export const AgentHomeScreen = ({
               )}
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
-              style={[styles.retryButton]}
-              onPress={() => {
-                router.push(routePath);
-              }}
-            >
-              <Text style={styles.retryText}>Follow Signal Providers</Text>
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity
+                style={[styles.retryButton]}
+                onPress={() => {
+                  router.push(routePath);
+                }}
+              >
+                <Text style={styles.retryText}>Follow Signal Providers</Text>
+              </TouchableOpacity>
+
+              <View style={{
+                marginTop: 10,
+              }}>
+                <TouchableOpacity
+                  style={[
+                    styles.retryButton,
+                    isFetching && { opacity: 0.7 }, // dim when loading
+                  ]}
+                  disabled={isFetching}
+                  onPress={() => {
+                    setPage(1);
+                    refetch();
+                  }}
+                >
+                  {isFetching ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={styles.retryText}>Refresh</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </>
           )}
         </View>
       </View>
@@ -339,9 +363,8 @@ const styles = StyleSheet.create({
   retryButton: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#FFFFFF",
-    backgroundColor: "#007AFF",
-    paddingVertical: 10,
+    backgroundColor: "#3486e0",
+    paddingVertical: 9,
     paddingHorizontal: 20,
     borderRadius: 8,
     overflow: "hidden",
