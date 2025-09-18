@@ -292,7 +292,7 @@ export const UserFollowingScreen = ({ boxType, blockedUserType = "user" }) => {
               fetchFollowing(1);
             }}
           >
-            <Text className="text-white text-base">Retry</Text>
+            <Text className="text-white text-base">Refresh</Text>
           </Pressable>
         </View>
       </View>
