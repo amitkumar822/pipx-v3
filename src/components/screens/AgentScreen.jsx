@@ -8,80 +8,67 @@ import NoResultsFound from "../NoResultsFound";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import SearchCardSkeleton from "../helper/search/SearchCardSkeleton";
 
-const perPage = 30;
+const perPage = 1;
 
 const AgentScreen = ({ currencyAssetId }) => {
   const insets = useSafeAreaInsets();
-  const bottomHeight = insets.bottom === 0 ? 85 : insets.bottom;
 
   const [agentDetails, setAgentDetails] = useState([]);
 
   // ======= Pagination Logic =======
   const [page, setPage] = useState(1);
-
   const [refreshing, setRefreshing] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const {
     data: paginationData,
     isLoading,
     isFetching,
-    isError,
-    refetch,
     error,
   } = useAssetBasedSignalPosts({
     assetId: currencyAssetId, page,
     perPage,
   });
 
-
-  const hasNextPage = paginationData?.hasNextPage ?? false;
+  // console.log("pagination Data: ", JSON.stringify(paginationData, null, 2));
 
   // Append new data to list only once per fetch for proper pagination
   useEffect(() => {
-    if (paginationData?.data?.length && !refreshing) {
+    if (paginationData?.statusCode === 200 && paginationData?.data?.length > 0) {
       if (page === 1) {
-        // First page - replace all data
         setAgentDetails(paginationData.data);
       } else {
-        // Subsequent pages - append new data and prevent duplicates
-        setAgentDetails((prev) => {
-          const existingIds = new Set(prev.map((item) => item.id));
-          const newItems = paginationData.data.filter(
-            (item) => !existingIds.has(item.id)
-          );
-          return [...prev, ...newItems];
-        });
+        setAgentDetails((prev) => [...prev, ...paginationData.data]);
       }
     }
-  }, [paginationData, page, refreshing]);
+    setHasNextPage(paginationData?.hasNextPage ?? false);
+    setIsLoadingMore(false);
+    setRefreshing(false);
+  }, [paginationData?.data, refreshing, page]);
+
 
   // Handle pagination trigger
   const handleLoadMore = () => {
-    if (!isFetching && hasNextPage) {
+    if (!isLoadingMore && hasNextPage && !isLoading) {
+      setIsLoadingMore(true);
       setPage((prev) => prev + 1);
     }
   };
 
   // Pull-to-refresh handler
-  const handleRefresh = useCallback(async () => {
-    try {
-      setRefreshing(true);
-      setPage(1); // Reset to first page
-      setAgentDetails([]); // Clear current data
-      await refetch();
-    } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error.message || "Failed to refresh data.",
-      });
-    } finally {
-      // Delay to show smooth refresh animation
-      setTimeout(() => {
-        setRefreshing(false);
-      }, 300);
-    }
-  }, [refetch]);
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setPage(1);
+    setHasNextPage(false);
+  };
+
+  // Initial loading time pagination logic
+  useEffect(() => {
+    setRefreshing(true);
+    setPage(1);
+    setHasNextPage(false);
+  }, []);
 
   //! ======= Pagination Logic End =======
 
@@ -107,7 +94,6 @@ const AgentScreen = ({ currencyAssetId }) => {
         )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{
-          paddingBottom: bottomHeight,
           paddingTop: 8,
         }}
         showsVerticalScrollIndicator={false}
@@ -128,10 +114,6 @@ const AgentScreen = ({ currencyAssetId }) => {
           ) : null
         }
         ListEmptyComponent={() => <NoResultsFound />}
-        initialNumToRender={10}
-        maxToRenderPerBatch={10}
-        windowSize={5}
-        removeClippedSubviews={true}
       />
     </View>
   );

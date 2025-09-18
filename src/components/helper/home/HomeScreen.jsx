@@ -4,11 +4,11 @@ import { useAllSignalPosts } from "@/src/hooks/useApi";
 import debounce from "lodash/debounce";
 import { View } from "react-native";
 
+let perPage = 100; // Set your desired per page value here
 const HomeScreen = () => {
 
   // pagination state
   const [page, setPage] = useState(1);
-  let perPage = 20; // Set your desired per page value here
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [posts, setPosts] = useState([]);

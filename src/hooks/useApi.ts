@@ -418,6 +418,7 @@ export const useAssetBasedSignalPosts = ({
   page: number;
   perPage: number;
 }) => {
+  console.log("page: ", page);
   return useQuery({
     queryKey: [QUERY_KEYS.ASSET_BASED_SIGNAL_POSTS, assetId, page, perPage],
     queryFn: () =>
@@ -450,7 +451,6 @@ export const useAllSignalPosts = (
   options: { enabled?: boolean } = {}
 ) => {
   const { enabled = true } = options;
-
   // This hook fetches all signal posts
   return useQuery({
     queryKey: [QUERY_KEYS.SIGNAL_POSTS, page, perPage],
@@ -482,7 +482,13 @@ export const useCreateSignalPost = () => {
     mutationFn: (request: SignalPostRequest) =>
       apiService.createSignalPost(request),
     onSuccess: () => {
+      // Invalidate signal posts queries
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SIGNAL_POSTS] });
+
+      // Invalidate signal provider profile to refresh agent data
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.SIGNAL_PROVIDER_PROFILE],
+      });
     },
   });
 };
