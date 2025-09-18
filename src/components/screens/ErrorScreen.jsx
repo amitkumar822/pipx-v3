@@ -5,7 +5,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { Feather } from "@expo/vector-icons";
 import { BackHeader } from "../helper/auth/BackHeader";
 
-const ErrorScreen = ({ error, refetch }) => {
+const ErrorScreen = ({ error, refetch, logout = () => { } }) => {
   return (
     <>
       <BackHeader />
@@ -23,7 +23,7 @@ const ErrorScreen = ({ error, refetch }) => {
           <Pressable
             onPress={refetch}
             className="mt-6 flex-row items-center bg-blue-500 px-4 py-2 rounded-xl"
-            android_ripple={{ color: "#ffffff20" }}
+            android_ripple={{ color: "#ffffff" }}
           >
             <Feather name="rotate-ccw" size={RFValue(16)} color="#fff" />
             <Text className="text-white ml-2" style={{ fontSize: RFValue(14) }}>
@@ -38,6 +38,11 @@ const ErrorScreen = ({ error, refetch }) => {
             style={{ fontSize: RFValue(14) }}
           >
             Go Back
+          </Text>
+        </Pressable>
+        <Pressable onPress={logout} className="mt-4">
+          <Text className="text-blue-500 underline" style={{ fontSize: 14 }}>
+            Logout
           </Text>
         </Pressable>
       </View>

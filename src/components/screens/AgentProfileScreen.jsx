@@ -7,13 +7,14 @@ import { useLogout, useSignalProviderProfile } from "@/src/hooks/useApi";
 import { AuthContext } from "@/src/store/AuthContext";
 import { useUserProvider } from "@/src/context/user/userContext";
 import { LoadingScreen } from "./LoadingScreen";
+import ErrorScreen from "./ErrorScreen";
 
 export const AgentProfileScreen = () => {
   const { setProfile } = useUserProvider();
 
   const { userType } = useContext(AuthContext);
 
-  const { data, loading, error } = useSignalProviderProfile();
+  const { data, loading, error, refetch } = useSignalProviderProfile();
 
   const agentProfile = data?.data;
 
@@ -29,6 +30,7 @@ export const AgentProfileScreen = () => {
 
   if (error) {
     return (
+      // <ErrorScreen error={error} refetch={refetch} logout={handleLogout} />
       <View className="flex-1 justify-center items-center bg-white">
         <Text className="text-2xl font-bold text-red-600 mb-2">Oops!</Text>
         <Text className="text-base text-gray-700">

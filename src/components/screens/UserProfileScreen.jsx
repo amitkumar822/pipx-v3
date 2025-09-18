@@ -68,7 +68,7 @@ export const UserProfileScreen = () => {
   }
 
   if (error) {
-    return <ErrorScreen error={error} refetch={refetch} />;
+    return <ErrorScreen error={error} refetch={refetch} logout={handleLogout} />;
   }
 
   // User Stats data - make this dynamic later

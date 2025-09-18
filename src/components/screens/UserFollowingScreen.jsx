@@ -143,10 +143,10 @@ export const UserFollowingScreen = ({ boxType, blockedUserType = "user" }) => {
       return;
     }
 
-    setUsername(userDetails.username);
+    setUsername(userDetails.signal_provider?.username);
     setVisible(true);
     setModalType("unfollow");
-    setSignalProvId(userDetails.id);
+    setSignalProvId( userDetails?.signal_provider?.id);
   };
 
   // User Unblock Hook
@@ -239,7 +239,7 @@ export const UserFollowingScreen = ({ boxType, blockedUserType = "user" }) => {
       },
       onError: (error) => {
         Alert.alert(
-          "Error",
+          "Error2",
           error?.message || "Failed to unfollow the signal provider."
         );
       },
