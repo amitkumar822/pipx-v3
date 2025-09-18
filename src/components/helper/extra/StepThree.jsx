@@ -80,7 +80,6 @@ export const StepThree = ({ type, step, setStep }) => {
                 placeholderTextColor="#797979"
               />
             </View>
-            {type === "signup" ? <View></View> : <></>}
           </View>
         </View>
         <View style={styles.bottomsection}>
