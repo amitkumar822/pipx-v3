@@ -11,10 +11,10 @@ import ErrorScreen from "./ErrorScreen";
 
 export const AgentProfileScreen = () => {
   const { setProfile } = useUserProvider();
-
-  const { userType } = useContext(AuthContext);
-
+  const { userType, logout } = useContext(AuthContext);
   const { data, loading, error, refetch } = useSignalProviderProfile();
+  const router = useRouter();
+  const logoutMutation = useLogout();
 
   const agentProfile = data?.data;
 
@@ -23,31 +23,6 @@ export const AgentProfileScreen = () => {
       setProfile(agentProfile);
     }
   }, [agentProfile, userType]);
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
-
-  if (error) {
-    return (
-      // <ErrorScreen error={error} refetch={refetch} logout={handleLogout} />
-      <View className="flex-1 justify-center items-center bg-white">
-        <Text className="text-2xl font-bold text-red-600 mb-2">Oops!</Text>
-        <Text className="text-base text-gray-700">
-          {typeof error === "string"
-            ? error
-            : error?.message || "Something went wrong."}
-
-          {JSON.stringify(error, null, 2)}
-        </Text>
-      </View>
-    );
-  }
-
-  //& Logout logic can be added here if needed
-  const router = useRouter();
-  const { logout } = useContext(AuthContext);
-  const logoutMutation = useLogout();
 
   const handleLogout = async () => {
     Alert.alert(
@@ -79,6 +54,16 @@ export const AgentProfileScreen = () => {
       { cancelable: true }
     );
   };
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    return (
+      <ErrorScreen error={error} refetch={refetch} logout={handleLogout} />
+    );
+  }
 
   // User Stats data - make this dynamic later
   const statsAgentData = [

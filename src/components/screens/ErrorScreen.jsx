@@ -40,8 +40,8 @@ const ErrorScreen = ({ error, refetch, logout = () => { } }) => {
             Go Back
           </Text>
         </Pressable>
-        <Pressable onPress={logout} className="mt-4">
-          <Text className="text-blue-500 underline" style={{ fontSize: 14 }}>
+        <Pressable onPress={logout} className="mt-4 bg-red-500 px-4 py-2 rounded-xl">
+          <Text className="text-white underline" style={{ fontSize: 14 }}>
             Logout
           </Text>
         </Pressable>

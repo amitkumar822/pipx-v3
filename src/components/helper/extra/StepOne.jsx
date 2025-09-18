@@ -72,9 +72,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
         const response = await apiService.generateOtpEmail({
           email: userEmail.toLocaleLowerCase().trim(),
         });
-
-        console.log("Response: ", JSON.stringify(response, null, 2));
-
+        
         Toast.show({
           type: "success",
           text1: "OTP Sent Successfully!",
