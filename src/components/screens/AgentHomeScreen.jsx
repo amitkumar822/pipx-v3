@@ -37,7 +37,7 @@ export const AgentHomeScreen = ({
   handleLoadMore,
   signalOwnPostReportButtonHidde = false,
 }) => {
-  
+
   const { userType } = useContext(AuthContext);
   // =========== Comment Modal Open Functionality ===================
   const [modalVisible, setModalVisible] = useState(false);

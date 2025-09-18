@@ -14,8 +14,11 @@ import {
 import ReportBlockModal from "@/src/components/helper/ReportBlockModel";
 import { AppStatusBar } from "@/src/components/utils/AppStatusBar";
 import { format } from "date-fns";
+import { useUserProvider } from "@/src/context/user/userContext";
 
 const visitprofile = () => {
+  const { profile: userProfile } = useUserProvider();
+
   const { id, userType, backRoutePath } = useLocalSearchParams();
 
   // Add staleTime: 0 to always fetch fresh data when component mounts
@@ -216,7 +219,7 @@ const visitprofile = () => {
     const dateToFormat = subscribedEndDate ? new Date(subscribedEndDate) : "";
 
     return dateToFormat ? format(dateToFormat, "dd MMMM yyyy") : "";
-  }, [subscribedEndDate]);  
+  }, [subscribedEndDate]); 
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
@@ -239,7 +242,10 @@ const visitprofile = () => {
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <Text>Error loading profile. Please try again.</Text>
+          <Text className="text-red-500">{error?.response?.message}</Text>
+          <Pressable onPress={() => refetch()} className="bg-blue-500 px-4 py-2 rounded-xl mt-4">
+            <Text className="text-white">Refresh</Text>
+          </Pressable>
         </View>
       ) : profileData?.data ? (
         <ProfileBox
@@ -260,7 +266,7 @@ const visitprofile = () => {
         <View
           className={`w-[94%] mx-auto mt-2 ${userType === "USER" && "hidden"}`}
         >
-          <View className="flex-row justify-between items-center mb-4">
+          {profile?.id !== userProfile?.id && <View className="flex-row justify-between items-center mb-4">
             <Pressable
               onPress={handleFollowUnfollowOpenModal}
               disabled={isProcessing}
@@ -298,7 +304,7 @@ const visitprofile = () => {
                 }}
               >{isSubscribed ? "Subscribed" : "Subscribe"}</Text>
             </Pressable>
-          </View>
+          </View>}
 
           {formattedDate && <View className="bg-yellow-400 px-4 py-3 rounded-md mb-4 flex-row items-center justify-center gap-2">
             <FontAwesome name="star" size={16} color="white" />

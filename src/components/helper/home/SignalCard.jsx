@@ -317,13 +317,13 @@ export const SignalCard = memo(
           {/* Right Side: 3-dot button */}
           {!signalOwnPostReportButtonHidde && (
             <Pressable
-            onPress={() => {
-              setVisible(true);
-              setModalType("postReport");
-            }}
-            className="p-2"
-          >
-            <MaterialIcons name="more-vert" size={20} color="#666" />
+              onPress={() => {
+                setVisible(true);
+                setModalType("postReport");
+              }}
+              className="p-2"
+            >
+              <MaterialIcons name="more-vert" size={20} color="#666" />
             </Pressable>
           )}
         </View>
@@ -358,25 +358,25 @@ export const SignalCard = memo(
                   <Text>Entry Price</Text>
                   <Text>{entry || "N/A"}</Text>
                 </View>
-                {tp1 && (
+                {!!tp1 && (
                   <View className="flex-row justify-between">
                     <Text>TP1</Text>
                     <Text>{tp1}</Text>
                   </View>
                 )}
-                {tp2 && (
+                {!!tp2 && (
                   <View className="flex-row justify-between">
                     <Text>TP2</Text>
                     <Text>{tp2}</Text>
                   </View>
                 )}
-                {tp3 && (
+                {!!tp3 && (
                   <View className="flex-row justify-between">
                     <Text>TP3</Text>
                     <Text>{tp3}</Text>
                   </View>
                 )}
-                {stop_loss && (
+                {!!stop_loss && (
                   <View className="flex-row justify-between">
                     <Text>Stop Loss</Text>
                     <Text>{stop_loss}</Text>
