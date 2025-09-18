@@ -1,31 +1,23 @@
 import { View, FlatList, ActivityIndicator, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState, useCallback } from "react";
-import { useSignalProviderListSearch } from "@/src/hooks/useApi";
+import { useAssetBasedSignalPosts } from "@/src/hooks/useApi";
 import SearchCard from "../helper/search/SearchCard";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useUserProvider } from "@/src/context/user/userContext";
 import Toast from "react-native-toast-message";
 import NoResultsFound from "../NoResultsFound";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import SearchCardSkeleton from "../helper/search/SearchCardSkeleton";
 
-const AgentScreen = () => {
+const perPage = 30;
+
+const AgentScreen = ({ currencyAssetId }) => {
   const insets = useSafeAreaInsets();
   const bottomHeight = insets.bottom === 0 ? 85 : insets.bottom;
 
-  const [displayName, setDisplayName] = useState(false);
   const [agentDetails, setAgentDetails] = useState([]);
 
-  // Access user context to get currencyAssetDetails (Home Page)
-  const { currencyAssetDetails, setCurrencyAssetDetails } = useUserProvider();
-
-  // Make sure it's a stable boolean
-  const shouldFetch = currencyAssetDetails.length === 0;
-
-  //! ======= Pagination Logic =======
-  // Pagination states
+  // ======= Pagination Logic =======
   const [page, setPage] = useState(1);
-  const perPage = 30;
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -35,11 +27,12 @@ const AgentScreen = () => {
     isFetching,
     isError,
     refetch,
-  } = useSignalProviderListSearch("", {
-    enabled: shouldFetch,
-    page,
+    error,
+  } = useAssetBasedSignalPosts({
+    assetId: currencyAssetId, page,
     perPage,
   });
+
 
   const hasNextPage = paginationData?.hasNextPage ?? false;
 
@@ -62,30 +55,6 @@ const AgentScreen = () => {
     }
   }, [paginationData, page, refreshing]);
 
-  // Handle initial data source (user context vs API)
-  useEffect(() => {
-    if (currencyAssetDetails.length > 0 && !refreshing) {
-      setDisplayName(true);
-      setAgentDetails(currencyAssetDetails);
-    } else if (
-      !isLoading &&
-      !isError &&
-      page === 1 &&
-      paginationData?.data &&
-      !refreshing
-    ) {
-      setDisplayName(false);
-      // Data is already set in the previous useEffect, no need to set again
-    }
-  }, [
-    currencyAssetDetails,
-    isLoading,
-    isError,
-    page,
-    paginationData?.data,
-    refreshing,
-  ]);
-
   // Handle pagination trigger
   const handleLoadMore = () => {
     if (!isFetching && hasNextPage) {
@@ -99,15 +68,7 @@ const AgentScreen = () => {
       setRefreshing(true);
       setPage(1); // Reset to first page
       setAgentDetails([]); // Clear current data
-
-      // If using currency context data, clear it to trigger fresh API fetch
-      if (currencyAssetDetails.length > 0) {
-        setCurrencyAssetDetails([]);
-        setDisplayName(false);
-      } else {
-        // Refetch from API
-        await refetch();
-      }
+      await refetch();
     } catch (error) {
       Toast.show({
         type: "error",
@@ -120,7 +81,7 @@ const AgentScreen = () => {
         setRefreshing(false);
       }, 300);
     }
-  }, [currencyAssetDetails.length, setCurrencyAssetDetails, refetch]);
+  }, [refetch]);
 
   //! ======= Pagination Logic End =======
 
@@ -142,7 +103,7 @@ const AgentScreen = () => {
       <FlatList
         data={agentDetails}
         renderItem={({ item }) => (
-          <SearchCard searchData={item} nameDisplay={displayName} />
+          <SearchCard searchData={item} nameDisplay={true} />
         )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{

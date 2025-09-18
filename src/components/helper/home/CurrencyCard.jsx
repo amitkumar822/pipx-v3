@@ -15,39 +15,21 @@ import { useRouter } from "expo-router";
 const { width: screenWidth } = Dimensions.get("window");
 
 const CurrencyCard = ({ item }) => {
-  const { setCurrencyAssetDetails } = useUserProvider();
   const router = useRouter();
   // Get Signal Provider by asset ID
   const handleFetchSignalProviderByAssetId = async (assetId) => {
-    try {
-      const response = await apiService.getAssetBasedSignalPosts({
-        asset_id: assetId,
-      });
-
-      if (response.statusCode === 200 && response?.data?.length > 0) {
-        // Navigate to AgentScreen with the fetched data
-        router.push({
-          pathname: "/agent",
-          params: {
-            currencyAssetDetails: response.data,
-          },
-        });
-        setCurrencyAssetDetails(response.data);
-      } else {
-        Alert.alert("Error", "No signal providers found for this asset.");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Failed to fetch signal providers for this asset.");
-      // Optionally, you can handle the error more gracefully here
-      setCurrencyAssetDetails([]);
-      return null;
+    if (!assetId) {
+      Alert.alert("Error", "No asset ID found.");
+      return;
     }
+    router.push({
+      pathname: "/agent",
+      params: {
+        currencyAssetId: assetId,
+      },
+    });
   };
 
-  useEffect(() => {
-    // Clear currency asset details when component mounts
-    setCurrencyAssetDetails([]);
-  }, []);
 
   return (
     <Pressable onPress={() => handleFetchSignalProviderByAssetId(item.id)}>

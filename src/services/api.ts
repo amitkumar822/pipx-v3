@@ -687,11 +687,15 @@ class ApiService {
 
   async getAssetBasedSignalPosts({
     asset_id,
+    page,
+    perPage,
   }: {
     asset_id: number;
+    page: number;
+    perPage: number;
   }): Promise<ApiResponse> {
     return this.makeRequest(
-      `${API_ENDPOINTS.ASSET_BASED_SIGNAL_POSTS}?asset_id=${asset_id}`,
+      `${API_ENDPOINTS.ASSET_BASED_SIGNAL_POSTS}?asset_id=${asset_id}&page=${page}&per_page=${perPage}`,
       {
         method: "GET",
       }

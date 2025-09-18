@@ -31,6 +31,7 @@ export const QUERY_KEYS = {
   MONTHLY_PROFIT_ANALYSIS: "monthlyProfitAnalysis",
   NOTIFICATIONS: "notifications",
   NOTIFICATION_COUNT: "notificationCount",
+  ASSET_BASED_SIGNAL_POSTS: "assetBasedSignalPosts",
 } as const;
 
 // Authentication Hooks
@@ -408,6 +409,26 @@ export const useSignalProviderListSearch = (
   };
 };
 
+export const useAssetBasedSignalPosts = ({
+  assetId,
+  page,
+  perPage,
+}: {
+  assetId: number;
+  page: number;
+  perPage: number;
+}) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.ASSET_BASED_SIGNAL_POSTS, assetId, page, perPage],
+    queryFn: () =>
+      apiService.getAssetBasedSignalPosts({ asset_id: assetId, page, perPage }),
+    enabled: !!assetId,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+  });
+};
+
 // Get Signal Provider By Id
 export const useSignalProviderProfileById = (signalProviderId: number) => {
   return useQuery({
@@ -533,7 +554,15 @@ export const useCreateReplyToComment = () => {
 };
 
 // Get Comments reply message
-export const useGetReplyCommentMessage = ({commentId, page=1, perPage=10000}: {commentId: number, page: number, perPage: number}) => {
+export const useGetReplyCommentMessage = ({
+  commentId,
+  page = 1,
+  perPage = 10000,
+}: {
+  commentId: number;
+  page: number;
+  perPage: number;
+}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_REPLY_COMMENT_MESSAGE, commentId, page, perPage],
     queryFn: () => apiService.getReplyCommentMessage(commentId, page, perPage),

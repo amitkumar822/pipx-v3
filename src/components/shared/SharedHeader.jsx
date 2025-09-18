@@ -9,14 +9,14 @@ const SharedHeader = memo(() => {
     const labels = [
         "Agent Signals",
         "By currency",
-        "Agent",
+        // "Agent",
     ];
 
     // Memoize the current active tab based on pathname
     const currentTab = useMemo(() => {
         if (pathname === "/") return "Agent Signals";
         if (pathname === "/by-currency") return "By currency";
-        if (pathname === "/agent") return "Agent";
+        // if (pathname === "/agent") return "Agent";
         return "Agent Signals";
     }, [pathname]);
 
@@ -33,11 +33,11 @@ const SharedHeader = memo(() => {
                     router.push("/by-currency");
                 }
                 break;
-            case "Agent":
-                if (pathname !== "/agent") {
-                    router.push("/agent");
-                }
-                break;
+            // case "Agent":
+            //     if (pathname !== "/agent") {
+            //         router.push("/agent");
+            //     }
+            //     break;
             default:
                 console.log("Unhandled press:", label);
         }
