@@ -154,6 +154,7 @@ export const StepFour = ({ type, step, setStep, loginType }) => {
                 placeholder="password"
                 keyboardType="default"
                 secureTextEntry={showPassword ? false : true}
+                placeholderTextColor="#797979"
               />
               <View style={styles.eyeIconContainer}>
                 {showPassword ? (

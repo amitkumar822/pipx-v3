@@ -108,7 +108,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
               onChangeText={(text) =>
                 setUserDetails({ ...userDetails, firstName: text })
               }
-              
+                    
             />
 
             <TextField

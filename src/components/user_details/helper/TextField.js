@@ -18,6 +18,7 @@ const TextField = ({
         secureTextEntry={secureTextEntry}
         editable={editable}
         importantForAutofill="no"
+        placeholderTextColor="#797979"
       />
     </View>
   );

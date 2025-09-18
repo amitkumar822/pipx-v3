@@ -30,7 +30,6 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
   const isEmail = trimmedEmail.includes("@");
 
   const onContinue = async () => {
-
     const isValidEmail = validateEmail(trimmedEmail) !== null;
 
     if (!isEmail && !isValidEmail) {
@@ -73,6 +72,9 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
         const response = await apiService.generateOtpEmail({
           email: userEmail.toLocaleLowerCase().trim(),
         });
+
+        console.log("Response: ", JSON.stringify(response, null, 2));
+
         Toast.show({
           type: "success",
           text1: "OTP Sent Successfully!",
@@ -84,7 +86,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
       } catch (error) {
         Toast.show({
           type: "error",
-          text1: error?.response?.message?.email[0] || "Failed to generate OTP",
+          text1: error?.response?.message || "Failed to generate OTP",
         });
         setShowError(true);
       } finally {
@@ -128,9 +130,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
               ) : type === "forgotpassword" ? (
                 <Text style={styles.mailtitletxt}>Forgot your password?</Text>
               ) : (
-                <Text style={styles.mailtitletxt}>
-                  Enter your email
-                </Text>
+                <Text style={styles.mailtitletxt}>Enter your email</Text>
               )}
             </View>
             {type === "signup" || type === "forgotpassword" ? (
@@ -147,6 +147,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
                 value={userEmail}
                 placeholder="Email address"
                 keyboardType="email-address"
+                placeholderTextColor="#797979"
               />
             </View>
             {showError ? (

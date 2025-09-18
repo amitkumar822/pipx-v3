@@ -75,8 +75,9 @@ export const StepThree = ({ type, step, setStep }) => {
                 style={styles.emailinput}
                 onChangeText={setUserName}
                 value={userName}
-                placeholder="@username"
+                placeholder="username"
                 keyboardType="default"
+                placeholderTextColor="#797979"
               />
             </View>
             {type === "signup" ? <View></View> : <></>}

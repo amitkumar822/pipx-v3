@@ -143,6 +143,7 @@ export const StepFive = ({ type, step, setStep }) => {
                 placeholder="password"
                 keyboardType="default"
                 secureTextEntry={showPassword ? false : true}
+                placeholderTextColor="#797979"
               />
 
               <View style={{ position: "absolute", right: 35, top: "45%" }}>

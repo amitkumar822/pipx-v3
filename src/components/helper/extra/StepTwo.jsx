@@ -105,6 +105,7 @@ export const StepTwo = ({ type, step, setStep }) => {
                 value={otp}
                 placeholder="OTP"
                 keyboardType="numeric"
+                placeholderTextColor="#797979"
               />
             </View>
             {type === "signup" ? <View></View> : <></>}
