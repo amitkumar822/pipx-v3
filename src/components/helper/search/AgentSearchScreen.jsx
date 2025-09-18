@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import useDebounce from "@/src/hooks/useDebounce";
-import { useUsersListSearch } from "@/src/hooks/useApi";
+import { useSignalProviderListSearch } from "@/src/hooks/useApi";
 import SearchScreen from "../../screens/SearchScreen";
-import debounce from "lodash/debounce";
 import Toast from "react-native-toast-message";
+import debounce from "lodash/debounce";
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import SearchCardSkeleton from "./SearchCardSkeleton";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
@@ -16,28 +16,23 @@ const AgentSearchScreen = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [refreshing, setRefreshing] = useState(false);
 
-  const [userData, setUserData] = useState([]);
-
   // Debounce the search term to avoid too many API calls
   const debouncedValue = useDebounce(searchTerm, 500);
 
   // Reset page and userdata when search term changes
   useEffect(() => {
     setPage(1);
-    // Clear existing user data when search term changes
     setUserData([]);
   }, [debouncedValue]);
 
   const queryOptions = useMemo(() => ({ page, perPage }), [page, perPage]);
 
-  // Use the custom hook to fetch the search results
-  const { data, isLoading, error, refetch, isFetching } = useUsersListSearch(
-    debouncedValue,
-    queryOptions,
-    {
+  // get all signal providers and search list
+  const { data, isLoading, error, refetch, isFetching } =
+    useSignalProviderListSearch(debouncedValue, queryOptions, {
       enabled: !!debouncedValue || page > 1,
-    }
-  );
+    });
+  const [userData, setUserData] = useState([]);
 
   useEffect(() => {
     if (page === 1) {
@@ -85,7 +80,7 @@ const AgentSearchScreen = () => {
   if (showInitialLoading) {
     return (
       <>
-        <GestureHandlerRootView style={{ flex: 1, paddingHorizontal: 10 }}>
+       <GestureHandlerRootView style={{ flex: 1, paddingHorizontal: 10 }}>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             {Array.from({ length: 30 }).map((_, index) => (
               <SearchCardSkeleton key={index} />
@@ -134,10 +129,10 @@ const AgentSearchScreen = () => {
         handleRefresh={handleRefresh}
         setRefreshing={setRefreshing}
         refreshing={refreshing}
+        // ✅ Pagination
         handleLoadMore={handleLoadMore}
         isFetchingMore={isFetchingMore}
         hasNextPage={data?.hasNextPage}
-        userType="SIGNAL_PROVIDER"
         loadingWhileSearching={loadingWhileSearching}
       />
     </>

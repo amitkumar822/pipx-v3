@@ -1,6 +1,5 @@
 import { View, Text, Pressable, Alert, ActivityIndicator } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
-import { useProfileById } from "@/src/components/helper/profile/helper/useProfileById";
 import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCallback } from "react";
@@ -9,6 +8,7 @@ import { ProfileHeader } from "@/src/components/helper/profile/ProfileHeader";
 import { FontAwesome } from "@expo/vector-icons";
 import {
   useFollowSignalProvider,
+  useSignalProviderProfileById,
   useUnfollowSignalProvider,
 } from "@/src/hooks/useApi";
 import ReportBlockModal from "@/src/components/helper/ReportBlockModel";
@@ -19,15 +19,15 @@ import { useUserProvider } from "@/src/context/user/userContext";
 const visitprofile = () => {
   const { profile: userProfile } = useUserProvider();
 
-  const { id, userType, backRoutePath } = useLocalSearchParams();
+  const { id, backRoutePath } = useLocalSearchParams();
 
-  // Add staleTime: 0 to always fetch fresh data when component mounts
   const {
     data: profileData,
     isLoading,
     error,
     refetch,
-  } = useProfileById(id, userType);
+  } = useSignalProviderProfileById(id);
+
   // Using optional chaining for both profileData?.data and array access [0]
   const profile = profileData?.data?.[0];
 
@@ -134,73 +134,72 @@ const visitprofile = () => {
 
   // Follow and Subscription Logic
   const handleFollowUnFollow = () => {
-    if (userType === "SIGNAL_PROVIDER" && typeof profile?.id === "number") {
-      // Capture values needed for the API call to avoid stale closures
-      const profileId = profile.id;
-      setIsProcessing(true);
 
-      if (isFollowing) {
-        // Optimistically update UI - unfollow and decrease followers count
-        setIsFollowing(false);
-        setFollowersCount((prevCount) => Math.max(0, prevCount - 1));
+    const profileId = profile.id;
+    setIsProcessing(true);
 
-        unfollowSignalProviderMutation(profileId, {
-          onSuccess: () => {
-            // Wrap state updates in requestAnimationFrame to prevent view tag errors
-            requestAnimationFrame(() => {
-              setModalType("success");
+    if (isFollowing) {
+      // Optimistically update UI - unfollow and decrease followers count
+      setIsFollowing(false);
+      setFollowersCount((prevCount) => Math.max(0, prevCount - 1));
 
-              setIsProcessing(false);
-              // Force refetch to get fresh data after unfollow
-              refetch();
-            });
-          },
-          onError: (error) => {
-            // Wrap state updates in requestAnimationFrame
-            requestAnimationFrame(() => {
-              // Revert UI on error
-              setIsFollowing(true);
-              setFollowersCount((prevCount) => prevCount + 1); // Restore previous count
-              setIsProcessing(false);
-              Alert.alert("Error", error?.message || "Failed to unfollow.", [
-                { text: "OK" },
-              ]);
-              setVisible(false); // Close modal on error
-            });
-          },
-        });
-      } else {
-        // Optimistically update UI - follow and increase followers count
-        setIsFollowing(true);
-        setFollowersCount((prevCount) => prevCount + 1);
+      unfollowSignalProviderMutation(profileId, {
+        onSuccess: () => {
+          // Wrap state updates in requestAnimationFrame to prevent view tag errors
+          requestAnimationFrame(() => {
+            setModalType("success");
 
-        followSignalProviderMutation(profileId, {
-          onSuccess: () => {
-            // Wrap state updates in requestAnimationFrame
-            requestAnimationFrame(() => {
-              setModalType("success");
+            setIsProcessing(false);
+            // Force refetch to get fresh data after unfollow
+            refetch();
+          });
+        },
+        onError: (error) => {
+          // Wrap state updates in requestAnimationFrame
+          requestAnimationFrame(() => {
+            // Revert UI on error
+            setIsFollowing(true);
+            setFollowersCount((prevCount) => prevCount + 1); // Restore previous count
+            setIsProcessing(false);
+            Alert.alert("Error", error?.message || "Failed to unfollow.", [
+              { text: "OK" },
+            ]);
+            setVisible(false); // Close modal on error
+          });
+        },
+      });
+    } else {
+      // Optimistically update UI - follow and increase followers count
+      setIsFollowing(true);
+      setFollowersCount((prevCount) => prevCount + 1);
 
-              setIsProcessing(false);
-              // Force refetch to get fresh data after follow
-              refetch();
-            });
-          },
-          onError: (error) => {
-            // Wrap state updates in requestAnimationFrame
-            requestAnimationFrame(() => {
-              // Revert UI on error
-              setIsFollowing(false);
-              setFollowersCount((prevCount) => Math.max(0, prevCount - 1)); // Restore previous count
-              setIsProcessing(false);
-              Alert.alert("Error", error?.message || "Failed to follow", [
-                { text: "OK" },
-              ]);
-              setVisible(false); // Close modal on error
-            });
-          },
-        });
-      }
+      followSignalProviderMutation(profileId, {
+        onSuccess: () => {
+          // Wrap state updates in requestAnimationFrame
+          requestAnimationFrame(() => {
+            setModalType("success");
+
+            setIsProcessing(false);
+            // Force refetch to get fresh data after follow
+            refetch();
+          });
+        },
+        onError: (error) => {
+          // Wrap state updates in requestAnimationFrame
+          requestAnimationFrame(() => {
+            // Revert UI on error
+            setIsFollowing(false);
+            setFollowersCount((prevCount) => Math.max(0, prevCount - 1)); // Restore previous count
+            setIsProcessing(false);
+            Alert.alert("Error", error?.message || "Failed to follow", [
+              { text: "OK" },
+            ]);
+            setVisible(false); // Close modal on error
+          });
+        },
+      });
     }
+
   };
 
   const handleSubscribe = () => {
@@ -219,7 +218,7 @@ const visitprofile = () => {
     const dateToFormat = subscribedEndDate ? new Date(subscribedEndDate) : "";
 
     return dateToFormat ? format(dateToFormat, "dd MMMM yyyy") : "";
-  }, [subscribedEndDate]); 
+  }, [subscribedEndDate]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
@@ -264,7 +263,7 @@ const visitprofile = () => {
       {/* Additional components can be added here */}
       {profile && (
         <View
-          className={`w-[94%] mx-auto mt-2 ${userType === "USER" && "hidden"}`}
+          className={`w-[94%] mx-auto mt-2`}
         >
           {profile?.id !== userProfile?.id && <View className="flex-row justify-between items-center mb-4">
             <Pressable

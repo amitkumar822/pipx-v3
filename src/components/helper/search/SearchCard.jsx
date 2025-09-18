@@ -8,25 +8,22 @@ const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
 const SearchCard = memo(
-  ({ searchData, nameDisplay = false, userType }) => {
+  ({ searchData, nameDisplay = false }) => {
     const router = useRouter();
 
     // Memoize all derived values
-    const [veryUserType, profileData] = useMemo(() => {
-      const isProvider = userType === "User";
+    const [profileData] = useMemo(() => {
       const data = searchData?.signal_provider ?? searchData;
-      return [isProvider, data];
-    }, [userType, searchData]);
+      return [data];
+    }, [searchData]);
 
     const [count, netPips, signals] = useMemo(
       () => [
-        veryUserType
-          ? (profileData?.followers_count ?? 0)
-          : (profileData?.following_count ?? 0),
+        profileData?.followers_count ?? 0,
         profileData?.net_pipx ?? 0,
         profileData?.signals ?? 0,
       ],
-      [veryUserType, profileData]
+      [profileData]
     );
 
     const username = useMemo(
@@ -47,11 +44,10 @@ const SearchCard = memo(
         pathname: "/visitprofile",
         params: {
           id: String(profileData.id),
-          userType: profileData.user_type || userType,
           backRoutePath: "/(tabs)/search",
         },
       });
-    }, [router, profileData, userType]);
+    }, [router, profileData]);
 
     // Early return if no valid data
     if (!profileData) return null;
@@ -88,17 +84,17 @@ const SearchCard = memo(
 
               <View className="flex-row flex-wrap gap-x-3">
                 <StatItem
-                  label={veryUserType ? "Followers" : "Following"}
+                  label="Followers"
                   value={count}
                 />
-                {veryUserType && <StatItem label="Net Pips" value={netPips} />}
-                {veryUserType && <StatItem label="Signals" value={signals} />}
+                <StatItem label="Net Pips" value={netPips} />
+                <StatItem label="Signals" value={signals} />
               </View>
             </View>
           </View>
 
           {/* Success Rate (Right Side) */}
-         {veryUserType && <SuccessRateIndicator rate={profileData.success_rate} />}
+          <SuccessRateIndicator rate={profileData.success_rate} />
         </View>
       </TouchableOpacity>
     );
@@ -108,7 +104,6 @@ const SearchCard = memo(
     return (
       prevProps.searchData?.id === nextProps.searchData?.id &&
       prevProps.nameDisplay === nextProps.nameDisplay &&
-      prevProps.userType === nextProps.userType &&
       prevProps.searchData?.followers_count ===
       nextProps.searchData?.followers_count &&
       prevProps.searchData?.following_count ===

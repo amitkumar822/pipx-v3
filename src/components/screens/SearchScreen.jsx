@@ -18,7 +18,6 @@ function SearchScreen({
   searchTerm,
   setSearchTerm,
   searchData,
-  userType,
   refreshing = false,
   handleRefresh = async () => {},
   handleLoadMore = () => {},
@@ -104,7 +103,7 @@ function SearchScreen({
           <FlatList
             data={searchData}
             renderItem={({ item }) => (
-              <SearchCard searchData={item} userType={userType} />
+              <SearchCard searchData={item} />
             )}
             keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={{
