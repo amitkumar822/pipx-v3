@@ -44,6 +44,15 @@ export const PhoneAuthStepOne = ({ type, setStep }) => {
       return;
     }
 
+    if (mobile.length !== 7) {
+      Toast.show({
+        type: "info",
+        text1: "Information",
+        text2: "Please enter valid phone number.",
+      });
+      return;
+    }
+
     const typeBaseRegLogin = type === "signup";
 
     if (typeBaseRegLogin) {
@@ -130,15 +139,15 @@ export const PhoneAuthStepOne = ({ type, setStep }) => {
                 onChangeMobile={onChangeMobile}
                 countryDetails={countryDetails}
                 setCountryDetails={setCountryDetails}
+                placeholderTextColor="#797979"
               />
             </View>
-            {type === "signup" ? <View></View> : <></>}
           </View>
         </View>
 
         {/* Continue Button */}
         <View style={styles.bottomsection}>
-          <Buttons onPress={handlePhoneSubmit} isLoading={loading} />
+          <Buttons onPress={handlePhoneSubmit} isLoading={loading} disabled={mobile.length !== 7} />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, BackHandler } from "react-native";
 import { PhoneAuthStepOne } from "../../../src/components/helper/extra/phoneauth/PhoneAuthStepOne";
 import { PhoneAuthStepTwo } from "../../../src/components/helper/extra/phoneauth/PhoneAuthStepTwo";
 import AddressForm from "@/src/components/user_details/AddressForm";
@@ -13,6 +13,28 @@ import { AppStatusBar } from "@/src/components/utils/AppStatusBar";
 export default function EmailAuth() {
   const { type } = useLocalSearchParams();
   const [step, setStep] = useState(1);
+
+  // 🔹 Handle Android hardware back
+  useEffect(() => {
+    const backAction = () => {
+      if (step > 1) {
+        if (type === "login") {
+          setStep(1);
+        } else {
+          setStep((prev) => prev - 1);
+        }
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [step]);
 
   if (type === "login") {
     return (

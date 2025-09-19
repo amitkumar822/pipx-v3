@@ -37,6 +37,7 @@ export default function PhoneInput({
           placeholder="Phone number"
           keyboardType="numeric"
           maxLength={10}
+          placeholderTextColor="#797979"
         />
       </View>
     </>
@@ -53,11 +54,9 @@ const styles = StyleSheet.create({
   countryinput: {
     width: "28%",
     backgroundColor: "#F3F3F3",
-    height: 56,
-    paddingVertical: 10,
-    // paddingHorizontal: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 14,
-    marginTop: 20,
     borderColor: "#007AFF",
     borderWidth: 1,
     bordeRadius: 14,
@@ -65,7 +64,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    // gap: 6,
   },
   flag: {
     fontSize: 20,
@@ -84,14 +82,13 @@ const styles = StyleSheet.create({
   emailinput: {
     width: "70%",
     backgroundColor: "#F3F3F3",
-    height: 56,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 14,
-    marginTop: 20,
     borderColor: "#007AFF",
     borderWidth: 1,
     bordeRadius: 14,
     fontSize: 22,
+    color: "#000000",
   },
 });
