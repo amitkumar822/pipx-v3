@@ -20,7 +20,6 @@ const visitprofile = () => {
   const { profile: userProfile } = useUserProvider();
 
   const { id, backRoutePath, userType } = useLocalSearchParams();
-  console.log("backRoutePath: ", backRoutePath);
 
   const {
     data: profileData,
