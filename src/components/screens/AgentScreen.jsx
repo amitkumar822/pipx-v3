@@ -8,10 +8,9 @@ import NoResultsFound from "../NoResultsFound";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import SearchCardSkeleton from "../helper/search/SearchCardSkeleton";
 
-const perPage = 1;
+const perPage = 1000;
 
-const AgentScreen = ({ currencyAssetId }) => {
-  const insets = useSafeAreaInsets();
+const AgentScreen = ({ assetId }) => {
 
   const [agentDetails, setAgentDetails] = useState([]);
 
@@ -27,12 +26,9 @@ const AgentScreen = ({ currencyAssetId }) => {
     isFetching,
     error,
   } = useAssetBasedSignalPosts({
-    assetId: currencyAssetId, page,
+    assetId, page,
     perPage,
   });
-
-  // console.log("pagination Data: ", JSON.stringify(paginationData, null, 2));
-
   // Append new data to list only once per fetch for proper pagination
   useEffect(() => {
     if (paginationData?.statusCode === 200 && paginationData?.data?.length > 0) {
@@ -45,7 +41,7 @@ const AgentScreen = ({ currencyAssetId }) => {
     setHasNextPage(paginationData?.hasNextPage ?? false);
     setIsLoadingMore(false);
     setRefreshing(false);
-  }, [paginationData?.data, refreshing, page]);
+  }, [paginationData, refreshing, page]);
 
 
   // Handle pagination trigger
@@ -62,13 +58,6 @@ const AgentScreen = ({ currencyAssetId }) => {
     setPage(1);
     setHasNextPage(false);
   };
-
-  // Initial loading time pagination logic
-  useEffect(() => {
-    setRefreshing(true);
-    setPage(1);
-    setHasNextPage(false);
-  }, []);
 
   //! ======= Pagination Logic End =======
 

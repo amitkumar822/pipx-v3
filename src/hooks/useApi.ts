@@ -418,7 +418,6 @@ export const useAssetBasedSignalPosts = ({
   page: number;
   perPage: number;
 }) => {
-  console.log("page: ", page);
   return useQuery({
     queryKey: [QUERY_KEYS.ASSET_BASED_SIGNAL_POSTS, assetId, page, perPage],
     queryFn: () =>

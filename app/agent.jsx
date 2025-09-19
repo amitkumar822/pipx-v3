@@ -21,7 +21,7 @@ const Agent = () => {
       </View>
 
       <>
-        <AgentScreen currencyAssetId={currencyAssetId} />
+        <AgentScreen assetId={currencyAssetId} />
       </>
     </SafeAreaView>
   )
