@@ -28,6 +28,7 @@ const CommentCard = ({
   replyText,
   setReplyText,
   handleLongPress,
+  handleVisitProfile,
 }) => {
   // State to manage sub-reply target
   const [activeSubReplyTarget, setActiveSubReplyTarget] = useState("");
@@ -151,6 +152,7 @@ const CommentCard = ({
       handleLike={handleLike}
       likeTargetId={likeTargetId}
       handleLongPress={handleLongPress}
+      handleVisitProfile={handleVisitProfile}
     />
   );
 
@@ -166,6 +168,7 @@ const CommentCard = ({
         <View className="flex-1">
           <Pressable
             onLongPress={() => handleLongPress(item)}
+            onPress={() => handleVisitProfile(item)}
             delayLongPress={500}
           >
             <View className="flex-row justify-between items-start">

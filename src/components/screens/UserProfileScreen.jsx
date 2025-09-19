@@ -88,7 +88,7 @@ export const UserProfileScreen = () => {
   return (
     <View style={styles.profilecontainer}>
       <ProfileHeader backaction={() => router.back()} rightaction={handleLogout} />
-      <ProfileBox profile={profile?.data} statsDataByRole={statsUserData} />
+      <ProfileBox profile={profile?.data} statsDataByRole={statsUserData} userType={userType} />
     </View>
   );
 };

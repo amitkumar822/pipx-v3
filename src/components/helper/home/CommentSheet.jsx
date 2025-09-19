@@ -16,6 +16,7 @@ import {
   useGetSignalPostComments,
 } from "@/src/hooks/useApi";
 import { useUserProvider } from "@/src/context/user/userContext";
+import { router } from "expo-router";
 
 const { height } = Dimensions.get("window");
 const heightPercent = (percent) => (height * percent) / 100;
@@ -84,6 +85,21 @@ const CommentSheet = ({ signalPostId }) => {
     );
   };
 
+  // Visit Profile
+  const handleVisitProfile = (userDetails) => {
+    const { id, user_type } = userDetails?.user;
+    if (!id || !user_type) return;
+    router.push({
+      pathname: "/visitprofile",
+      params: {
+        id,
+        userType: user_type,
+        backRoutePath: "/"
+      },
+
+    });
+  };
+
   const renderComment = ({ item }) => (
     <CommentCard
       item={item}
@@ -94,6 +110,7 @@ const CommentSheet = ({ signalPostId }) => {
       replyText={replyText}
       setReplyText={setReplyText}
       handleLongPress={handleLongPress}
+      handleVisitProfile={handleVisitProfile}
     />
   );
 

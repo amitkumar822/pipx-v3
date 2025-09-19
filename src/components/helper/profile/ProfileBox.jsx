@@ -10,17 +10,14 @@ import {
   useSignalProviderReportUser,
   useUserReportSignalProvider,
 } from "@/src/hooks/useApi";
-import { AuthContext } from "@/src/store/AuthContext";
 import { AppImage } from "../../utils/AppImage";
 import Loading from "../../Loading";
 
-export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
+export const ProfileBox = ({ profile, statsDataByRole, visitType = false, userType, backRoutePath = "/(tabs)/search" }) => {
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   const router = useRouter();
-  // The type/role of the currently authenticated user (not the profile being viewed)
-  const { userType } = useContext(AuthContext);
 
   const [visible, setVisible] = useState(false);
   const [modalType, setModalType] = useState("");
@@ -45,7 +42,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
         onSuccess: () => {
           setModalType("success");
           setTimeout(() => {
-            router.push("/(tabs)/search");
+            router.push(backRoutePath);
           }, 500);
         },
         onError: (error) => {
@@ -62,7 +59,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false }) => {
         onSuccess: () => {
           setModalType("success");
           setTimeout(() => {
-            router.push("/(tabs)/search");
+            router.push(backRoutePath);
           }, 500);
         },
         onError: (error) => {

@@ -44,6 +44,7 @@ const SearchCard = memo(
         pathname: "/visitprofile",
         params: {
           id: String(profileData.id),
+          userType: profileData.user_type,
           backRoutePath: "/(tabs)/search",
         },
       });

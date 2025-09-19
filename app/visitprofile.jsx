@@ -15,18 +15,19 @@ import ReportBlockModal from "@/src/components/helper/ReportBlockModel";
 import { AppStatusBar } from "@/src/components/utils/AppStatusBar";
 import { format } from "date-fns";
 import { useUserProvider } from "@/src/context/user/userContext";
+import { useProfileById } from "@/src/components/helper/profile/helper/useProfileById";
 
 const visitprofile = () => {
   const { profile: userProfile } = useUserProvider();
 
-  const { id, backRoutePath } = useLocalSearchParams();
+  const { id, backRoutePath, userType } = useLocalSearchParams();
 
   const {
     data: profileData,
     isLoading,
     error,
     refetch,
-  } = useSignalProviderProfileById(id);
+  } = useProfileById(id, userType);
 
   // Using optional chaining for both profileData?.data and array access [0]
   const profile = profileData?.data?.[0];
@@ -251,6 +252,8 @@ const visitprofile = () => {
           profile={profile}
           statsDataByRole={statsDataByRole}
           visitType={true}
+          userType={userType}
+          backRoutePath={backRoutePath}
         />
       ) : (
         <View

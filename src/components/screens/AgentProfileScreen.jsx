@@ -97,7 +97,7 @@ export const AgentProfileScreen = () => {
   return (
     <View style={styles.profilecontainer}>
       <ProfileHeader rightaction={handleLogout} />
-      <ProfileBox profile={agentProfile} statsDataByRole={statsAgentData} />
+      <ProfileBox profile={agentProfile} statsDataByRole={statsAgentData} userType={userType} />
     </View>
   );
 };
