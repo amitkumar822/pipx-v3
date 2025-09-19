@@ -21,6 +21,7 @@ import ReportBlockModal from "../ReportBlockModel";
 import AnimatedNumber from "react-native-animated-numbers";
 import { AppImage } from "../../utils/AppImage";
 import { router } from "expo-router";
+import { useUserProvider } from "@/src/context/user/userContext";
 
 const data = [{ value: 50 }, { value: 80 }, { value: 90 }, { value: 70 }];
 
@@ -289,6 +290,13 @@ export const SignalCard = memo(
       );
     };
 
+
+    const { profile: loginCurrentProfile } = useUserProvider();
+
+    const isCurrentUserProfile = useMemo(() => {
+      return loginCurrentProfile?.id === userid;
+    }, [loginCurrentProfile, userid]);
+
     return (
       <View className="w-full bg-[#EBF5FF] rounded-xl p-2 mb-3">
         {/* Header */}
@@ -315,7 +323,7 @@ export const SignalCard = memo(
           </TouchableOpacity>
 
           {/* Right Side: 3-dot button */}
-          {!signalOwnPostReportButtonHidde && (
+          {!signalOwnPostReportButtonHidde && !isCurrentUserProfile && (
             <Pressable
               onPress={() => {
                 setVisible(true);

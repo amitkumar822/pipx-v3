@@ -17,7 +17,6 @@ import React, { useState, useEffect } from "react";
 import PostSignalHeader from "../helper/postsignals/PostSignalHeader";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Feather from "@expo/vector-icons/Feather";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import apiService from "../../services/api";
 import { validateRequired } from "../../utils/validation";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
@@ -265,15 +264,15 @@ export default function PostSignalScreen() {
                 </Pressable>
                 <Pressable
                   style={
-                    signalType === "Long Term"
+                    signalType === "Long_Term"
                       ? styles.selected
                       : styles.unselected
                   }
-                  onPress={() => setSignalType("Long Term")}
+                  onPress={() => setSignalType("Long_Term")}
                 >
                   <Text
                     style={
-                      signalType === "Long Term"
+                      signalType === "Long_Term"
                         ? styles.selectedusertext
                         : styles.unselectedusertext
                     }
