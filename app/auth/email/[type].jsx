@@ -10,6 +10,7 @@ import UserAgentDetailsForm from "@/src/components/user_details/UserAgentDetails
 import AddressForm from "@/src/components/user_details/AddressForm";
 import { AppStatusBar } from "@/src/components/utils/AppStatusBar";
 
+
 export default function EmailAuth() {
   const { type } = useLocalSearchParams();
   const [step, setStep] = useState(1);

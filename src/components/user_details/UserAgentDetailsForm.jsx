@@ -64,7 +64,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
 
   // handle Submit
   const handleUserDetailsSubmit = async () => {
-   
+
     if (!isFormValid) {
       Alert.alert("All fields are required");
       return;
@@ -103,30 +103,30 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
 
           <View style={styles.form}>
             <TextField
-              placeholder="First name"
+              placeholder="First name*"
               value={userDetails.firstName}
               onChangeText={(text) =>
                 setUserDetails({ ...userDetails, firstName: text })
               }
-                    
+
             />
 
             <TextField
-              placeholder="Last name"
+              placeholder="Last name*"
               value={userDetails.lastName}
               onChangeText={(text) =>
                 setUserDetails({ ...userDetails, lastName: text })
               }
-              
+
             />
 
             {/* 🎯 Birthday - Touchable Date Picker */}
             <TouchableOpacity onPress={() => setShowDatePicker(true)}>
               <TextField
-                placeholder="Birthday (mm/dd/yyyy)"
+                placeholder="Birthday (mm/dd/yyyy)*"
                 value={userDetails.birthday}
                 editable={false}
-                
+
               />
             </TouchableOpacity>
             {showDatePicker && (
@@ -146,7 +146,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
                   setUserDetails({ ...userDetails, gender: value })
                 }
               >
-                <Picker.Item label="Select Gender" value="" />
+                <Picker.Item label="Select Gender*" value="" style={{ color: "gray" }} />
                 <Picker.Item label="Male" value="Male" />
                 <Picker.Item label="Female" value="Female" />
                 <Picker.Item label="Others" value="Others" />
@@ -158,7 +158,7 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
                 onFileSelect={(file) =>
                   setUserDetails({ ...userDetails, document: file })
                 }
-                
+
               />
             )}
           </View>
