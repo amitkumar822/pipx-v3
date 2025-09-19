@@ -702,6 +702,12 @@ class ApiService {
     );
   }
 
+  async checkUsername(username: string): Promise<ApiResponse> {
+    return this.makeRequest(`${API_ENDPOINTS.CHECK_USERNAME}?username=${encodeURIComponent(username)}`, {
+      method: "GET",
+    });
+  }
+
   // Get Own Signal Posts
   async getOwnSignalPosts({
     page,

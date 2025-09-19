@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   GENERATE_OTP: "/generate_otp/",
   VERIFY_OTP: "/verify_otp/",
   GENERATE_OTP_EMAIL: "/generate_otp_using_email/",
+  CHECK_USERNAME: "/check_username/",
   REGISTER: "/register/",
   LOGIN: "/login/",
   SUPERUSER_LOGIN: "/superuser_login_api/",

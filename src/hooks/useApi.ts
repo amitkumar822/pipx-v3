@@ -41,6 +41,12 @@ export const useGenerateOtp = () => {
   });
 };
 
+export const useCheckUsername = () => {
+  return useMutation({
+    mutationFn: (username: string) => apiService.checkUsername(username),
+  });
+};
+
 export const useGenerateOtpEmail = () => {
   return useMutation({
     mutationFn: (request: OtpRequest) => apiService.generateOtpEmail(request),
