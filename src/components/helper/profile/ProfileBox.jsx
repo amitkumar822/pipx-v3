@@ -14,6 +14,7 @@ import { AppImage } from "../../utils/AppImage";
 import Loading from "../../Loading";
 import { AuthContext } from "@/src/store/AuthContext";
 import { useUserProvider } from "@/src/context/user/userContext";
+import { useBackHandler } from "@/src/utils/useBackHandler";
 
 export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRoutePath = "/(tabs)/search" }) => {
   const blurhash =
@@ -44,6 +45,9 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
     router.push("/profile/editprofile");
   };
 
+  // Handle Android hardware back button using utility function
+  useBackHandler(backRoutePath, "/");
+
   // User Block/Unblock Signal Provider hook
   const blockUnblockMutation = useBlockUnblockSignalProvider();
 
@@ -57,12 +61,6 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
       Alert.alert("Error", "Profile ID is missing.");
       return;
     }
-
-    // console.log('====================================');
-    // console.log("Profile: ", JSON.stringify(profile, null, 2));
-    // console.log("Id: ", profile?.id);
-    // console.log("User Type: ", userType);
-    // console.log('====================================');
 
     if (userType === "SIGNAL_PROVIDER") {
       // Call the block/unblock mutation for SIGNAL_PROVIDER

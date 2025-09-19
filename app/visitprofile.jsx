@@ -8,7 +8,6 @@ import { ProfileHeader } from "@/src/components/helper/profile/ProfileHeader";
 import { FontAwesome } from "@expo/vector-icons";
 import {
   useFollowSignalProvider,
-  useSignalProviderProfileById,
   useUnfollowSignalProvider,
 } from "@/src/hooks/useApi";
 import ReportBlockModal from "@/src/components/helper/ReportBlockModel";
@@ -21,6 +20,7 @@ const visitprofile = () => {
   const { profile: userProfile } = useUserProvider();
 
   const { id, backRoutePath, userType } = useLocalSearchParams();
+  console.log("backRoutePath: ", backRoutePath);
 
   const {
     data: profileData,
