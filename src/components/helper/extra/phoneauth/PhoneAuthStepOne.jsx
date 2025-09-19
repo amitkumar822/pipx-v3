@@ -17,10 +17,10 @@ import apiService from "@/src/services/api";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export const PhoneAuthStepOne = ({ type, setStep }) => {
-  const { setOtp, setEmail_or_mobile } = useUserProvider();
+  const { setOtp, setEmail_or_mobile, authFormData, updateAuthFormData } = useUserProvider();
 
-  const [mobile, onChangeMobile] = useState("");
-  const [countryDetails, setCountryDetails] = useState({
+  const [mobile, onChangeMobile] = useState(authFormData.phone || "");
+  const [countryDetails, setCountryDetails] = useState(authFormData.countryDetails || {
     cca2: "GB",
     callingCode: ["44"],
   });
@@ -136,9 +136,15 @@ export const PhoneAuthStepOne = ({ type, setStep }) => {
             <View style={styles.emailinputwrap}>
               <PhoneInput
                 mobile={mobile}
-                onChangeMobile={onChangeMobile}
+                onChangeMobile={(text) => {
+                  onChangeMobile(text);
+                  updateAuthFormData('phone', text);
+                }}
                 countryDetails={countryDetails}
-                setCountryDetails={setCountryDetails}
+                setCountryDetails={(country) => {
+                  setCountryDetails(country);
+                  updateAuthFormData('countryDetails', country);
+                }}
                 placeholderTextColor="#797979"
               />
             </View>

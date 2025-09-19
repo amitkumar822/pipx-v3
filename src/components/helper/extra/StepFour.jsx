@@ -26,9 +26,17 @@ export const StepFour = ({ type, step, setStep, loginType }) => {
 
   const { setIsLoggedIn, setUserType } = useContext(AuthContext);
 
-  const { setUserAgentPassword, email_or_mobile } = useUserProvider();
+  const { 
+    setUserAgentPassword, 
+    email_or_mobile, 
+    authFormData, 
+    updateAuthFormData, 
+    clearAuthFormData,
+    clearUserAgentDetailsFormData,
+    clearAddressFormData 
+  } = useUserProvider();
 
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(authFormData.password || "");
   const [showPassword, setShowPassword] = useState(false);
 
   // Password rule validation
@@ -109,6 +117,10 @@ export const StepFour = ({ type, step, setStep, loginType }) => {
             setPassword("");
             setUserType(data?.user_type || "USER");
             setIsLoggedIn(true);
+            // Clear all form data on successful login
+            clearAuthFormData();
+            clearUserAgentDetailsFormData();
+            clearAddressFormData();
             // navigate to home/dashboard screen
             router.replace("/(tabs)");
           },
@@ -149,7 +161,10 @@ export const StepFour = ({ type, step, setStep, loginType }) => {
             <View style={styles.emailinputwrap}>
               <TextInput
                 style={styles.emailinput}
-                onChangeText={setPassword}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  updateAuthFormData('password', text);
+                }}
                 value={password}
                 placeholder="password"
                 keyboardType="default"

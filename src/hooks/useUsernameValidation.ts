@@ -101,8 +101,6 @@ export const useUsernameValidation = (username: string) => {
         });
       },
       onError: (error: any) => {
-        // Handle API errors - assume username is available if we can't check
-        console.error('Username check failed:', error);
         setValidationResult({
           isValid: true, // Allow proceeding if API fails
           errorMessage: '',

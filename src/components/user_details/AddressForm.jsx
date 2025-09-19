@@ -25,15 +25,14 @@ const AddressForm = ({ registrationType, setStep, step }) => {
     confirmPassword,
     setConfirmPassword,
     regRoleType,
+    clearAuthFormData,
+    addressFormData,
+    updateAddressFormData,
+    clearUserAgentDetailsFormData,
+    clearAddressFormData,
   } = useUserProvider();
 
-  const [address, setAddress] = useState({
-    address: "",
-    address1: "",
-    city: "",
-    postalCode: "",
-    country: "",
-  });
+  const [address, setAddress] = useState(addressFormData);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -103,6 +102,10 @@ const AddressForm = ({ registrationType, setStep, step }) => {
         setEmail_or_mobile("");
         setUsername("");
         setUserAgentPassword("");
+        // Clear all form data on successful registration
+        clearAuthFormData();
+        clearUserAgentDetailsFormData();
+        clearAddressFormData();
         setConfirmPassword("");
 
         router.push("/success");
@@ -153,27 +156,47 @@ const AddressForm = ({ registrationType, setStep, step }) => {
       <TextField
         placeholder="Address"
         value={address.address}
-        onChangeText={(text) => setAddress({ ...address, address: text })}
+        onChangeText={(text) => {
+          const updatedAddress = { ...address, address: text };
+          setAddress(updatedAddress);
+          updateAddressFormData('address', text);
+        }}
       />
       <TextField
         placeholder="Address line 2"
         value={address.address1}
-        onChangeText={(text) => setAddress({ ...address, address1: text })}
+        onChangeText={(text) => {
+          const updatedAddress = { ...address, address1: text };
+          setAddress(updatedAddress);
+          updateAddressFormData('address1', text);
+        }}
       />
       <TextField
         placeholder="City"
         value={address.city}
-        onChangeText={(text) => setAddress({ ...address, city: text })}
+        onChangeText={(text) => {
+          const updatedAddress = { ...address, city: text };
+          setAddress(updatedAddress);
+          updateAddressFormData('city', text);
+        }}
       />
       <TextField
         placeholder="Postal code"
         value={address.postalCode}
-        onChangeText={(text) => setAddress({ ...address, postalCode: text })}
+        onChangeText={(text) => {
+          const updatedAddress = { ...address, postalCode: text };
+          setAddress(updatedAddress);
+          updateAddressFormData('postalCode', text);
+        }}
       />
       <TextField
         placeholder="Country"
         value={address.country}
-        onChangeText={(text) => setAddress({ ...address, country: text })}
+        onChangeText={(text) => {
+          const updatedAddress = { ...address, country: text };
+          setAddress(updatedAddress);
+          updateAddressFormData('country', text);
+        }}
       />
 
       <View>

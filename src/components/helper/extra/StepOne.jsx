@@ -16,9 +16,9 @@ import apiService from "@/src/services/api";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export const StepOne = ({ type, setStep, validateEmail }) => {
-  const { setOtpEmail, setEmail_or_mobile } = useUserProvider();
+  const { setOtpEmail, setEmail_or_mobile, authFormData, updateAuthFormData } = useUserProvider();
 
-  const [userEmail, setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState(authFormData.email || "");
   const [showError, setShowError] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
@@ -31,6 +31,7 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
 
   const onContinue = async () => {
     const isValidEmail = validateEmail(trimmedEmail) !== null;
+    console.log("CLick")
 
     if (!isEmail && !isValidEmail) {
       setShowError(true);
@@ -141,7 +142,10 @@ export const StepOne = ({ type, setStep, validateEmail }) => {
             <View style={styles.emailinputwrap}>
               <TextInput
                 style={styles.emailinput}
-                onChangeText={setUserEmail}
+                onChangeText={(text) => {
+                  setUserEmail(text);
+                  updateAuthFormData('email', text);
+                }}
                 value={userEmail}
                 placeholder="Email address"
                 keyboardType="email-address"
@@ -230,7 +234,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 14,
-    // marginTop: 20,
     borderColor: "#007AFF",
     borderWidth: 1,
     bordeRadius: 14,
@@ -241,6 +244,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     paddingHorizontal: 21,
+    marginBottom: 15,
   },
   continuebtn: {
     width: "100%",

@@ -18,9 +18,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useUsernameValidation } from "@/src/hooks/useUsernameValidation";
 
 export const StepThree = ({ type, step, setStep }) => {
-  const { setUsername } = useUserProvider();
+  const { setUsername, authFormData, updateAuthFormData } = useUserProvider();
 
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState(authFormData.username || "");
   const [loading, setLoading] = useState(false);
 
   // Use the new username validation hook
@@ -95,6 +95,7 @@ export const StepThree = ({ type, step, setStep }) => {
                 onChangeText={(text) => {
                   const lowerText = text.toLowerCase().trim();
                   setUserName(lowerText);
+                  updateAuthFormData('username', lowerText);
                 }}
                 value={userName}
                 placeholder="username"

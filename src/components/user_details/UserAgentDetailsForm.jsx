@@ -20,15 +20,14 @@ import FileUploadField from "./helper/FileUploadField";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const UserAgentDetailsForm = ({ setStep, step }) => {
-  const { setUserAgentDetails, regRoleType } = useUserProvider();
+  const { 
+    setUserAgentDetails, 
+    regRoleType, 
+    userAgentDetailsFormData, 
+    updateUserAgentDetailsFormData 
+  } = useUserProvider();
 
-  const [userDetails, setUserDetails] = useState({
-    firstName: "",
-    lastName: "",
-    birthday: "",
-    gender: "",
-    document: null,
-  });
+  const [userDetails, setUserDetails] = useState(userAgentDetailsFormData);
 
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -45,8 +44,10 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
       const day = String(selectedDate.getDate()).padStart(2, "0");
 
       const formattedDate = `${year}-${month}-${day}`;
+      const updatedDetails = { ...userDetails, birthday: formattedDate };
 
-      setUserDetails({ ...userDetails, birthday: formattedDate });
+      setUserDetails(updatedDetails);
+      updateUserAgentDetailsFormData('birthday', formattedDate);
     }
   };
 
@@ -105,18 +106,22 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
             <TextField
               placeholder="First name*"
               value={userDetails.firstName}
-              onChangeText={(text) =>
-                setUserDetails({ ...userDetails, firstName: text })
-              }
+              onChangeText={(text) => {
+                const updatedDetails = { ...userDetails, firstName: text };
+                setUserDetails(updatedDetails);
+                updateUserAgentDetailsFormData('firstName', text);
+              }}
 
             />
 
             <TextField
               placeholder="Last name*"
               value={userDetails.lastName}
-              onChangeText={(text) =>
-                setUserDetails({ ...userDetails, lastName: text })
-              }
+              onChangeText={(text) => {
+                const updatedDetails = { ...userDetails, lastName: text };
+                setUserDetails(updatedDetails);
+                updateUserAgentDetailsFormData('lastName', text);
+              }}
 
             />
 
@@ -142,9 +147,11 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
             <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={userDetails.gender}
-                onValueChange={(value) =>
-                  setUserDetails({ ...userDetails, gender: value })
-                }
+                onValueChange={(value) => {
+                  const updatedDetails = { ...userDetails, gender: value };
+                  setUserDetails(updatedDetails);
+                  updateUserAgentDetailsFormData('gender', value);
+                }}
               >
                 <Picker.Item label="Select Gender*" value="" style={{ color: "gray" }} />
                 <Picker.Item label="Male" value="Male" />
@@ -155,9 +162,11 @@ const UserAgentDetailsForm = ({ setStep, step }) => {
 
             {regRoleType === "SIGNAL_PROVIDER" && (
               <FileUploadField
-                onFileSelect={(file) =>
-                  setUserDetails({ ...userDetails, document: file })
-                }
+                onFileSelect={(file) => {
+                  const updatedDetails = { ...userDetails, document: file };
+                  setUserDetails(updatedDetails);
+                  updateUserAgentDetailsFormData('document', file);
+                }}
 
               />
             )}

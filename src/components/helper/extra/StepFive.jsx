@@ -22,8 +22,14 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export const StepFive = ({ type, step, setStep }) => {
-  const { setConfirmPassword, userAgentPassword, email_or_mobile } =
-    useUserProvider();
+  const { 
+    setConfirmPassword, 
+    userAgentPassword, 
+    email_or_mobile, 
+    clearAuthFormData,
+    clearUserAgentDetailsFormData,
+    clearAddressFormData 
+  } = useUserProvider();
 
   const [showPassword, setShowPassword] = useState(false);
   const [confirm_password, setConfirm_password] = useState("");
@@ -88,6 +94,10 @@ export const StepFive = ({ type, step, setStep }) => {
             text1: "Password Reset Successfully!",
             text2: "Your password has been reset successfully.",
           });
+          // Clear all form data on successful password reset
+          clearAuthFormData();
+          clearUserAgentDetailsFormData();
+          clearAddressFormData();
           router.replace("/success");
         }
       } catch (error) {
