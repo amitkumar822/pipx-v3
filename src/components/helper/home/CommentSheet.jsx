@@ -17,6 +17,7 @@ import {
 } from "@/src/hooks/useApi";
 import { useUserProvider } from "@/src/context/user/userContext";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
 
 const { height } = Dimensions.get("window");
 const heightPercent = (percent) => (height * percent) / 100;
@@ -87,6 +88,11 @@ const CommentSheet = ({ signalPostId }) => {
 
   // Visit Profile
   const handleVisitProfile = (userDetails) => {
+
+    // if the comment is from the same user, don't navigate to the profile
+    if (userDetails?.user?.id === profile?.id || (profile?.user_type === userDetails?.user?.user_type)) {
+      return;
+    }
     const { id, user_type } = userDetails?.user;
     if (!id || !user_type) return;
     router.push({
@@ -96,7 +102,6 @@ const CommentSheet = ({ signalPostId }) => {
         userType: user_type,
         backRoutePath: "/"
       },
-
     });
   };
 

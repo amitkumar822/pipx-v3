@@ -252,7 +252,6 @@ const visitprofile = () => {
           profile={profile}
           statsDataByRole={statsDataByRole}
           visitType={true}
-          userType={userType}
           backRoutePath={backRoutePath}
         />
       ) : (

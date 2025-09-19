@@ -12,15 +12,37 @@ import {
 } from "@/src/hooks/useApi";
 import { AppImage } from "../../utils/AppImage";
 import Loading from "../../Loading";
+import { AuthContext } from "@/src/store/AuthContext";
+import { useUserProvider } from "@/src/context/user/userContext";
 
-export const ProfileBox = ({ profile, statsDataByRole, visitType = false, userType, backRoutePath = "/(tabs)/search" }) => {
+export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRoutePath = "/(tabs)/search" }) => {
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
+  const { profile: loginCurrentProfile } = useUserProvider();
+
   const router = useRouter();
+  const { userType } = useContext(AuthContext);
 
   const [visible, setVisible] = useState(false);
   const [modalType, setModalType] = useState("");
+
+  // Define constants for button logic
+  const isCurrentUserProfile = !visitType;
+  const isUserVisitingProfile = visitType && userType === "USER";
+  const isSignalProviderVisitingUser = visitType && userType === "SIGNAL_PROVIDER" && profile?.user_type === "USER";
+  const shouldShowMoreVertButton = isUserVisitingProfile || isSignalProviderVisitingUser;
+  const shouldShowEditButton = isCurrentUserProfile;
+
+  // Button handlers
+  const handleMoreVertPress = () => {
+    setModalType("both");
+    setVisible(true);
+  };
+
+  const handleEditPress = () => {
+    router.push("/profile/editprofile");
+  };
 
   // User Block/Unblock Signal Provider hook
   const blockUnblockMutation = useBlockUnblockSignalProvider();
@@ -35,6 +57,12 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, userTy
       Alert.alert("Error", "Profile ID is missing.");
       return;
     }
+
+    // console.log('====================================');
+    // console.log("Profile: ", JSON.stringify(profile, null, 2));
+    // console.log("Id: ", profile?.id);
+    // console.log("User Type: ", userType);
+    // console.log('====================================');
 
     if (userType === "SIGNAL_PROVIDER") {
       // Call the block/unblock mutation for SIGNAL_PROVIDER
@@ -161,12 +189,9 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, userTy
                       </Text>
                     </View>
                   </View>
-                  {visitType ? (
-                    userType === "USER" && <Pressable
-                      onPress={() => {
-                        setModalType("both");
-                        setVisible(true);
-                      }}
+                  {shouldShowMoreVertButton && (
+                    <Pressable
+                      onPress={handleMoreVertPress}
                       className="p-1"
                     >
                       <MaterialIcons
@@ -175,10 +200,12 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, userTy
                         color="#7E7E7E"
                       />
                     </Pressable>
-                  ) : (
+                  )}
+
+                  {shouldShowEditButton && (
                     <Pressable
-                      onPress={() => router.push("/profile/editprofile")}
-                      className={`p-1`}
+                      onPress={handleEditPress}
+                      className="p-1"
                     >
                       <MaterialIcons name="edit" size={18} color="#7E7E7E" />
                     </Pressable>
@@ -233,8 +260,8 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, userTy
                         <View className=" rounded-xl py-3 justify-center items-center min-h-[60px]">
                           <Text
                             className={`font-bold mb-0.5 ${stat.label === "Success rate"
-                                ? "text-green-500"
-                                : "text-black"
+                              ? "text-green-500"
+                              : "text-black"
                               }`}
                             style={{
                               fontSize: 16,
