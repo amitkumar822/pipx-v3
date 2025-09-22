@@ -90,7 +90,7 @@ const AgentScreen = ({ assetId }) => {
       <FlatList
         data={agentDetails}
         renderItem={({ item }) => (
-          <SearchCard searchData={item} nameDisplay={true} />
+          <SearchCard searchData={item} nameDisplay={true} backRoutePath={"/agent"} />
         )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{

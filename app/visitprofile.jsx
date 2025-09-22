@@ -220,6 +220,10 @@ const visitprofile = () => {
     return dateToFormat ? format(dateToFormat, "dd MMMM yyyy") : "";
   }, [subscribedEndDate]);
 
+  console.log('====================================');
+  console.log("backRoutePath:", backRoutePath);
+  console.log('====================================');
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <AppStatusBar backgroundColor="#FFF" barStyle="dark-content" />

@@ -7,7 +7,7 @@ const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
 const SearchCard = memo(
-  ({ searchData, nameDisplay = false }) => {
+  ({ searchData, nameDisplay = false, backRoutePath }) => {
     const router = useRouter();
 
     // Memoize all derived values
@@ -44,10 +44,11 @@ const SearchCard = memo(
         params: {
           id: String(profileData.id),
           userType: profileData.user_type,
-          backRoutePath: "/(tabs)/search",
+          backRoutePath: backRoutePath,
+          // backRoutePath: "/(tabs)/search",
         },
       });
-    }, [router, profileData]);
+    }, [router, profileData, backRoutePath]);
 
     // Early return if no valid data
     if (!profileData) return null;

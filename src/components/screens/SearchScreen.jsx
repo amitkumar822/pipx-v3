@@ -103,7 +103,7 @@ function SearchScreen({
           <FlatList
             data={searchData}
             renderItem={({ item }) => (
-              <SearchCard searchData={item} />
+              <SearchCard searchData={item} backRoutePath={"/(tabs)/search"} />
             )}
             keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={{
