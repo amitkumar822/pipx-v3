@@ -8,10 +8,11 @@ import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import SearchCardSkeleton from "./SearchCardSkeleton";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 
+const perPage = 35;
+
 const AgentSearchScreen = () => {
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [page, setPage] = useState(1);
-  const [perPage] = useState(20);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [refreshing, setRefreshing] = useState(false);
