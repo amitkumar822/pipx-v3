@@ -62,12 +62,6 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
       return;
     }
 
-    // console.log('====================================');
-    // console.log("Profile: ", JSON.stringify(profile, null, 2));
-    // console.log("Id: ", profile?.id);
-    // console.log("User Type: ", userType);
-    // console.log('====================================');
-
     if (userType === "SIGNAL_PROVIDER") {
       // Call the block/unblock mutation for SIGNAL_PROVIDER
       signalProviderBlockedUsers(profile?.id, {
@@ -140,6 +134,10 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
       reportSignalProvider(profile?.id, {
         onSuccess: (res) => {
           setModalType("success");
+
+          setTimeout(() => {
+            setVisible(false);
+          }, 2500);
         },
         onError: (error) => {
           Alert.alert(
@@ -153,6 +151,10 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
       reportUserSignalProvider(profile?.id, {
         onSuccess: (res) => {
           setModalType("success");
+
+          setTimeout(() => {
+            setVisible(false);
+          }, 2500);
         },
         onError: (error) => {
           Alert.alert("Error", error?.message || "Failed to report the user.");

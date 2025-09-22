@@ -149,6 +149,10 @@ const visitprofile = () => {
           requestAnimationFrame(() => {
             setModalType("success");
 
+            setTimeout(() => {
+              setVisible(false);
+            }, 2500);
+
             setIsProcessing(false);
             // Force refetch to get fresh data after unfollow
             refetch();
@@ -178,6 +182,10 @@ const visitprofile = () => {
           // Wrap state updates in requestAnimationFrame
           requestAnimationFrame(() => {
             setModalType("success");
+
+            setTimeout(() => {
+              setVisible(false);
+            }, 2500);
 
             setIsProcessing(false);
             // Force refetch to get fresh data after follow
