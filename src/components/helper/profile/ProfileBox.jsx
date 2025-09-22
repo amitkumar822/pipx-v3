@@ -16,7 +16,7 @@ import { AuthContext } from "@/src/store/AuthContext";
 import { useUserProvider } from "@/src/context/user/userContext";
 import { useBackHandler } from "@/src/utils/useBackHandler";
 
-export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRoutePath = "/(tabs)/search" }) => {
+export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRoutePath }) => {
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[f  Qoff7azayj[ayj[j[ayofayj[ayfjj[j[ayjuayj[";
 
@@ -199,7 +199,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
                       className="p-1"
                     >
                       <MaterialIcons
-                        name="                  more-vert"
+                        name="more-vert"
                         size={22}
                         color="#7E7E7E"
                       />
