@@ -1,9 +1,7 @@
 import { View, FlatList, ActivityIndicator, Text, StyleSheet } from "react-native";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useAssetBasedSignalPosts } from "@/src/hooks/useApi";
 import SearchCard from "../helper/search/SearchCard";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import NoResultsFound from "../NoResultsFound";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import SearchCardSkeleton from "../helper/search/SearchCardSkeleton";

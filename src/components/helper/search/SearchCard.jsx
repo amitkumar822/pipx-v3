@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { memo, useCallback, useMemo } from "react";
-import { RFValue } from "react-native-responsive-fontsize";
 import { useRouter } from "expo-router";
 import { AppImage } from "../../utils/AppImage";
 
