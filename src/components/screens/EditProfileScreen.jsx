@@ -719,7 +719,7 @@ export const EditProfileScreen = () => {
                       secureTextEntry={!showOldPassword}
                       value={userData.old_password}
                       placeholderTextColor="#797979"
-                      onChangeText={(text) => handleChange("old_password", text)}
+                      onChangeText={(text) => handleChange("old_password", text.toString().trim())}
                     />
                     <Pressable
                       style={styles.eyeIcon}
@@ -742,7 +742,7 @@ export const EditProfileScreen = () => {
                       secureTextEntry={!showNewPassword}
                       value={userData.password}
                       placeholderTextColor="#797979"
-                      onChangeText={(text) => handleChange("password", text)}
+                      onChangeText={(text) => handleChange("password", text.toString().trim())}
                     />
                     <Pressable
                       style={styles.eyeIcon}
@@ -766,7 +766,7 @@ export const EditProfileScreen = () => {
                       value={userData.confirm_password}
                       placeholderTextColor="#797979"
                       onChangeText={(text) =>
-                        handleChange("confirm_password", text)
+                        handleChange("confirm_password", text.toString().trim())
                       }
                     />
                     <Pressable

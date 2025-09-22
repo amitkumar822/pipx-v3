@@ -88,10 +88,13 @@ const AgentScreen = ({ assetId }) => {
     );
   }
 
-  if(error) {
+  if(error && page === 1) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <>
         <Text style={{ textAlign: "center", marginTop: 20 }}>{error?.message || "An error occurred while loading data"}</Text>
+        <Text>Agent Screen</Text>
+        </>
       </View>
     );
   }

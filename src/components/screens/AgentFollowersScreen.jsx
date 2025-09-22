@@ -145,6 +145,8 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingVertical: 8,
     paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderColor: "#E0E0E0",
   },
   profileimg: {
     width: 46,
