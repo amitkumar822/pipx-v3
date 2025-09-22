@@ -8,15 +8,14 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 
 const Agent = () => {
   const { currencyAssetId } = useLocalSearchParams();
-  console.log("currencyAssetId: ", currencyAssetId);
   return (
     <SafeAreaView style={styles.container}>
       <AppStatusBar backgroundColor="#FFF" barStyle="dark-content" />
       <View style={styles.headercontainer}>
-        <Pressable style={styles.backbtn} onPress={() => router.back()}>
+        <Pressable style={styles.backbtn} onPress={() => router.push("/by-currency")}>
           <View style={styles.backbtn}>
             <Ionicons name="chevron-back-outline" size={24} color="#007AFF" />
-            <Text style={styles.backTxt}>Back55</Text>
+            <Text style={styles.backTxt}>Back</Text>
           </View>
         </Pressable>
       </View>

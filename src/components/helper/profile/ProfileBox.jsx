@@ -16,7 +16,7 @@ import { AuthContext } from "@/src/store/AuthContext";
 import { useUserProvider } from "@/src/context/user/userContext";
 import { useBackHandler } from "@/src/utils/useBackHandler";
 
-export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRoutePath }) => {
+export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRoutePath, currencyAssetId }) => {
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[f  Qoff7azayj[ayj[j[ayofayj[ayfjj[j[ayjuayj[";
 
@@ -46,7 +46,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
   };
 
   // Handle Android hardware back button using utility function
-  useBackHandler(backRoutePath, "/");
+  useBackHandler(backRoutePath, "/", currencyAssetId);
 
   // User Block/Unblock Signal Provider hook
   const blockUnblockMutation = useBlockUnblockSignalProvider();
@@ -74,7 +74,16 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
         onSuccess: () => {
           setModalType("success");
           setTimeout(() => {
-            router.push(backRoutePath);
+            if (backRoutePath === "/agent" && currencyAssetId) {
+              router.push({
+                pathname: "/agent",
+                params: {
+                  currencyAssetId: currencyAssetId,
+                },
+              });
+            } else {
+              router.push(backRoutePath);
+            }
           }, 500);
         },
         onError: (error) => {
@@ -91,7 +100,16 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
         onSuccess: () => {
           setModalType("success");
           setTimeout(() => {
-            router.push(backRoutePath);
+            if (backRoutePath === "/agent" && currencyAssetId) {
+              router.push({
+                pathname: "/agent",
+                params: {
+                  currencyAssetId: currencyAssetId,
+                },
+              });
+            } else {
+              router.push(backRoutePath);
+            }
           }, 500);
         },
         onError: (error) => {

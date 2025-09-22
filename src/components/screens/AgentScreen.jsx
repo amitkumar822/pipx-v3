@@ -5,10 +5,12 @@ import SearchCard from "../helper/search/SearchCard";
 import NoResultsFound from "../NoResultsFound";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import SearchCardSkeleton from "../helper/search/SearchCardSkeleton";
+import { useBackHandler } from "@/src/utils/useBackHandler";
 
 const perPage = 20;
 
 const AgentScreen = ({ assetId }) => {
+  useBackHandler("/by-currency", "/", assetId);
 
   const [agentDetails, setAgentDetails] = useState([]);
 
@@ -90,7 +92,12 @@ const AgentScreen = ({ assetId }) => {
       <FlatList
         data={agentDetails}
         renderItem={({ item }) => (
-          <SearchCard searchData={item} nameDisplay={true} backRoutePath={"/agent"} />
+          <SearchCard 
+            searchData={item} 
+            nameDisplay={true} 
+            backRoutePath={"/agent"} 
+            currencyAssetId={assetId}
+          />
         )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{

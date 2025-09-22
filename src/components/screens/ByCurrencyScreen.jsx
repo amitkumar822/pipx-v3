@@ -11,10 +11,14 @@ import useErrorHandler from "@/src/hooks/useErrorHandler";
 import CurrencyCard from "../helper/home/CurrencyCard";
 import debounce from "lodash/debounce";
 import Toast from "react-native-toast-message";
+import { useBackHandler } from "@/src/utils/useBackHandler";
 
 const perPage = 35;
 
 const ByCurrencyScreen = ({ setShowTab }) => {
+  // Back handler for the home screen when back button is pressed
+  useBackHandler("/");
+
   //^=============Start Pagination Functionality==============
   const [error, setError] = useState(null);
   const [assets, setAssets] = useState([]);

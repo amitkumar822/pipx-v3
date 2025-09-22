@@ -6,15 +6,27 @@ import { useRouter } from 'expo-router';
  * Custom hook to handle Android hardware back button
  * @param backRoutePath - The route to navigate to when back button is pressed
  * @param fallbackRoute - Fallback route if backRoutePath is not provided (defaults to "/")
+ * @param currencyAssetId - Currency asset ID to pass when navigating back to agent screen
  */
-export const useBackHandler = (backRoutePath?: string, fallbackRoute: string = "/") => {
+export const useBackHandler = (backRoutePath?: string, fallbackRoute: string = "/", currencyAssetId?: string) => {
   const router = useRouter();
+
+  console.log("currencyAssetId: ", currencyAssetId, "backRoutePath: ", backRoutePath);
 
   useEffect(() => {
     const backAction = () => {
       // Navigate to backRoutePath if provided, otherwise use fallback route
-      const targetRoute = backRoutePath || fallbackRoute;
-      router.push(targetRoute as any);
+      if (backRoutePath === "/agent" && currencyAssetId) {
+        router.push({
+          pathname: "/agent",
+          params: {
+            currencyAssetId: currencyAssetId,
+          },
+        });
+      } else {
+        const targetRoute = backRoutePath || fallbackRoute;
+        router.push(targetRoute as any);
+      }
       return true; // Prevent default back behavior
     };
 
@@ -24,7 +36,7 @@ export const useBackHandler = (backRoutePath?: string, fallbackRoute: string = "
     );
 
     return () => backHandler.remove();
-  }, [backRoutePath, fallbackRoute, router]);
+  }, [backRoutePath, fallbackRoute, currencyAssetId, router]);
 };
 
 /**

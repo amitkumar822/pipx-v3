@@ -19,7 +19,7 @@ import { useProfileById } from "@/src/components/helper/profile/helper/useProfil
 const visitprofile = () => {
   const { profile: userProfile } = useUserProvider();
 
-  const { id, backRoutePath, userType } = useLocalSearchParams();
+  const { id, backRoutePath, userType, currencyAssetId } = useLocalSearchParams();
 
   const {
     data: profileData,
@@ -220,10 +220,6 @@ const visitprofile = () => {
     return dateToFormat ? format(dateToFormat, "dd MMMM yyyy") : "";
   }, [subscribedEndDate]);
 
-  console.log('====================================');
-  console.log("backRoutePath:", backRoutePath);
-  console.log('====================================');
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <AppStatusBar backgroundColor="#FFF" barStyle="dark-content" />
@@ -232,7 +228,18 @@ const visitprofile = () => {
         backtxt={`@${profileData?.data?.[0]?.username || "Profile"}`}
         righttxt={""}
         righticon={null}
-        backaction={() => router.push(`${backRoutePath}`)}
+        backaction={() => {
+          if (backRoutePath === "/agent" && currencyAssetId) {
+            router.push({
+              pathname: "/agent",
+              params: {
+                currencyAssetId: currencyAssetId,
+              },
+            });
+          } else {
+            router.back();
+          }
+        }}
       />
 
       {isLoading ? (
@@ -256,6 +263,7 @@ const visitprofile = () => {
           statsDataByRole={statsDataByRole}
           visitType={true}
           backRoutePath={backRoutePath}
+          currencyAssetId={currencyAssetId}
         />
       ) : (
         <View
