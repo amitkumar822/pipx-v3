@@ -13,6 +13,7 @@ import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { AuthContextProvider } from "@/src/store/AuthContext";
 import ENV from "@/src/config/env";
 import { NoInternetWrapper } from "@/src/utils/NoInternetScreen";
+import { ToastConfig } from "@/src/utils/ToastConfig";
 
 // Apply patches to fix third-party library issues
 try {
@@ -111,6 +112,7 @@ export default function RootLayout() {
                           <Slot />
                           <Toast
                             visibilityTime={3000} // 3 seconds
+                            config={ToastConfig}
                           />
                         </UserContextProvider>
                       </ErrorBoundary>
