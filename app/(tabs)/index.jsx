@@ -7,10 +7,14 @@ import ScreenWrapper from "@/src/components/shared/ScreenWrapper";
 import { AppStatusBar } from "@/src/components/utils/AppStatusBar";
 import { useSignalProviderProfile, useUserProfile } from "@/src/hooks/useApi";
 import { useUserProvider } from "@/src/context/user/userContext";
+import { useDoubleTapToExit } from "@/src/utils/useBackHandler";
 
 export default function Home() {
   const { userType } = useContext(AuthContext);
   const { setProfile } = useUserProvider();
+  
+  // Enable double tap to exit functionality for home screen
+  useDoubleTapToExit(500);
   
   // Always call hooks at the top level, regardless of conditions
   const { data: userProfile } = useUserProfile();

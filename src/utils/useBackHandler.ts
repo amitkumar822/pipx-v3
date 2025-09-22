@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { BackHandler } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { BackHandler, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 
 /**
@@ -37,6 +37,101 @@ export const useBackHandler = (backRoutePath?: string, fallbackRoute: string = "
 
     return () => backHandler.remove();
   }, [backRoutePath, fallbackRoute, currencyAssetId, router]);
+};
+
+/**
+ * Custom hook to handle double tap to exit functionality
+ * @param exitTimeout - Timeout in milliseconds for double tap detection (defaults to 500ms)
+ */
+export const useDoubleTapToExit = (
+  exitTimeout: number = 500
+) => {
+  const backPressedRef = useRef<number>(0);
+  const isWaitingForSecondTap = useRef<boolean>(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const backAction = () => {
+      const now = Date.now();
+      
+      console.log("Back pressed - isWaiting:", isWaitingForSecondTap.current, "timeDiff:", backPressedRef.current ? now - backPressedRef.current : 0);
+      
+      if (isWaitingForSecondTap.current && backPressedRef.current && now - backPressedRef.current < exitTimeout) {
+        // Double tap detected - show confirmation dialog directly
+        console.log("Double tap detected! Showing confirmation dialog");
+        isWaitingForSecondTap.current = false;
+        backPressedRef.current = 0;
+        
+        // Clear any existing timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = null;
+        }
+        
+        Alert.alert(
+          "Exit App",
+          "Are you sure you want to close this app?",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
+              onPress: () => {
+                // Reset state on cancel
+                isWaitingForSecondTap.current = false;
+                backPressedRef.current = 0;
+              }
+            },
+            {
+              text: "Exit",
+              style: "destructive",
+              onPress: () => {
+                // Exit the app
+                BackHandler.exitApp();
+              }
+            }
+          ]
+        );
+        return true;
+      } else {
+        // First tap - just set timestamp and wait for second tap (no alert)
+        console.log("First tap - setting up for double tap detection");
+        isWaitingForSecondTap.current = true;
+        backPressedRef.current = now;
+        
+        // Clear any existing timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+        
+        // Set timeout to reset state if no second tap
+        timeoutRef.current = setTimeout(() => {
+          console.log("Timeout reached - resetting state");
+          isWaitingForSecondTap.current = false;
+          backPressedRef.current = 0;
+          timeoutRef.current = null;
+        }, exitTimeout);
+        
+        // No alert on first tap - just return true to prevent default back behavior
+        return true;
+      }
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => {
+      backHandler.remove();
+      // Clear timeout and reset state when component unmounts
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      isWaitingForSecondTap.current = false;
+      backPressedRef.current = 0;
+    };
+  }, [exitTimeout]);
 };
 
 /**
