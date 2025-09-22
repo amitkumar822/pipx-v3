@@ -8,7 +8,7 @@ import NoResultsFound from "../NoResultsFound";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import SearchCardSkeleton from "../helper/search/SearchCardSkeleton";
 
-const perPage = 1;
+const perPage = 20;
 
 const AgentScreen = ({ assetId }) => {
 
@@ -19,6 +19,7 @@ const AgentScreen = ({ assetId }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const {
     data: paginationData,
@@ -29,19 +30,29 @@ const AgentScreen = ({ assetId }) => {
     assetId, page,
     perPage,
   });
+
   // Append new data to list only once per fetch for proper pagination
   useEffect(() => {
-    if (paginationData?.statusCode === 200 && paginationData?.data?.length > 0) {
+    if (paginationData?.statusCode === 200) {
       if (page === 1) {
-        setAgentDetails(paginationData.data);
+        setAgentDetails(paginationData.data || []);
       } else {
-        setAgentDetails((prev) => [...prev, ...paginationData.data]);
+        setAgentDetails((prev) => [...prev, ...(paginationData.data || [])]);
       }
+      setHasNextPage(paginationData?.hasNextPage ?? false);
+      setIsInitialLoad(false);
     }
-    setHasNextPage(paginationData?.hasNextPage ?? false);
     setIsLoadingMore(false);
     setRefreshing(false);
-  }, [paginationData, refreshing, page]);
+  }, [paginationData, page]);
+
+  // Auto-load more data if initial load doesn't fill the screen
+  useEffect(() => {
+    if (!isInitialLoad && hasNextPage && !isLoading && !isLoadingMore && agentDetails.length < 10) {
+      // If we have less than 10 items and there's more data available, load more
+      handleLoadMore();
+    }
+  }, [isInitialLoad, hasNextPage, isLoading, isLoadingMore, agentDetails.length]);
 
 
   // Handle pagination trigger
@@ -56,7 +67,9 @@ const AgentScreen = ({ assetId }) => {
   const handleRefresh = () => {
     setRefreshing(true);
     setPage(1);
-    setHasNextPage(false);
+    setHasNextPage(true);
+    setIsInitialLoad(true);
+    setAgentDetails([]);
   };
 
   //! ======= Pagination Logic End =======
