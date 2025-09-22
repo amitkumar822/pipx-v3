@@ -18,7 +18,7 @@ import { useBackHandler } from "@/src/utils/useBackHandler";
 
 export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRoutePath = "/(tabs)/search" }) => {
   const blurhash =
-    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[f  Qoff7azayj[ayj[j[ayofayj[ayfjj[j[ayjuayj[";
 
   const { profile: loginCurrentProfile } = useUserProvider();
 
@@ -61,6 +61,12 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
       Alert.alert("Error", "Profile ID is missing.");
       return;
     }
+
+    // console.log('====================================');
+    // console.log("Profile: ", JSON.stringify(profile, null, 2));
+    // console.log("Id: ", profile?.id);
+    // console.log("User Type: ", userType);
+    // console.log('====================================');
 
     if (userType === "SIGNAL_PROVIDER") {
       // Call the block/unblock mutation for SIGNAL_PROVIDER
@@ -193,7 +199,7 @@ export const ProfileBox = ({ profile, statsDataByRole, visitType = false, backRo
                       className="p-1"
                     >
                       <MaterialIcons
-                        name="more-vert"
+                        name="                  more-vert"
                         size={22}
                         color="#7E7E7E"
                       />

@@ -28,6 +28,8 @@ import {
 } from "@/src/hooks/useApi";
 import Toast from "react-native-toast-message";
 import { AppImage } from "../utils/AppImage";
+import { ImageCompress } from "../helper/profile/helper/ImageCompress";
+
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
@@ -130,11 +132,16 @@ export const EditProfileScreen = () => {
       // Set the image URI for display purposes
       setSelectedImage(result.assets[0].uri);
 
+      // ✅ compress before upload
+      const image = result.assets?.[0]?.uri;
+      const compressedImage = await ImageCompress(image, 100);
+      const imageUri = compressedImage?.uri;
+      
       // Store the image file object for API upload
       setUserData((prev) => ({
         ...prev,
         profile_image: {
-          uri: result.assets[0].uri,
+          uri: imageUri,
           name: `image.${result.assets[0].uri.split(".").pop()}`,
           type: `image/${result.assets[0].uri.split(".").pop()}`,
         },
@@ -177,11 +184,16 @@ export const EditProfileScreen = () => {
       // Set the image URI for display purposes
       setSelectedImage(result.assets[0].uri);
 
+      // ✅ compress before upload
+      const image = result.assets?.[0]?.uri;
+      const compressedImage = await ImageCompress(image, 100);
+      const imageUri = compressedImage?.uri;
+
       // Store the image file object for API upload
       setUserData((prev) => ({
         ...prev,
         profile_image: {
-          uri: result.assets[0].uri,
+          uri: imageUri,
           name: `image.${result.assets[0].uri.split(".").pop()}`,
           type: `image/${result.assets[0].uri.split(".").pop()}`,
         },
