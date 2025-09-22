@@ -136,7 +136,7 @@ export const EditProfileScreen = () => {
       const image = result.assets?.[0]?.uri;
       const compressedImage = await ImageCompress(image, 100);
       const imageUri = compressedImage?.uri;
-      
+
       // Store the image file object for API upload
       setUserData((prev) => ({
         ...prev,
@@ -307,14 +307,11 @@ export const EditProfileScreen = () => {
           router.back();
         },
         onError: (error) => {
-          console.log('====================================');
-          console.log("Error: ", JSON.stringify(error, null, 2));
-          console.log('====================================');
           setIsUpdating(false);
           Toast.show({
             type: "error",
             text1: "Update Failed",
-            text2: error?.response?.data?.message || error?.message || "An error occurred. Please try again.",
+            text2: error?.message || error?.response?.data?.message[0] || "An error occurred. Please try again.",
           });
         },
       });
@@ -768,7 +765,7 @@ export const EditProfileScreen = () => {
                       secureTextEntry={!showConfirmPassword}
                       value={userData.confirm_password}
                       placeholderTextColor="#797979"
-                        onChangeText={(text) =>
+                      onChangeText={(text) =>
                         handleChange("confirm_password", text)
                       }
                     />
