@@ -30,17 +30,29 @@ export default function TabLayout() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarHideOnKeyboard: true,
-        tabBarLabelPosition: "below-icon", // force consistent layout
+        tabBarLabelPosition: "below-icon",
+        tabBarStyle: {
+          height: 55,
+        },
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: '500',
+        },
+        tabBarIconStyle: {
+          marginTop: 1,
+        },
+        tabBarActiveTintColor: "#000",
+        tabBarInactiveTintColor: "#999",
         tabBarIcon: ({ focused, size }) => {
           let iconName;
           if (route.name === "index") {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "notification") {
-            iconName = focused ? "notifications" : "notifications-outline";
             return (
               <NotificationBadge
                 iconSize={size}
-                iconColor={focused ? "black" : "#999"}
+                iconColor={focused ? "#000" : "#999"}
+                focused={focused}
               />
             );
           } else if (route.name === "postsignal") {
@@ -50,10 +62,8 @@ export default function TabLayout() {
           } else if (route.name === "profile") {
             iconName = focused ? "person" : "person-outline";
           }
-          return <Ionicons name={iconName} size={size} color={"black"} />;
+          return <Ionicons name={iconName} size={size} color={focused ? "#000" : "#999"} />;
         },
-        // This ensures both icon + label are clickable
-        tabBarButton: (props) => <TouchableOpacity {...props} activeOpacity={0.7} />,
       })}
     >
       <Tabs.Screen

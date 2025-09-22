@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { router } from "expo-router";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Ionicons } from "@expo/vector-icons";
 import apiService from "../../services/api";
 
-export const NotificationBadge = ({ iconSize = 24, iconColor = "#666" }) => {
+export const NotificationBadge = ({ iconSize = 24, iconColor = "#666", focused = false }) => {
   const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {
@@ -43,7 +43,11 @@ export const NotificationBadge = ({ iconSize = 24, iconColor = "#666" }) => {
 
   return (
     <Pressable style={styles.container} onPress={handlePress}>
-      <MaterialIcons name="notifications" size={iconSize} color={iconColor} />
+      <Ionicons 
+        name={focused ? "notifications" : "notifications-outline"} 
+        size={iconSize} 
+        color={iconColor} 
+      />
       {notificationCount > 0 && (
         <View style={styles.badge}>
           <Text style={styles.badgeText}>
