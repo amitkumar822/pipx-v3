@@ -307,11 +307,14 @@ export const EditProfileScreen = () => {
           router.back();
         },
         onError: (error) => {
+          console.log('====================================');
+          console.log("Error: ", JSON.stringify(error, null, 2));
+          console.log('====================================');
           setIsUpdating(false);
           Toast.show({
             type: "error",
             text1: "Update Failed",
-            text2: error?.message || "An error occurred. Please try again.",
+            text2: error?.response?.data?.message || error?.message || "An error occurred. Please try again.",
           });
         },
       });
@@ -415,6 +418,7 @@ export const EditProfileScreen = () => {
                     placeholder="First Name"
                     keyboardType="default"
                     value={userData.first_name}
+                    placeholderTextColor="#797979"
                     onChangeText={(text) => handleChange("first_name", text)}
                   />
                 </View>
@@ -428,6 +432,7 @@ export const EditProfileScreen = () => {
                     style={styles.inputfield}
                     placeholder="Last Name"
                     value={userData.last_name}
+                    placeholderTextColor="#797979"
                     onChangeText={(text) => handleChange("last_name", text)}
                   />
                 </View>
@@ -441,6 +446,7 @@ export const EditProfileScreen = () => {
                     style={styles.inputfield}
                     placeholder="User ID"
                     value={userData.username}
+                    placeholderTextColor="#797979"
                     onChangeText={(text) => handleChange("username", text)}
                   />
                 </View>
@@ -477,9 +483,10 @@ export const EditProfileScreen = () => {
                     {/* Phone Input */}
                     <TextInput
                       style={styles.phoneInput}
-                      placeholder="Phone Number"
+                      placeholder="Number"
                       keyboardType="phone-pad"
                       value={userData.mobile}
+                      placeholderTextColor="#797979"
                       onChangeText={handlePhoneChange}
                       maxLength={10} // Max 10 digits without country code
                     />
@@ -495,6 +502,7 @@ export const EditProfileScreen = () => {
                     style={[styles.inputfield, styles.disabledField]}
                     placeholder="Email"
                     value={userData.email}
+                    placeholderTextColor="#797979"
                     onChangeText={(text) => handleChange("email", text)}
                     editable={false}
                   />
@@ -667,6 +675,7 @@ export const EditProfileScreen = () => {
                     style={styles.inputfield}
                     placeholder="Bio"
                     value={userData.bio}
+                    placeholderTextColor="#797979"
                     onChangeText={(text) => handleChange("bio", text)}
                   />
                 </View>
@@ -680,6 +689,7 @@ export const EditProfileScreen = () => {
                     style={styles.inputfield}
                     placeholder="Address"
                     value={userData.address}
+                    placeholderTextColor="#797979"
                     onChangeText={(text) => handleChange("address", text)}
                   />
                 </View>
@@ -693,6 +703,7 @@ export const EditProfileScreen = () => {
                     style={styles.inputfield}
                     placeholder="Address2"
                     value={userData.address1}
+                    placeholderTextColor="#797979"
                     onChangeText={(text) => handleChange("address1", text)}
                   />
                 </View>
@@ -710,6 +721,7 @@ export const EditProfileScreen = () => {
                       keyboardType="default"
                       secureTextEntry={!showOldPassword}
                       value={userData.old_password}
+                      placeholderTextColor="#797979"
                       onChangeText={(text) => handleChange("old_password", text)}
                     />
                     <Pressable
@@ -732,6 +744,7 @@ export const EditProfileScreen = () => {
                       keyboardType="default"
                       secureTextEntry={!showNewPassword}
                       value={userData.password}
+                      placeholderTextColor="#797979"
                       onChangeText={(text) => handleChange("password", text)}
                     />
                     <Pressable
@@ -754,7 +767,8 @@ export const EditProfileScreen = () => {
                       keyboardType="default"
                       secureTextEntry={!showConfirmPassword}
                       value={userData.confirm_password}
-                      onChangeText={(text) =>
+                      placeholderTextColor="#797979"
+                        onChangeText={(text) =>
                         handleChange("confirm_password", text)
                       }
                     />
@@ -887,7 +901,6 @@ const styles = StyleSheet.create({
   phoneInput: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    height: 36,
     paddingVertical: 8,
     paddingHorizontal: 8,
     borderRadius: 8,
