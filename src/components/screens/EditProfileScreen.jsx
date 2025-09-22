@@ -119,7 +119,7 @@ export const EditProfileScreen = () => {
   const pickImageFromGallery = useCallback(async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ImagePicker.mediaTypes,
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.8,

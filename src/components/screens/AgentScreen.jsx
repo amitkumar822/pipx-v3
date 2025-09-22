@@ -10,6 +10,7 @@ import { useBackHandler } from "@/src/utils/useBackHandler";
 const perPage = 20;
 
 const AgentScreen = ({ assetId }) => {
+  // Back handler for the home screen when back button is pressed
   useBackHandler("/by-currency", "/", assetId);
 
   const [agentDetails, setAgentDetails] = useState([]);
@@ -44,7 +45,7 @@ const AgentScreen = ({ assetId }) => {
     }
     setIsLoadingMore(false);
     setRefreshing(false);
-  }, [paginationData, page]);
+  }, [paginationData, page, refreshing]);
 
   // Auto-load more data if initial load doesn't fill the screen
   useEffect(() => {

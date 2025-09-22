@@ -11,8 +11,6 @@ import { useRouter } from 'expo-router';
 export const useBackHandler = (backRoutePath?: string, fallbackRoute: string = "/", currencyAssetId?: string) => {
   const router = useRouter();
 
-  console.log("currencyAssetId: ", currencyAssetId, "backRoutePath: ", backRoutePath);
-
   useEffect(() => {
     const backAction = () => {
       // Navigate to backRoutePath if provided, otherwise use fallback route
@@ -54,11 +52,8 @@ export const useDoubleTapToExit = (
     const backAction = () => {
       const now = Date.now();
       
-      console.log("Back pressed - isWaiting:", isWaitingForSecondTap.current, "timeDiff:", backPressedRef.current ? now - backPressedRef.current : 0);
-      
       if (isWaitingForSecondTap.current && backPressedRef.current && now - backPressedRef.current < exitTimeout) {
         // Double tap detected - show confirmation dialog directly
-        console.log("Double tap detected! Showing confirmation dialog");
         isWaitingForSecondTap.current = false;
         backPressedRef.current = 0;
         
@@ -94,7 +89,6 @@ export const useDoubleTapToExit = (
         return true;
       } else {
         // First tap - just set timestamp and wait for second tap (no alert)
-        console.log("First tap - setting up for double tap detection");
         isWaitingForSecondTap.current = true;
         backPressedRef.current = now;
         
@@ -105,7 +99,6 @@ export const useDoubleTapToExit = (
         
         // Set timeout to reset state if no second tap
         timeoutRef.current = setTimeout(() => {
-          console.log("Timeout reached - resetting state");
           isWaitingForSecondTap.current = false;
           backPressedRef.current = 0;
           timeoutRef.current = null;
