@@ -12,6 +12,8 @@ import CurrencyCard from "../helper/home/CurrencyCard";
 import debounce from "lodash/debounce";
 import Toast from "react-native-toast-message";
 
+const perPage = 35;
+
 const ByCurrencyScreen = ({ setShowTab }) => {
   //^=============Start Pagination Functionality==============
   const [error, setError] = useState(null);
@@ -22,7 +24,6 @@ const ByCurrencyScreen = ({ setShowTab }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [page, setPage] = useState(1);
-  const [perPage] = useState(20);
 
   const handleLoadMore = useCallback(
     debounce(() => {
@@ -74,7 +75,11 @@ const ByCurrencyScreen = ({ setShowTab }) => {
 
       if (response.statusCode === 200 && response.data) {
         setAssets(response);
-        setCurrencyDetails((prev) => [...prev, ...response.data]);
+        if(page === 1){
+          setCurrencyDetails(response.data);
+        }else{
+          setCurrencyDetails((prev) => [...prev, ...response.data]);
+        }
       }
     } catch (error) {
       handleApiError(error, "Failed to load assets");
@@ -85,7 +90,7 @@ const ByCurrencyScreen = ({ setShowTab }) => {
     }
   };
 
-  if (assetsLoading) {
+  if (assetsLoading && page === 1) {
     return (
       <View className="w-full flex justify-center items-center">
         <Text>Loading....</Text>

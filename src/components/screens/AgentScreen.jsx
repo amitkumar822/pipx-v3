@@ -8,7 +8,7 @@ import NoResultsFound from "../NoResultsFound";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 import SearchCardSkeleton from "../helper/search/SearchCardSkeleton";
 
-const perPage = 1000;
+const perPage = 1;
 
 const AgentScreen = ({ assetId }) => {
 
